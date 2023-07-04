@@ -29,6 +29,7 @@ router.get('/', (req, res, next) =>
 // (Ne requiert pas d'authentification)
 router.get('/:id', (req, res, next) =>
 {
+
     const id = req.params.id;
     console.log("id:", id);
     recetteQueries.getRecetteById(id).then(recette =>
@@ -42,7 +43,7 @@ router.get('/:id', (req, res, next) =>
             res.json(recette);
         } else
         {
-            return next(new HttpError(404, `Produit ${id} introuvable`));
+            return next(new HttpError(404, `Recette ${id} introuvable`));
         }
     }).catch(err =>
     {
@@ -103,7 +104,7 @@ router.post('/',
         {
             if (recette)
             {
-                throw new HttpError(409, `Un produit avec l'id ${id} existe déjà`);
+                throw new HttpError(409, `Une recette avec l'id ${id} existe déjà`);
             }
 
             const nouvRecette = {
@@ -149,7 +150,7 @@ router.put('/:id',
 
         if (id !== req.body.id)
         {
-            return next(new HttpError(400, `Le paramètre spécifie l'id ${id} alors que le produit fourni a l'id ${req.body.id}`));
+            return next(new HttpError(400, `Le paramètre spécifie l'id ${id} alors que la recette fourni a l'id ${req.body.id}`));
         }
 
         const nouvRecette = {
@@ -168,7 +169,7 @@ router.put('/:id',
         {
             if (!result)
             {
-                return next(new HttpError(404, `Produit ${id} introuvable`));
+                return next(new HttpError(404, `Recette ${id} introuvable`));
             }
 
             res.json(result);
@@ -200,7 +201,7 @@ router.delete('/:id',
         {
             if (!result)
             {
-                return next(new HttpError(404, `Produit ${id} introuvable`));
+                return next(new HttpError(404, `Recette ${id} introuvable`));
             }
 
             res.json(result);
@@ -230,7 +231,7 @@ router.post('/:id/image',
         {
             if (!recette)
             {
-                throw new HttpError(404, `Produit id ${id} introuvable`);
+                throw new HttpError(404, `Recette id ${id} introuvable`);
             }
 
             // Le middleware upload.single(...) rendra accessible le contenu binaire du fichier

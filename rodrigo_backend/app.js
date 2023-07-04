@@ -95,8 +95,8 @@ app.get('/login',
       // On crée un nouvel objet pour la réponse en JSON, afin de ne pas
       // retourner le hash et salt du mot de passe:
       const userDetails = {
-        userAccountEmail: req.user.userAccountEmail,
-        userFullName: req.user.userFullName,
+        courrielUtilisateur: req.user.courrielUtilisateur,
+        nomComplet: req.user.nomComplet,
         isAdmin: req.user.isAdmin,
         isActive: req.user.isActive
       };

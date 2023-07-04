@@ -24,27 +24,24 @@ const getAllRecettes = async () =>
     const result = await pool.query(
         `SELECT recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions, is_active
         FROM Recette 
+        WHERE is_active = true
         ORDER BY recette_id`
     );
 
     return result.rows.map(row =>
     {
-        if (row.is_active)
-        {
-            const recette = {
-                id: row.recette_id,
-                nom: row.nom,
-                descLong: row.desc_long,
-                descCourt: row.desc_court,
-                tempsPrepMin: row.temps_prep_min,
-                tempsCuissonMin: row.temps_cuisson_min,
-                nbPortions: row.nb_portions,
-                isActive: row.is_active
-            };
-
-            const recetteWithImagePath = addImagePathToRecette(recette);
-            return recetteWithImagePath;
-        }
+        const recette = {
+            id: row.recette_id,
+            nom: row.nom,
+            descLong: row.desc_long,
+            descCourt: row.desc_court,
+            tempsPrepMin: row.temps_prep_min,
+            tempsCuissonMin: row.temps_cuisson_min,
+            nbPortions: row.nb_portions,
+            isActive: row.is_active
+        };
+        const recetteWithImagePath = addImagePathToRecette(recette);
+        return recetteWithImagePath;
     });
 };
 exports.getAllRecettes = getAllRecettes;
@@ -70,9 +67,10 @@ const getRecetteById = async (recetteId) =>
             tempsPrepMin: row.temps_prep_min,
             tempsCuissonMin: row.temps_cuisson_min,
             nbPortions: row.nb_portions,
-            isActive: row.is_active
+            isActive: row.is_active,
         };
 
+        console.log("recette avant le addimagepathtorecette : ", recette)
         return addImagePathToRecette(recette);
     }
     return undefined;

@@ -8,7 +8,10 @@ const passport = require('passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
 const crypto = require('crypto');
 
+
 const recetteRouter = require('./routes/recetteRouter');
+
+const userAccountQueries = require("./queries/UserAccountQueries");
 
 const app = express();
 
@@ -35,8 +38,9 @@ class BasicStrategyModified extends BasicStrategy {
 }
 
 
-passport.use(new BasicStrategyModified((username, password, cb) => {
-  userAccountQueries.getLoginByUserAccountEmail(username).then(login => {
+
+passport.use(new BasicStrategyModified((user_email, password, cb) => {
+  userAccountQueries.getLoginByUserAccountEmail(user_email).then(login => {
     if (!login || !login.isActive) {
       // L'utilisateur est introuvable ou inactif, on appelle le callback cb
       // avec false en 2e paramètre
@@ -103,52 +107,6 @@ app.get('/login',
     }
   }
 );
-
-
-// La création d'un nouveau compte ne requiert pas d'authentification
-app.post('/login',
-  (req, res, next) => {
-
-    if (!req.body.userAccountEmail || req.body.userAccountEmail === '') {
-      return next(new HttpError(400, 'Propriété userAccountEmail requise'));
-    }
-
-    if (!req.body.password || req.body.password === '') {
-      return next(new HttpError(400, 'Propriété password requise'));
-    }
-
-    const saltBuf = crypto.randomBytes(16);
-    const salt = saltBuf.toString("base64");
-
-    // Calcule le hash pour le mot de passe, la fonction fléchée en callback sera appellée
-    // avec le résultat dans le paramètre derivedKey
-    crypto.pbkdf2(req.body.password, salt, 100000, 64, "sha512", async (err, derivedKey) => {
-      if (err) {
-        return next(err);
-      }
-
-      const passwordHashBase64 = derivedKey.toString("base64");
-
-      try {
-        const userAccountWithPasswordHash = await userAccountQueries.createUserAccount(req.body.userAccountEmail,
-          passwordHashBase64, salt, req.body.userFullName);
-
-        const userDetails = {
-          userAccountEmail: userAccountWithPasswordHash.userAccountEmail,
-          userFullName: userAccountWithPasswordHash.userFullName,
-          isAdmin: userAccountWithPasswordHash.isAdmin,
-          isActive: userAccountWithPasswordHash.isActive
-        };
-
-        res.json(userDetails);
-      } catch (err) {
-        return next(err);
-      }
-
-    });
-  }
-);
-
 
 // *** GESTION DES ERREURS ***
 

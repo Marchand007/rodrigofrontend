@@ -2,6 +2,6 @@ module.exports = {
     user: 'backend_user',
     host: 'localhost',
     port: '5432',
-    database: 'paniervert',
+    database: 'recettesrodrigo',
     password: '12345'
 };

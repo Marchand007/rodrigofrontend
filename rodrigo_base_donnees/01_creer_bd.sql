@@ -1,1 +1,1 @@
-CREATE DATABASE rodrigo;
+CREATE DATABASE recettesrodrigo;

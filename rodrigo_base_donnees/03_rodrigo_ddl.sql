@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS Appreciation;
 
 
 CREATE TABLE Recette (
-	id text PRIMARY KEY,
+	recette_id text PRIMARY KEY,
 	nom text NOT NULL UNIQUE,
 	desc_long text NOT NULL,
 	desc_court text NOT NULL,
@@ -15,12 +15,13 @@ CREATE TABLE Recette (
 	temps_cuisson_min integer,
 	nb_portions integer,
 	image_content bytea,
+	image_content_type text
 	is_active boolean NOT NULL DEFAULT true
 );
 
 
 CREATE TABLE Utilisateur (
-	courriel text PRIMARY KEY,
+	courriel_utilisateur text PRIMARY KEY,
 	nom_complet text,
 	password_hash text,
 	password_salt text,
@@ -30,32 +31,37 @@ CREATE TABLE Utilisateur (
 
 
 CREATE TABLE Commentaire (
-	id serial PRIMARY KEY,
-	courriel_utilisateur text NOT NULL REFERENCES Utilisateur (courriel) ON DELETE CASCADE,
+	commentaire_id serial PRIMARY KEY,
+	courriel_utilisateur text NOT NULL REFERENCES Utilisateur (courriel) ON DELETE NO ACTION,
 	recette_id text NOT NULL REFERENCES Recette (id) ON DELETE CASCADE,
 	texte text NOT NULL,
-	date_publication date NOT NULL
+	date_publication timestamp with time zone NOT NULL,
+	UNIQUE (recette_id, user_account_id)
 );
 
 CREATE TABLE Appreciation (
-	id serial PRIMARY KEY,
-	courriel_utilisateur text NOT NULL REFERENCES Utilisateur (courriel) ON DELETE CASCADE,
+	appreciation_id serial PRIMARY KEY,
+	courriel_utilisateur text NOT NULL REFERENCES Utilisateur (courriel) ON DELETE NO ACTION,
 	recette_id text NOT NULL REFERENCES Recette (id) ON DELETE CASCADE,
-	note integer NOT NULL
+	note integer NOT NULL,
+	UNIQUE (recette_id, user_account_id)
 );
 
 
 CREATE TABLE Ingredient (
-	id serial PRIMARY KEY,
+	ingredient_id serial PRIMARY KEY,
 	recette_id text NOT NULL REFERENCES Recette (id) ON DELETE CASCADE,
 	quantite decimal,
 	unite_mesure text,
-	nom text NOT NULL
+	nom text NOT NULL,
+	ordre integer NOT NULL,
+	UNIQUE (recette_id, ordre)
 );
 
 CREATE TABLE Etape (
-	id serial PRIMARY KEY,
+	etape_id serial PRIMARY KEY,
 	recette_id text NOT NULL REFERENCES Recette (id) ON DELETE CASCADE,
 	ordre integer NOT NULL,
-	description text NOT NULL
+	description text NOT NULL,
+	UNIQUE (recette_id, ordre)
 );

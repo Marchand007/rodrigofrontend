@@ -62,10 +62,6 @@ const getRecetteById = async (recetteId) =>
     const row = result.rows[0];
     if (row)
     {
-        if (!row.is_active)
-        {
-            throw new Error("Impossible de charger cette recette car elle est supprimée");
-        }
         const recette = {
             id: row.recette_id,
             nom: row.nom,
@@ -176,7 +172,7 @@ const updateRecetteImage = async (recetteId, imageBuffer, imageContentType) =>
 
     if (result.rowCount === 0)
     {
-        throw new Error("Erreur lors de la mise-à-jour de l'image");
+        throw new Error("Erreur lors de la mi   se-à-jour de l'image");
     }
 
     return getRecetteImageContent(recetteId);

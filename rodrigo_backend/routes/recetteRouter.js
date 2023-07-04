@@ -35,6 +35,10 @@ router.get('/:id', (req, res, next) =>
     {
         if (recette)
         {
+            if (!recette.isActive)
+            {
+                return next(new HttpError(404, `Impossible de charger cette recette car elle est supprimée`));
+            }
             res.json(recette);
         } else
         {
@@ -184,7 +188,7 @@ router.delete('/:id',
 
         if (!user || !user.isAdmin)
         {
-            return next(HttpError(403, "Droit administrateur requis"));
+            return next(new HttpError(403, "Droit administrateur requis"));
         }
 
         const id = req.params.id;
@@ -192,7 +196,6 @@ router.delete('/:id',
         {
             return next(new HttpError(400, 'Le paramètre id est requis'));
         }
-if (req.hide)
         recetteQueries.hideRecette(id).then(result =>
         {
             if (!result)

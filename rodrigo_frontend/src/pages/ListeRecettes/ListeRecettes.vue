@@ -1,6 +1,6 @@
 <template>
     <v-sheet class="ma-2">
-        <h2 class="text-h4">Liste des recette</h2>
+        <h2 class="text-h4">Liste des recettes</h2>
         <ResumeRecette v-if="!loading" v-for="recette in recettes" :key="recette.id" :id="recette.id"
             :nom="recette.nom" :descCourt="recette.descCourt" :image="recette.image" />
     </v-sheet>
@@ -12,19 +12,19 @@ import { fetchRecettes } from '../../RecetteService';
 
 export default {
     components: {
-        ItemCatalogue: ItemCatalogue
+        ResumeRecette: ResumeRecette
     },
     data() {
         return {
-            products: [],
+            recettes: [],
             loading: true,
             loadError: false
         };
     },
     mounted() {
-        fetchProducts().then(products => {
-            this.products = products;
-            this.loading = false;
+        fetchRecettes().then(recettes => {
+            this.recettes = recettes;
+            this.loading = true;
             this.loadError = false;
         }).catch(err => {
             console.error(err);

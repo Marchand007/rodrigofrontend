@@ -6,6 +6,22 @@ const HttpError = require("../HttpError");
 
 const commentQueries = require("../queries/CommentQueries");
 
+router.get('/:id', (req,res,next) => {
+    const recetteId = req.params.id;
+    console.log("recetteId :", recetteId);
+    if (!recetteId || recetteId === '') {
+        return next(new HttpError(400, 'Le champ recetteId est requis'));
+    }
+    commentQueries.getCommentByRecetteId(recetteId).then(comment =>{
+        if(comment){
+            res.json(comment);
+        }
+
+    }).catch(err => {
+        return next(err);
+    });
+});
+
 router.post('/:id',
     passport.authenticate('basic', { session: false }),
     (req, res, next) => 
@@ -39,3 +55,5 @@ router.post('/:id',
             next(err);
         });
     });
+
+    module.exports = router;

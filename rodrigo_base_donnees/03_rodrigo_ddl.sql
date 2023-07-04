@@ -15,7 +15,7 @@ CREATE TABLE Recette (
 	temps_cuisson_min integer,
 	nb_portions integer,
 	image_content bytea,
-	image_content_type text
+	image_content_type text,
 	is_active boolean NOT NULL DEFAULT true
 );
 
@@ -32,25 +32,25 @@ CREATE TABLE Utilisateur (
 
 CREATE TABLE Commentaire (
 	commentaire_id serial PRIMARY KEY,
-	courriel_utilisateur text NOT NULL REFERENCES Utilisateur (courriel) ON DELETE NO ACTION,
-	recette_id text NOT NULL REFERENCES Recette (id) ON DELETE CASCADE,
+	courriel_utilisateur text NOT NULL REFERENCES Utilisateur (courriel_utilisateur) ON DELETE NO ACTION,
+	recette_id text NOT NULL REFERENCES Recette (recette_id) ON DELETE CASCADE,
 	texte text NOT NULL,
 	date_publication timestamp with time zone NOT NULL,
-	UNIQUE (recette_id, user_account_id)
+	UNIQUE (recette_id, courriel_utilisateur)
 );
 
 CREATE TABLE Appreciation (
 	appreciation_id serial PRIMARY KEY,
-	courriel_utilisateur text NOT NULL REFERENCES Utilisateur (courriel) ON DELETE NO ACTION,
-	recette_id text NOT NULL REFERENCES Recette (id) ON DELETE CASCADE,
+	courriel_utilisateur text NOT NULL REFERENCES Utilisateur (courriel_utilisateur) ON DELETE NO ACTION,
+	recette_id text NOT NULL REFERENCES Recette (recette_id) ON DELETE CASCADE,
 	note integer NOT NULL,
-	UNIQUE (recette_id, user_account_id)
+	UNIQUE (recette_id, courriel_utilisateur)
 );
 
 
 CREATE TABLE Ingredient (
 	ingredient_id serial PRIMARY KEY,
-	recette_id text NOT NULL REFERENCES Recette (id) ON DELETE CASCADE,
+	recette_id text NOT NULL REFERENCES Recette (recette_id) ON DELETE CASCADE,
 	quantite decimal,
 	unite_mesure text,
 	nom text NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE Ingredient (
 
 CREATE TABLE Etape (
 	etape_id serial PRIMARY KEY,
-	recette_id text NOT NULL REFERENCES Recette (id) ON DELETE CASCADE,
+	recette_id text NOT NULL REFERENCES Recette (recette_id) ON DELETE CASCADE,
 	ordre integer NOT NULL,
 	description text NOT NULL,
 	UNIQUE (recette_id, ordre)

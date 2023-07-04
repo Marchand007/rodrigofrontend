@@ -23,7 +23,7 @@ async function createServiceError(response) {
 const convertToRecette = jsonRecette => {
     return {
         id: jsonRecette.id,
-        nom: jsonRecette.name,
+        nom: jsonRecette.nom,
         descCourt: jsonRecette.descCourt,
         descLong: jsonRecette.descLong,
         image: jsonRecette.image,
@@ -39,12 +39,12 @@ const convertToRecette = jsonRecette => {
  * 
  * @returns Promesse permettant d'obtenir la liste des produits
  */
-export async function fetchProducts() {
-    const response = await fetch('/api/products');
+export async function fetchRecettes() {
+    const response = await fetch('/api/recettes');
 
     if (response.ok) {
         const respJson = await response.json();
-        return respJson.map(p => convertToProduct(p));
+        return respJson.map(r => convertToRecette(r));
     } else {
         throw await createServiceError(response);
     }
@@ -53,44 +53,44 @@ export async function fetchProducts() {
 /**
  * Récupère depuis l'API back-end un produit individuel du catalogue
  * 
- * @param {String} productId L'identifiant du produit à récupérer
+ * @param {String} recetteId L'identifiant du produit à récupérer
  * @returns Promesse permettant d'obtenir le produit demandé
  */
-export async function fetchProduct(productId) {
-    const response = await fetch(`/api/products/${productId}`);
+export async function fetchRecette(recetteId) {
+    const response = await fetch(`/api/recettes/${recetteId}`);
 
     if (response.ok) {
-        return convertToProduct(await response.json());
+        return convertToRecette(await response.json());
     } else {
         throw await createServiceError(response);
     }
 };
 
-export async function updateProduct(product) {
-    const response = await fetch(`/api/products/${product.id}`, {
+export async function updateRecette(recette) {
+    const response = await fetch(`/api/recettes/${recette.id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
             ...session.getAuthHeaders()
         },
-        body: JSON.stringify(product)
+        body: JSON.stringify(recette)
     });
 
     if (response.ok) {
-        return convertToProduct(await response.json());
+        return convertToRecette(await response.json());
     } else {
         throw await createServiceError(response);
     }
 }
 
-export async function createProduct(product) {
-    const response = await fetch(`/api/products`, {
+export async function createRecette(recette) {
+    const response = await fetch(`/api/recettes`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             ...session.getAuthHeaders()
         },
-        body: JSON.stringify(product)
+        body: JSON.stringify(recette)
     });
 
     if (response.ok) {
@@ -101,8 +101,8 @@ export async function createProduct(product) {
 }
 
 
-export async function updateProductImage(productId, formData) {
-    const response = await fetch(`/api/products/${productId}/image`, {
+export async function updateRecetteImage(recetteId, formData) {
+    const response = await fetch(`/api/recettes/${recetteId}/image`, {
         method: "POST",
         headers: {
             ...session.getAuthHeaders()

@@ -8,6 +8,9 @@ const passport = require('passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
 const crypto = require('crypto');
 
+
+const recetteRouter = require('./routes/recetteRouter');
+
 const userAccountQueries = require("./queries/UserAccountQueries");
 
 const app = express();
@@ -35,18 +38,7 @@ class BasicStrategyModified extends BasicStrategy {
 }
 
 
-// ** Exercice 1.1 **
-// Définition de la stratégie d'authentification avec Passport.js
-//
-// Vous devez mettre en place la statégie d'authentification Basic Auth pour
-// la librairie Passport.js. Servez-vous de la classe BasicStrategyModified définie
-// ci-haut. Tous les imports de modules (avec require(...)) sont déjà faits plus haut.
-// Vous pouvez utiliser la fonction getLoginByUserAccountId() dans le module UserAccountQueries.js
-// pour récupérer les informations d'un compte utilisateur selon l'identifiant passé dans le
-// paramètre username. Assurez-vous de refuser l'authentification si la propriété isActive
-// du compte utilisateur n'a pas la valeur true! Les hash et salt dans la BD sont encodés
-// en base64. La fonction de hachage cryptographique employée est sha512, avec 100000 itérations.
-// Référez-vous au app.js de l'exemple 1 du cours 19 pour voir la marche à suivre.
+
 passport.use(new BasicStrategyModified((user_email, password, cb) => {
   userAccountQueries.getLoginByUserAccountEmail(user_email).then(login => {
     if (!login || !login.isActive) {
@@ -90,30 +82,8 @@ passport.use(new BasicStrategyModified((user_email, password, cb) => {
 }));
 
 
-// ** Exercice 1.2 **
-// Route pour faire une authentification initiale et obtenir les
-// informations du compte utilisateur.
-//
-// Il s'agit de fournir une méthode HTTP GET avec le chemin "/login" pour
-// laquelle l'authentification est obligatoire. L'identifiant et le mot de passe
-// seront fournis dans les en-têtes de la requête HTTP selon la méthode
-// d'authentification Basic Auth. La stratégie pour Passport.js mise en place
-// à l'exercice 1.1 devrait gérer cela, il suffit d'appeler correctement la fonction
-// middleware passport.authenticate(...) pour la route afin que l'accès à celle-ci
-// soit sécurisée. La méthode de route devrait ensuite avoir accès (via la propriété
-// req.user) à l'objet du compte utilisateur défini et retourné depuis la stratégie
-// d'authentification.
-//
-// La réponse en format JSON doit contenir les détails du compte utilisateur, soit
-// les propriétés suivantes de l'objet req.user : userAccountId, userFullName,
-// isAdmin et isActive. On omet les propriétés passwordHash et passwordSalt car celles-ci
-// sont inutiles pour le front-end et leur interception pourrait accroître les risques
-// liés à la sécurité.
-//
-// Référez-vous à la méthode de route /login définie dans app.js de l'exemple du cours 19.
-// Une fois cette route complétée, vous pourrez tester celle-ci grâce à un client HTTP
-// comme Insomnia en activant l'authentification Basic et en entrant les informations
-// d'un compte utilisateur (p.ex. josbleau).
+app.use('/recettes', recetteRouter);
+
 app.get('/login',
   passport.authenticate('basic', { session: false }),
   (req, res, next) => {

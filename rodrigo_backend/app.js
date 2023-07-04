@@ -8,7 +8,7 @@ const passport = require('passport');
 const BasicStrategy = require('passport-http').BasicStrategy;
 const crypto = require('crypto');
 
-
+const userAccountQueries = require("./queries/UserAccountQueries");
 
 const app = express();
 
@@ -47,8 +47,8 @@ class BasicStrategyModified extends BasicStrategy {
 // du compte utilisateur n'a pas la valeur true! Les hash et salt dans la BD sont encodés
 // en base64. La fonction de hachage cryptographique employée est sha512, avec 100000 itérations.
 // Référez-vous au app.js de l'exemple 1 du cours 19 pour voir la marche à suivre.
-passport.use(new BasicStrategyModified((username, password, cb) => {
-  userAccountQueries.getLoginByUserAccountId(username).then(login => {
+passport.use(new BasicStrategyModified((user_email, password, cb) => {
+  userAccountQueries.getLoginByUserAccountEmail(user_email).then(login => {
     if (!login || !login.isActive) {
       // L'utilisateur est introuvable ou inactif, on appelle le callback cb
       // avec false en 2e paramètre
@@ -125,7 +125,7 @@ app.get('/login',
       // On crée un nouvel objet pour la réponse en JSON, afin de ne pas
       // retourner le hash et salt du mot de passe:
       const userDetails = {
-        userAccountId: req.user.userAccountId,
+        userAccountEmail: req.user.userAccountEmail,
         userFullName: req.user.userFullName,
         isAdmin: req.user.isAdmin,
         isActive: req.user.isActive
@@ -137,52 +137,6 @@ app.get('/login',
     }
   }
 );
-
-
-// La création d'un nouveau compte ne requiert pas d'authentification
-app.post('/login',
-  (req, res, next) => {
-
-    if (!req.body.userAccountId || req.body.userAccountId === '') {
-      return next(new HttpError(400, 'Propriété userAccountId requise'));
-    }
-
-    if (!req.body.password || req.body.password === '') {
-      return next(new HttpError(400, 'Propriété password requise'));
-    }
-
-    const saltBuf = crypto.randomBytes(16);
-    const salt = saltBuf.toString("base64");
-
-    // Calcule le hash pour le mot de passe, la fonction fléchée en callback sera appellée
-    // avec le résultat dans le paramètre derivedKey
-    crypto.pbkdf2(req.body.password, salt, 100000, 64, "sha512", async (err, derivedKey) => {
-      if (err) {
-        return next(err);
-      }
-
-      const passwordHashBase64 = derivedKey.toString("base64");
-
-      try {
-        const userAccountWithPasswordHash = await userAccountQueries.createUserAccount(req.body.userAccountId,
-          passwordHashBase64, salt, req.body.userFullName);
-
-        const userDetails = {
-          userAccountId: userAccountWithPasswordHash.userAccountId,
-          userFullName: userAccountWithPasswordHash.userFullName,
-          isAdmin: userAccountWithPasswordHash.isAdmin,
-          isActive: userAccountWithPasswordHash.isActive
-        };
-
-        res.json(userDetails);
-      } catch (err) {
-        return next(err);
-      }
-
-    });
-  }
-);
-
 
 // *** GESTION DES ERREURS ***
 

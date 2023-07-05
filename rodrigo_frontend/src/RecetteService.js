@@ -127,13 +127,22 @@ export async function fetchEtapesByRecetteId(recetteId) {
     }
 }
 
+export async function fetchIngredientsByRecetteId(recetteId) {
+    const response = await fetch(`/api/ingredients/${recetteId}`);
+
+    if (response.ok) {
+        return await response.json();
+    } else {
+        throw await createServiceError(response);
+    }
+}
+
 
 
 export async function fetchCommentairesByRecetteId(recetteId) {
     const response = await fetch(`/api/comments/${recetteId}`);
 
     if (response.ok) {
-        console.log("reponse json comemntaire pour une recette : ", response.json());
         return await response.json();
     } else {
         throw await createServiceError(response);

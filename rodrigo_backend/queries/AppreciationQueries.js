@@ -14,10 +14,31 @@ const getAppreciationByRecetteId = async (recetteId) =>
     {
         const appreciation = {
             moyenneAppreciation: row.avg,
-            nombreAppreciation: row.count,
+            nombreAppreciation: row.count
         };
         return appreciation;
 
     };
+};
+
+exports.getAppreciationByRecetteId = getAppreciationByRecetteId;
+
+const getUserAppreciationByRecetteId = async(courriel_utilisateur, recetteId) => {
+    const result = await pool.query(
+        `SELECT COUNT(courriel_utilisateur)
+        FROM Appreciation
+        WHERE courriel_utilisateur = $1 AND recette_id = $2`,
+        [courriel_utilisateur, recetteId]
+    );
 }
-    exports.getAppreciationByRecetteId = getAppreciationByRecetteId;
+exports.getUserAppreciationByRecetteId = getUserAppreciationByRecetteId;
+
+const insertAppreciationToRecipe = async (appreciation) => {
+    const result = await pool.query(
+        `INSERT INTO appreciation(courriel_utilisateur, recette_id, note)
+        VALUES ($1, $2, $3)`,
+        [appreciation.courrielUtilisateur, appreciation.recetteId, appreciation.note]
+    );
+};
+
+exports.insertAppreciationToRecipe = insertAppreciationToRecipe;

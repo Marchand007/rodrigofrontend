@@ -1,4 +1,5 @@
 const pool = require('./DBPool');
+const { DateTime } = require('luxon');
 
 const getCommentByRecetteId = async (recetteId) => {
     const result = await pool.query(
@@ -22,13 +23,26 @@ const getCommentByRecetteId = async (recetteId) => {
 
 exports.getCommentByRecetteId = getCommentByRecetteId;
 
+const getUserCommentByRecetteId = async(courriel_utilisateur, recetteId) => {
+    const result = await pool.query(
+        `SELECT COUNT(courriel_utilisateur)
+        FROM commentaire
+        WHERE courriel_utilisateur = $1 AND recette_id = $2`,
+        [courriel_utilisateur, recetteId]
+    );
+};
 
-const insertCommentToRecipe = async (recetteId, comment) => {
-    const commentDateTime = DateTime.now().toString();
+exports.getUserCommentByRecetteId = getUserCommentByRecetteId;
+
+
+const insertCommentToRecipe = async (comment) => {
+    
+    const commentDateTime = DateTime.now();
+
     const result = await pool.query(
         `INSERT INTO commentaire (courriel_utilisateur, recette_id, texte, date_publication)
         VALUES ($1, $2, $3, $4)`,
-        [comment.courriel_utilisateur, recetteId, comment.texte, commentDateTime]
+        [comment.courrielUtilisateur, comment.recetteId, comment.texte, commentDateTime]
     );
 };
 

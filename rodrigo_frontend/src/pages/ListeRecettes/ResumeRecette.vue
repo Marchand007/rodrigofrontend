@@ -10,7 +10,7 @@
                     <div class="text-body-1">{{ descCourt }}</div>
                 </v-card-text>
             </v-sheet>
-            <v-sheet>
+            <v-sheet v-if="session.user && session.user.isAdmin">
                 <v-card-actions>
                     <v-btn>Editer</v-btn>
                 </v-card-actions>

@@ -27,7 +27,7 @@ const router = createRouter({
     routes: [
         { path: '', component:  ListeRecettes},
         { path: '/recettes/:id', component: PageDetailRecette, props: true },
-        { path: '/admin/new-recipe', component: NewRecette },
+        { path: '/admin/new-recipe', component: NewRecette},
         { path: '/login', component: FormulaireLogin }
     ]
 });

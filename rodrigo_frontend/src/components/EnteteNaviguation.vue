@@ -15,7 +15,7 @@
 
         <div v-if="session.user">
             <v-tab>
-                {{ session.user.nomComplet }}
+                Bienvenue, {{ session.user.nomComplet }}
             </v-tab>
             <v-tab @click="disconnect()">
                 DECONNEXION

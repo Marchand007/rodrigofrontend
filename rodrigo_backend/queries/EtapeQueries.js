@@ -1,7 +1,5 @@
 const pool = require('./DBPool');
 
-
-
 const getEtapesByRecetteId = async (recetteId) =>
 {
     const result = await pool.query(

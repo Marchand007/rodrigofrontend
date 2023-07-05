@@ -17,6 +17,8 @@ const etapeRouter = require('./routes/EtapeRouter');
 
 const ingredientRouter = require('./routes/IngredientRouter');
 
+const appreciationRouter = require('./routes/AppreciationRouter');
+
 const userAccountQueries = require("./queries/UserAccountQueries");
 
 const app = express();
@@ -95,6 +97,7 @@ app.use('/comments', commentRouter);
 app.use('/etapes', etapeRouter);
 
 app.use('/ingredients', ingredientRouter);
+app.use('/appreciation', appreciationRouter);
 
 
 app.get('/login',

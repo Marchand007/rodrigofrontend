@@ -34,6 +34,15 @@ const convertToRecette = jsonRecette => {
     };
 };
 
+const convertToCommentaire = jsonCommentaire => {
+    return {
+        courrielUtilisateur: jsonCommentaire.courrielUtilisateur,
+        recetteId: jsonCommentaire.recetteId,
+        texte: jsonCommentaire.texte,
+        datePublication: jsonCommentaire.datePublication
+    };
+};
+
 /**
  * Récupère depuis l'API back-end la liste de tous les produits du catalogue
  * 
@@ -137,6 +146,7 @@ export async function fetchIngredientsByRecetteId(recetteId) {
     }
 }
 
+
 export async function fetchAppreciationByRecetteId(recetteId) {
     const response = await fetch(`/api/appreciation/${recetteId}`);
 
@@ -147,14 +157,28 @@ export async function fetchAppreciationByRecetteId(recetteId) {
     }
 }
 
-
-
-
 export async function fetchCommentairesByRecetteId(recetteId) {
     const response = await fetch(`/api/comments/${recetteId}`);
 
     if (response.ok) {
         return await response.json();
+    } else {
+        throw await createServiceError(response);
+    }
+}
+
+export async function addCommentaireToRecipeId(commentaire ,recetteId){
+    const response = await fetch(`/api/comments/${recetteId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify(commentaire)
+    });
+
+    if (response.ok) {
+        return convertToCommentaire(await response.json());
     } else {
         throw await createServiceError(response);
     }

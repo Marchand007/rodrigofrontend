@@ -1,5 +1,5 @@
 <template>
- <h2 class="d-flex justify-center">Les recette de</h2>
+ <h2 class="d-flex justify-center">Les recettes de</h2>
     <v-flex class="d-flex justify-center">
        
   <v-img

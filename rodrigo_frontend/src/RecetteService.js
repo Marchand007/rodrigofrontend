@@ -146,6 +146,17 @@ export async function fetchIngredientsByRecetteId(recetteId) {
     }
 }
 
+
+export async function fetchAppreciationByRecetteId(recetteId) {
+    const response = await fetch(`/api/appreciation/${recetteId}`);
+
+    if (response.ok) {
+        return await response.json();
+    } else {
+        throw await createServiceError(response);
+    }
+}
+
 export async function fetchCommentairesByRecetteId(recetteId) {
     const response = await fetch(`/api/comments/${recetteId}`);
 

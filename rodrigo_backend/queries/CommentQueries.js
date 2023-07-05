@@ -2,14 +2,16 @@ const pool = require('./DBPool');
 
 const getCommentByRecetteId = async (recetteId) => {
     const result = await pool.query(
-        `SELECT courriel_utilisateur, texte, date_publication
-        FROM commentaire
+        `SELECT C.courriel_utilisateur, C.texte, C.date_publication, U.nom_complet
+        FROM commentaire as C
+        JOIN Utilisateur as U ON U.courriel_utilisateur = C.courriel_utilisateur
         WHERE recette_id = $1
         ORDER BY date_publication ASC`,
         [recetteId]
     );
     return result.rows.map(row => {
         const commentaire = {
+            nomUtilisateur: row.nom_complet,
             courrielUtilisateur: row.courriel_utilisateur,
             commentUtilisateur: row.texte,
             commentDatePublication: row.date_publication

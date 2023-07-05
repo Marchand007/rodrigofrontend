@@ -45,8 +45,11 @@
                                     <h2>Ingredients</h2>
                                 </v-list-subheader>
                                 <v-list-item v-for="(ingredient, i) in this.ingredients" :key="i">
-                                    <v-list-item-title
-                                        v-text="ingredient.quantite + ingredient.uniteMesure + ' ' + ingredient.nomIngredient"></v-list-item-title>
+                                    <span><strong>{{ ingredient.nom }}</strong></span>
+                                    <span> (</span>
+                                    <span v-if="ingredient.quantite">{{ ingredient.quantite}}</span>
+                                    <span v-if="ingredient.uniteMesure">{{ ingredient.uniteMesure }}</span>
+                                    <span>)</span>
                                 </v-list-item>
                             </v-list>
                     </v-col>
@@ -57,6 +60,7 @@
                                     <h2>Etapes</h2>
                                 </v-list-subheader>
                                 <v-list-item v-for="(etape, i) in this.etapes" :key="i">
+
                                     <v-list-item-title v-text="etape.ordre + ' - ' + etape.description"></v-list-item-title>
                                 </v-list-item>
                             </v-list>
@@ -79,7 +83,7 @@
 
 <script>
 import { addApiPrefixToPath } from '../../../src/api_utils.js';
-import { fetchEtapesByRecetteId, fetchRecette } from '../../RecetteService';
+import { fetchRecette, fetchEtapesByRecetteId, fetchIngredientsByRecetteId } from '../../RecetteService';
 import { fetchCommentairesByRecetteId } from '../../RecetteService';
 
 export default {
@@ -93,36 +97,9 @@ export default {
     {
         return {
             recette: {},
-            ingredients: [
-                {
-                    quantite: 3,
-                    uniteMesure: "g",
-                    nomIngredient: "Poudre de piment fort"
-                },
-                {
-                    quantite: 8,
-                    uniteMesure: null,
-                    nomIngredient: "tomates"
-                }
-            ],
+            ingredients: [],
             etapes: [],
-            commentaires: [
-                {
-                    courrielUtilisateur: "josbleau@hotmail.com",
-                    commentUtilisateur: "vraiment vraiment bon",
-                    commentDatePublication: Date.now()
-                },
-                {
-                    courrielUtilisateur: "admin@admin.com",
-                    commentUtilisateur: "yes cest ma recette",
-                    commentDatePublication: Date.now()
-                },
-                {
-                    courrielUtilisateur: "lautrela@hotmail.com",
-                    commentUtilisateur: "degeuxxxxx",
-                    commentDatePublication: Date.now()
-                }
-            ],
+            commentaires: [],
             moyenneAppreciation: 0.00,
             loading: true,
             loadError: false
@@ -146,15 +123,21 @@ export default {
         }).catch(err =>
         {
             console.error(err);
-        })
-        /* fetchCommentairesByRecetteId(this.id).then(commentaires =>
+        }),
+        fetchIngredientsByRecetteId(this.id).then(ingredients => {
+            this.ingredients = ingredients;
+        }).catch(err =>
         {
-            this.recette.commentaires = commentaires;
+            console.error(err);
+        }),
+        fetchCommentairesByRecetteId(this.id).then(commentaires =>
+        {
+            this.commentaires = commentaires;
         }).catch(err =>
         {
             console.error(err);
         })
-        */
+    
     },
     computed: {
         recetteDetailUrl()

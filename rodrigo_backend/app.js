@@ -15,6 +15,7 @@ const commentRouter = require('./routes/commentRouter');
 
 const etapeRouter = require('./routes/EtapeRouter');
 
+const ingredientRouter = require('./routes/IngredientRouter');
 
 const userAccountQueries = require("./queries/UserAccountQueries");
 
@@ -92,6 +93,8 @@ app.use('/recettes', recetteRouter);
 app.use('/comments', commentRouter);
 
 app.use('/etapes', etapeRouter);
+
+app.use('/ingredients', ingredientRouter);
 
 
 app.get('/login',

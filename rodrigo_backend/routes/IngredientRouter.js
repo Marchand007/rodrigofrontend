@@ -4,23 +4,23 @@ const passport = require('passport');
 
 const HttpError = require("../HttpError");
 
-const etapeQueries = require("../queries/EtapeQueries");
-
+const ingredientQueries = require("../queries/IngredientQueries");
 
 router.get('/:id', (req, res, next) =>
 {
     const id = req.params.id;
     console.log("id:", id);
-    if (id == null || id === "") {
+    if (id == null || id === "")
+    {
         return next(new HttpError(400, `Le parametre Id est requis`));
     }
-    etapeQueries.getEtapesByRecetteId(id).then(etapes =>
+    ingredientQueries.getIngredientsByRecetteId(id).then(ingredients =>
     {
-        
-        if (etapes)
+
+        if (ingredients)
         {
-           
-            res.json(etapes);
+            console.log("liste ingredient backened avant envoie : ", ingredients);
+            res.json(ingredients);
         } else
         {
             return next(new HttpError(404, `Recette ${id} introuvable`));

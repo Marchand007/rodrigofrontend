@@ -147,6 +147,7 @@ export async function fetchIngredientsByRecetteId(recetteId) {
 }
 
 
+
 export async function fetchAppreciationByRecetteId(recetteId) {
     const response = await fetch(`/api/appreciation/${recetteId}`);
 
@@ -156,6 +157,25 @@ export async function fetchAppreciationByRecetteId(recetteId) {
         throw await createServiceError(response);
     }
 }
+
+export async function addAppreciationToRecipeId(appreciation){
+    const response = await fetch(`/api/appreciation`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+        body: JSON.stringify(appreciation)
+    });
+
+    if (response.ok) {
+        return response.json();
+    } else {
+        throw await createServiceError(response);
+    }
+}
+
+
 
 export async function fetchCommentairesByRecetteId(recetteId) {
     const response = await fetch(`/api/comments/${recetteId}`);
@@ -167,8 +187,8 @@ export async function fetchCommentairesByRecetteId(recetteId) {
     }
 }
 
-export async function addCommentaireToRecipeId(commentaire ,recetteId){
-    const response = await fetch(`/api/comments/${recetteId}`, {
+export async function addCommentaireToRecipeId(commentaire){
+    const response = await fetch(`/api/comments`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -178,7 +198,7 @@ export async function addCommentaireToRecipeId(commentaire ,recetteId){
     });
 
     if (response.ok) {
-        return convertToCommentaire(await response.json());
+        return response.json();
     } else {
         throw await createServiceError(response);
     }

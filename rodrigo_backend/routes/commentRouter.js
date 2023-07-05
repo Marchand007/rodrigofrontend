@@ -22,33 +22,35 @@ router.get('/:id', (req,res,next) => {
     });
 });
 
-router.post('/:id',
+router.post('/',
     passport.authenticate('basic', { session: false }),
     (req, res, next) => 
     {
-        const recetteId = req.params.id;
-        if (recetteId || recetteId === '') {
+        console.log("TEST", req.body);
+        const recetteId = req.body.recetteId;
+        if (recetteId == "") {
             return next(new HttpError(400, 'Le champ recetteId est requis'));
         }
 
         const user = req.user;
         if (!user) {
-            return next(new HttpError(403, "Vous avoir un compte utilisateur pour publier un commentaire"));
+            return next(new HttpError(403, "Vous devez avoir un compte utilisateur pour publier un commentaire"));
         }
 
-        recetteId.getCommentByRecetteId(id).then(comment => {
+        commentQueries.getUserCommentByRecetteId(user.courrielUtilisateur, recetteId).then(result => {
 
-            if(comment.courrielUtilisateur === user.courrielUtilisateur){
+            if(result == 1){
                 return next(new HttpError(400, `${user.courrielUtilisateur} a déjà fait une publication sur la recette ${recetteId}`));
             }
+
             const nouvCommentaire = {
-                courrielUtilisateur: "" + req.body.courriel_utilisateur,
-                recetteId: "" + id,
+                courrielUtilisateur: "" + user.courrielUtilisateur,
+                recetteId: "" + recetteId,
                 texte: "" + req.body.texte,
                 datePublication: "" + req.body.date_publication
             };
 
-            return commentQueries.insertCommentToRecipe(id, nouvCommentaire);
+            return commentQueries.insertCommentToRecipe(nouvCommentaire);
         }).then(result => {
             res.json(result);
         }).catch(err => {

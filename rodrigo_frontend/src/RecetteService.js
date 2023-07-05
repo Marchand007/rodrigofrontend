@@ -117,6 +117,16 @@ export async function updateRecetteImage(recetteId, formData) {
     }
 }
 
+export async function fetchEtapesByRecetteId(recetteId) {
+    const response = await fetch(`/api/etapes/${recetteId}`);
+
+    if (response.ok) {
+        return await response.json();
+    } else {
+        throw await createServiceError(response);
+    }
+}
+
 
 
 export async function fetchCommentairesByRecetteId(recetteId) {

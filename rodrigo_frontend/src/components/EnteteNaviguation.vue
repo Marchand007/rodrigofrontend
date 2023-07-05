@@ -1,6 +1,6 @@
 <template>
     <v-app-bar app prominent dense dark :elevation="4">
-        <v-app-bar-nav-icon>
+        <v-app-bar-nav-icon @click="this.$router.push('/')">
             <v-img width="60" aspect-ratio="0"
                 src="http://logos.textgiraffe.com/logos/logo-name/Rodrigo-designstyle-friday-m.png" />
         </v-app-bar-nav-icon>
@@ -12,15 +12,17 @@
         <router-link class="routerlink" to="/"><v-tab>Les recettes</v-tab></router-link>
         <router-link class="routerlink" to="/admin/new-recipe"><v-tab v-if="session.user && session.user.isAdmin">Ajouter une
                 recette</v-tab></router-link>
+
         <div v-if="session.user">
             <v-tab>
                 {{ session.user.nomComplet }}
             </v-tab>
-            <v-tab @click="session.disconnect()">
+            <v-tab @click="disconnect()">
                 DECONNEXION
             </v-tab>
         </div>
-        <div v-if="!session.user">
+
+        <div v-else>
             <router-link class="routerlink" to="/login">
                 <v-tab>
                     SE CONNECTER
@@ -45,6 +47,13 @@ export default {
             session: session
         };
     },
+    methods : {
+        disconnect() {
+            session.disconnect()
+            this.$router.push('/');
+        }
+    }
+    
 }
 </script>
 

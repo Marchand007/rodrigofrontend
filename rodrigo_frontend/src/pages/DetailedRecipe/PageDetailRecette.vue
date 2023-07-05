@@ -40,7 +40,7 @@
 
                 <v-row no-gutters>
                     <v-col cols="4">
-                            <v-list disabled>
+                            <v-list >
                                 <v-list-subheader>
                                     <h2>Ingredients</h2>
                                 </v-list-subheader>
@@ -52,7 +52,7 @@
                     </v-col>
 
                     <v-col cols="8">
-                            <v-list disabled>
+                            <v-list >
                                 <v-list-subheader>
                                     <h2>Etapes</h2>
                                 </v-list-subheader>
@@ -79,7 +79,7 @@
 
 <script>
 import { addApiPrefixToPath } from '../../../src/api_utils.js';
-import { fetchRecette } from '../../RecetteService';
+import { fetchEtapesByRecetteId, fetchRecette } from '../../RecetteService';
 import { fetchCommentairesByRecetteId } from '../../RecetteService';
 
 export default {
@@ -105,24 +105,7 @@ export default {
                     nomIngredient: "tomates"
                 }
             ],
-            etapes: [
-                {
-                    ordre: 1,
-                    description: "Partir le four a 375 degres"
-                },
-                {
-                    ordre: 2,
-                    description: "Ecraser les tomates dans un pot"
-                },
-                {
-                    ordre: 3,
-                    description: "Versez la poudre de piment fort aux tomates"
-                },
-                {
-                    ordre: 4,
-                    description: "Mettre au four 30 minutes"
-                }
-            ],
+            etapes: [],
             commentaires: [
                 {
                     courrielUtilisateur: "josbleau@hotmail.com",
@@ -140,7 +123,7 @@ export default {
                     commentDatePublication: Date.now()
                 }
             ],
-            moyenneAppreciation: 0,
+            moyenneAppreciation: 0.00,
             loading: true,
             loadError: false
         };
@@ -158,6 +141,12 @@ export default {
             this.loading = false;
             this.loadError = true;
         });
+        fetchEtapesByRecetteId(this.id).then(etapes => {
+            this.etapes = etapes;
+        }).catch(err =>
+        {
+            console.error(err);
+        })
         /* fetchCommentairesByRecetteId(this.id).then(commentaires =>
         {
             this.recette.commentaires = commentaires;

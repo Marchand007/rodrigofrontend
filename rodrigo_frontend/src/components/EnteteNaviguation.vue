@@ -1,5 +1,5 @@
 <template>
-    <v-app-bar app prominent dense dark :elevation="4">
+    <v-app-bar app prominent dense dark :elevation="4" >
         <v-app-bar-nav-icon @click="this.$router.push('/')">
             <v-img width="60" aspect-ratio="0"
                 src="http://logos.textgiraffe.com/logos/logo-name/Rodrigo-designstyle-friday-m.png" />

@@ -1,37 +1,109 @@
 <template>
     <div class="boxed-center">
         <h2>Creation d'une nouvelle recette</h2>
-        <v-sheet v-if="session.user && session.user.isAdmin" class="d-flex flex-4-1">
-            <v-sheet class="w-50 ma-4">
-                <v-form @submit.prevent="submitNewProduct" validate-on="submit lazy" ref="productform">
-                    <v-text-field v-model="recettetId" label="Identifiant unique de la recette (exemple : poulet_curry)"
-                        density="compact" :rules="[rules.required, rules.recetteIdUnique]"></v-text-field>
-                    <v-text-field v-model="recetteName" label="Nom du produit" density="compact"
-                        :rules="[rules.required]"></v-text-field>
+        <v-sheet v-if="session.user && session.user.isAdmin">
+            <v-form @submit.prevent="" validate-on="submit lazy" ref="recetteform">
+                <v-sheet class="boxed-center">
+                    <v-sheet-title>Informations de la recette</v-sheet-title>
                     <v-container>
                         <v-row>
-                            <v-col cols="3" sm="4">
+                            <v-col cols="1" sm="6">
+                                <v-text-field class="w-100 justify-center" v-model="recettetId"
+                                    label="Identifiant unique de la recette (exemple : poulet_curry)" density="compact"
+                                    :rules="[rules.required, rules.recetteIdUnique]"></v-text-field>
+                            </v-col>
+                            <v-col cols="1" sm="6">
+                                <v-text-field v-model="recetteName" label="Nom du produit" density="compact"
+                                    :rules="[rules.required]"></v-text-field>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                    <v-container>
+                        <v-row>
+                            <v-col cols="1" sm="4">
                                 <v-text-field class="mr-2" v-model="tempsPrepMin" label="Temps de preparation"
-                                    density="compact" type="number" step="1" :rules="[rules.required]"></v-text-field>
+                                    density="compact" type="number" min="0" step="1" :rules="[]"></v-text-field>
                             </v-col>
-                            <v-col cols="3" sm="4">
+                            <v-col cols="1" sm="4">
                                 <v-text-field v-model="tempsCuissMin" label="Temps de cuisson" density="compact"
-                                    type="number" step="1" :rules="[rules.required]"></v-text-field>
+                                    type="number" step="1" min="0" :rules="[]"></v-text-field>
                             </v-col>
-                            <v-col cols="3" sm="4">
+                            <v-col cols="1" sm="4">
                                 <v-text-field v-model="nbPortions" label="Nombre de portions" density="compact"
-                                    type="number" step="1" :rules="[rules.required]"></v-text-field>
+                                    type="number" step="1" min="0" :rules="[]"></v-text-field>
                             </v-col>
                         </v-row>
                     </v-container>
                     <v-text-field v-model="DescCourt" label="Description Courte" density="compact"
                         :rules="[rules.required]"></v-text-field>
-                    <v-textarea id="description" v-model="DescLong" label="Description longue" :rules="[]"
+                    <v-textarea id="description" v-model="DescLong" label="Description longue" :rules="[rules.required]"
                         auto-grow></v-textarea>
+                </v-sheet>
+                <v-sheet class="boxed-center">
+                    <v-sheet-title>Liste des ingredients</v-sheet-title>
+                    <v-form @submit.prevent="addIngredient" validate-on="submit" ref="ingredientAddForm">
 
-                    <v-btn type="submit">Ajouter</v-btn>
-                </v-form>
-            </v-sheet>
+                    <v-container v-for="(ingredient, i) in ingredients">
+                        <v-row>
+
+                            <span> {{ i + 1 }}</span>
+                            <v-text-field class="ml-2" v-model="ingredients[i].quantite" density="compact">
+                            </v-text-field>
+                            <v-text-field class="ml-2" v-model="ingredients[i].uniteMesure" density="compact">
+                            </v-text-field>
+                            <v-text-field class="ml-2" v-model="ingredients[i].nom" density="compact"
+                                :rules="[rules.required]">
+                            </v-text-field>
+
+                            <v-btn class="ml-10" @click="deleteIngredient(i)" size="small">Supprimer l'ingrédient</v-btn>
+                            <v-btn class="ml-10" @click="upIngredient(i)" size="small">Monter l'ingrédient</v-btn>
+                            <v-btn class="ml-10" @click="downIngredient(i)" size="small">Descendre l'ingrédient</v-btn>
+
+                        </v-row>
+                    </v-container>
+                    <v-container>
+                            <v-row>
+                                <v-btn type="submit" size="small">Ajouter l'ingrédient</v-btn>
+                                <v-text-field class="ml-2" label="Quantite" v-model="nouvQuantiteIngredient"
+                                    density="compact">
+                                </v-text-field>
+                                <v-text-field class="ml-2" label="Unite de mesure" v-model="nouvMesureIngredient"
+                                    density="compact">
+                                </v-text-field>
+                                <v-text-field class="ml-2" label="Nom du nouvel ingredient" v-model="nouvNomIngredient"
+                                    density="compact" :rules="[rules.required]">
+                                </v-text-field>
+                            </v-row>
+                        </v-container>
+                    </v-form>
+
+                </v-sheet>
+                <v-sheet class="boxed-center">
+                    <v-sheet-title class="ma-5">Liste des etapes</v-sheet-title>
+                    <v-form @submit.prevent="addEtape" validate-on="submit" ref="etapeAddForm">
+
+                    <v-container v-for="(etape, i) in etapes">
+                        <v-row>
+                            <span> {{ i + 1 }}</span>
+                            <v-text-field class="ml-2" v-model="etapes[i].description" density="compact">
+
+                            </v-text-field>
+                            <v-btn @click="deleteEtape(i)" size="small">Supprimer l'étape</v-btn>
+                            <v-btn @click="upEtape(i)" size="small">Monter l'étape</v-btn>
+                            <v-btn @click="downEtape(i)" size="small">Descendre l'étape</v-btn>
+                        </v-row>
+                    </v-container>
+                    <v-container>
+                            <v-row>
+                                <v-btn type="submit" size="small">Ajouter l'étape</v-btn>
+                                <v-text-field class="ml-2" label="Description de la nouvelle étape" v-model="nouvNomEtape"
+                                    density="compact" :rules="[rules.required]">
+                                </v-text-field>
+                            </v-row>
+                        </v-container>
+                    </v-form>
+                </v-sheet>
+            </v-form>
         </v-sheet>
         <v-sheet v-else class="ma-2">Vous n'avez pas les permissions pour voir cette page</v-sheet>
     </div>
@@ -64,8 +136,83 @@ export default {
                 required: value => !!value || "Le champ est requis",
                 productIdUnique: () => this.productIdUnique || "Cet identifiant est déjà utilisé, veuillez en enter un autre"
             },
+            nouvQuantiteIngredient: "",
+            nouvMesureIngredient: "",
+            nouvNomIngredient: "",
+            nouvNomEtape: ""
         };
     },
+    methods: {
+        addIngredient()
+        {
+            if (this.nouvNomIngredient == "")
+            {
+                alert("champs requis");
+                return;
+            }
+
+            const nouvIngredient = {
+                nom: this.nouvNomIngredient,
+                quantite: this.nouvQuantiteIngredient,
+                uniteMesure: this.nouvMesureIngredient,
+            }
+            this.ingredients.push(nouvIngredient);
+            this.nouvNomIngredient = "";
+            this.nouvQuantiteIngredient = "";
+            this.nouvMesureIngredient = "";
+        },
+        deleteIngredient(index)
+        {
+            this.ingredients.splice(index, 1);
+
+        },
+        upIngredient(index)
+        {
+            if (index > 0)
+            {
+                this.ingredients[index - 1] = this.ingredients.splice(index, 1, this.ingredients[index - 1])[0];
+            }
+        },
+        downIngredient(index)
+        {
+            if (index < this.ingredients.length - 1)
+            {
+                this.ingredients[index + 1] = this.ingredients.splice(index, 1, this.ingredients[index + 1])[0];
+            }
+        },
+        addEtape()
+        {
+            if (this.nouvNomEtape == "")
+            {
+                alert("champs requis");
+                return;
+            }
+
+            const nouvEtape = {
+                description: this.nouvNomEtape,
+            }
+            this.etapes.push(nouvEtape);
+            this.nouvNomEtape = "";
+        },
+        deleteEtape(index)
+        {
+            this.etapes.splice(index, 1);
+        },
+        upEtape(index)
+        {
+            if (index > 0)
+            {
+                this.etapes[index - 1] = this.etapes.splice(index, 1, this.etapes[index - 1])[0];
+            }
+        },
+        downEtape(index)
+        {
+            if (index < this.etapes.length - 1)
+            {
+                this.etapes[index + 1] = this.etapes.splice(index, 1, this.etapes[index + 1])[0];
+            }
+        },
+    }
 
 
 }

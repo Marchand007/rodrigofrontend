@@ -2,9 +2,7 @@
     <v-card class="ma-2">
         <v-sheet class="d-flex flex-no-wrap">
             <v-sheet class="w-25">
-                <router-link :to="recetteDetailUrl">
                     <v-img :src="imageSrc" max-height="5rem" />
-                </router-link>
             </v-sheet>
             <v-sheet>
                 <v-card-title><router-link :to="recetteDetailUrl">{{ nom }}</router-link></v-card-title>
@@ -14,8 +12,7 @@
             </v-sheet>
             <v-sheet>
                 <v-card-actions>
-                    <v-btn @click="cart.addToCart(id)" v-bind:disabled="cart.loading || !session.user">Ajouter au
-                        panier</v-btn>
+                    <v-btn>Editer</v-btn>
                 </v-card-actions>
             </v-sheet>
         </v-sheet>
@@ -40,8 +37,8 @@ export default {
         };
     },
 
-    computed: {
-        productDetailUrl()
+    computed: { 
+        recetteDetailUrl()
         {
             return "/recettes/" + this.id;
         },

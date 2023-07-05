@@ -12,7 +12,7 @@ const loadImages = async () => {
         const imageData = fs.readFileSync('./images/recettes/' + imageName);
 
         await pool.query(
-            `UPDATE recette SET image_content = $1, image_content_type = 'image/jpeg'
+            `UPDATE Recette SET image_content = $1, image_content_type = 'image/jpeg'
              WHERE recette_id = $2`,
             [imageData, recetteId]
         );

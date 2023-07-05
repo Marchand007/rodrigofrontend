@@ -11,8 +11,8 @@ const getLoginByUserAccountEmail = async(userAccountEmail, client) => {
     const row = result.rows[0];
     if(row){
         return {
-            userAccountEmail: row.courriel_utilisateur,
-            userFullName: row.nom_complet,
+            courrielUtilisateur: row.courriel_utilisateur,
+            nomComplet: row.nom_complet,
             passwordHash: row.password_hash,
             passwordSalt: row.password_salt,
             isActive: row.is_active,

@@ -116,3 +116,26 @@ export async function updateRecetteImage(recetteId, formData) {
         throw await createServiceError(response);
     }
 }
+
+export async function fetchEtapesByRecetteId(recetteId) {
+    const response = await fetch(`/api/etapes/${recetteId}`);
+
+    if (response.ok) {
+        return await response.json();
+    } else {
+        throw await createServiceError(response);
+    }
+}
+
+
+
+export async function fetchCommentairesByRecetteId(recetteId) {
+    const response = await fetch(`/api/comments/${recetteId}`);
+
+    if (response.ok) {
+        console.log("reponse json comemntaire pour une recette : ", response.json());
+        return await response.json();
+    } else {
+        throw await createServiceError(response);
+    }
+}

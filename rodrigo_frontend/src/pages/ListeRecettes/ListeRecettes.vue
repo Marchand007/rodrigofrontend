@@ -1,7 +1,14 @@
 <template>
+ <h2 class="d-flex justify-center">Les recette de</h2>
+    <v-flex class="d-flex justify-center">
+       
+  <v-img
+max-width="75%"
+    src="http://logos.textgiraffe.com/logos/logo-name/Rodrigo-designstyle-friday-m.png"
+  />
+    </v-flex>
     <v-sheet class="ma-2">
-        <h2 class="text-h4">Liste des recettes</h2>
-        <ResumeRecette v-if="!loading" v-for="recette in recettes" :key="recette.id" :id="recette.id"
+        <ResumeRecette v-for="recette in recettes" :key="recette.id" :id="recette.id"
             :nom="recette.nom" :descCourt="recette.descCourt" :image="recette.image" />
     </v-sheet>
 </template>

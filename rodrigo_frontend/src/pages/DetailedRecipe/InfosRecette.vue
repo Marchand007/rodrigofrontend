@@ -12,7 +12,7 @@
             <v-sheet>
                 <v-card-title>Mais c'est quoi du {{ recette.nom }} ??</v-card-title>
                 <v-card-text>
-                    <div class="text-body-1">{{ recette.descLong }}</div>
+                    <div class="text-body-1 pre-wrap">{{ recette.descLong }}</div>
                 </v-card-text>
             </v-sheet>
         </v-sheet>
@@ -24,8 +24,8 @@
                     <v-col>
                         <v-sheet class="pa-2 ma-2">
                             <span>Temps de prepration : </span>
-                            <span v-if="recette.tempsPrepMin != null || recette.tempsPrepMin > 0">{{ recette.tempsPrepMin }}
-                                minutes</span>
+                            <span v-if="recette.tempsPrepMin != null || recette.tempsPrepMin > 0">
+                                {{ recette.tempsPrepMin }} minutes</span>
                             <span v-else>N/A </span>
                         </v-sheet>
                     </v-col>
@@ -33,7 +33,7 @@
                     <v-col>
                         <v-sheet class="pa-2 ma-2">
                             <span>Temps de cuisson : </span>
-                            <span v-if="recette.tempsCuissonMin != null && recette.tempsCuissonMin > 0">Temps de cuisson :
+                            <span v-if="recette.tempsCuissonMin != null && recette.tempsCuissonMin > 0">
                                 {{ recette.tempsCuissonMin }} minutes</span>
                             <span v-else> N/A </span>
                         </v-sheet>
@@ -42,8 +42,8 @@
                     <v-col>
                         <v-sheet class="pa-2 ma-2">
                             <span>Nombre de portions : </span>
-                            <span v-if="recette.nbPortions != null || recette.nbPortions > 0">{{ recette.nbPortions }}
-                                portions</span>
+                            <span v-if="recette.nbPortions != null || recette.nbPortions > 0">
+                                {{ recette.nbPortions }} portions</span>
                             <span v-else> N/A </span>
                         </v-sheet>
                     </v-col>
@@ -110,3 +110,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.pre-wrap {
+    white-space: pre-wrap;
+}
+</style>

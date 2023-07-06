@@ -1,16 +1,16 @@
 <template>
     <div class="boxed-center">
-        <h2>Creation d'une nouvelle recette</h2>
+        <h2>Modification d'une recette</h2>
         <v-sheet v-if="session.user && session.user.isAdmin">
-            <v-form @submit.prevent="addRecette" validate-on="submit lazy" ref="recetteform">
+            <v-form @submit.prevent="" validate-on="submit lazy" ref="recetteform">
                 <v-sheet class="boxed-center">
                     <v-sheet-title>Informations de la recette</v-sheet-title>
                     <v-container>
                         <v-row>
                             <v-col cols="1" sm="6">
-                                <v-text-field class="w-100 justify-center" v-model="recette.recetteId"
+                                <v-text-field class="w-100 justify-center" v-model="recette.id"
                                     label="Identifiant unique de la recette (exemple : poulet_curry)" density="compact"
-                                    :rules="[rules.required, rules.recetteIdUnique]"></v-text-field>
+                                    :rules="[rules.required, rules.recetteIdUnique]" disabled></v-text-field>
                             </v-col>
                             <v-col cols="1" sm="6">
                                 <v-text-field v-model="recette.nom" label="Nom de la recette" density="compact"
@@ -21,49 +21,47 @@
                     <v-container>
                         <v-row>
                             <v-col cols="1" sm="4">
-                                <v-text-field class="mr-2" v-model="recette.tempsPrepMin" label="Temps de preparation"
+                                <v-text-field class="mr-2" v-model="recette.tempsPrepMin" label="Temps de preparation (minutes)"
                                     density="compact" type="number" min="0" step="1" :rules="[]"></v-text-field>
                             </v-col>
                             <v-col cols="1" sm="4">
-                                <v-text-field v-model="recette.tempsCuissMin" label="Temps de cuisson (minutes)"
-                                    density="compact" type="number" step="1" min="0" :rules="[]"></v-text-field>
+                                <v-text-field v-model="recette.tempsCuissMin" label="Temps de cuisson (minutes)" density="compact"
+                                    type="number" step="1" min="0" :rules="[]"></v-text-field>
                             </v-col>
                             <v-col cols="1" sm="4">
-                                <v-text-field v-model="recette.nbPortions" label="Nombre de portions (minutes)"
-                                    density="compact" type="number" step="1" min="0" :rules="[]"></v-text-field>
+                                <v-text-field v-model="recette.nbPortions" label="Nombre de portions" density="compact"
+                                    type="number" step="1" min="0" :rules="[]"></v-text-field>
                             </v-col>
                         </v-row>
                     </v-container>
                     <v-text-field v-model="recette.descCourt" label="Description Courte" density="compact"
                         :rules="[rules.required]"></v-text-field>
-                    <v-textarea id="description" v-model="recette.descLong" label="Description longue"
-                        :rules="[rules.required]" auto-grow></v-textarea>
+                    <v-textarea id="description" v-model="recette.descLong" label="Description longue" :rules="[rules.required]"
+                        auto-grow></v-textarea>
                 </v-sheet>
                 <v-sheet class="boxed-center">
                     <v-sheet-title>Liste des ingredients</v-sheet-title>
                     <v-form @submit.prevent="addIngredient" validate-on="submit" ref="ingredientAddForm">
 
-                        <v-container v-for="(ingredient, i) in ingredients">
-                            <v-row>
+                    <v-container v-for="(ingredient, i) in ingredients">
+                        <v-row>
 
-                                <span> {{ i + 1 }}</span>
-                                <v-text-field class="ml-2" v-model="ingredients[i].quantite" density="compact">
-                                </v-text-field>
-                                <v-text-field class="ml-2" v-model="ingredients[i].uniteMesure" density="compact">
-                                </v-text-field>
-                                <v-text-field class="ml-2" v-model="ingredients[i].nom" density="compact"
-                                    :rules="[rules.required]">
-                                </v-text-field>
+                            <span> {{ i + 1 }}</span>
+                            <v-text-field class="ml-2" v-model="ingredients[i].quantite" density="compact">
+                            </v-text-field>
+                            <v-text-field class="ml-2" v-model="ingredients[i].uniteMesure" density="compact">
+                            </v-text-field>
+                            <v-text-field class="ml-2" v-model="ingredients[i].nom" density="compact"
+                                :rules="[rules.required]">
+                            </v-text-field>
 
-                                <v-btn class="ml-5" @click="deleteIngredient(i)" size="small">Supprimer l'ingrédient</v-btn>
-                                <v-btn class="ml-5" @click="upIngredient(i)" size="small" :disabled="i <= 0">Monter
-                                    l'ingrédient</v-btn>
-                                <v-btn class="ml-5" @click="downIngredient(i)" size="small"
-                                    :disabled="i >= ingredients.length - 1">Descendre l'ingrédient</v-btn>
+                            <v-btn class="ml-5" @click="deleteIngredient(i)" size="small">Supprimer l'ingrédient</v-btn>
+                            <v-btn class="ml-5" @click="upIngredient(i)" size="small" :disabled="i <= 0">Monter l'ingrédient</v-btn>
+                            <v-btn class="ml-5" @click="downIngredient(i)" size="small" :disabled="i >= ingredients.length - 1">Descendre l'ingrédient</v-btn>
 
-                            </v-row>
-                        </v-container>
-                        <v-container>
+                        </v-row>
+                    </v-container>
+                    <v-container>
                             <v-row>
                                 <v-text-field class="ml-2" label="Quantite" v-model="nouvQuantiteIngredient"
                                     density="compact">
@@ -84,20 +82,18 @@
                     <v-sheet-title class="ma-5">Liste des etapes</v-sheet-title>
                     <v-form @submit.prevent="addEtape" validate-on="submit" ref="etapeAddForm">
 
-                        <v-container v-for="(etape, i) in etapes">
-                            <v-row>
-                                <span> {{ i + 1 }}</span>
-                                <v-text-field class="ml-2" v-model="etapes[i].description" density="compact">
+                    <v-container v-for="(etape, i) in etapes">
+                        <v-row>
+                            <span> {{ i + 1 }}</span>
+                            <v-text-field class="ml-2" v-model="etapes[i].description" density="compact">
 
-                                </v-text-field>
-                                <v-btn class="ml-5" @click="deleteEtape(i)" size="small">Supprimer l'étape</v-btn>
-                                <v-btn class="ml-5" @click="upEtape(i)" size="small" :disabled="i <= 0">Monter
-                                    l'étape</v-btn>
-                                <v-btn class="ml-5" @click="downEtape(i)" size="small"
-                                    :disabled="i >= etapes.length - 1">Descendre l'étape</v-btn>
-                            </v-row>
-                        </v-container>
-                        <v-container>
+                            </v-text-field>
+                            <v-btn class="ml-5" @click="deleteEtape(i)" size="small">Supprimer l'étape</v-btn>
+                            <v-btn class="ml-5" @click="upEtape(i)" size="small" :disabled="i <= 0">Monter l'étape</v-btn>
+                            <v-btn class="ml-5" @click="downEtape(i)" size="small" :disabled="i >= etapes.length - 1">Descendre l'étape</v-btn>
+                        </v-row>
+                    </v-container>
+                    <v-container>
                             <v-row>
                                 <v-text-field class="ml-2" label="Description de la nouvelle étape" v-model="nouvNomEtape"
                                     density="compact" :rules="[rules.required]">
@@ -107,7 +103,6 @@
                         </v-container>
                     </v-form>
                 </v-sheet>
-                <v-btn class="w-50 ml-5" type="submit" size="large">Ajouter la recette</v-btn>
             </v-form>
         </v-sheet>
         <v-sheet v-else class="ma-2">Vous n'avez pas les permissions pour voir cette page</v-sheet>
@@ -118,31 +113,24 @@
 <script>
 
 import session from '../session';
-import { createRecette, addEtape, addIngredient } from '../RecetteService';
+import { fetchRecette, fetchEtapesByRecetteId, fetchIngredientsByRecetteId } from '../RecetteService';
+
 
 export default {
+    props: {
+        id: String,
+    },
     data()
     {
         return {
             session: session,
-            recette: {
-                recetteId: "",
-                nom: "",
-                descCourt: "",
-                descLong: "",
-                tempsPrepMin: 0,
-                tempsCuissMin: 0,
-                nbPortions: 0,
-                image: "",
-                isActive: true
-            },
+            recette: {},
             ingredients: [],
             etapes: [],
             rules: {
                 required: value => !!value || "Le champ est requis",
-                recetteIdUnique: () => this.recetteIdUnique || "Cet identifiant est déjà utilisé, veuillez en enter un autre"
+                productIdUnique: () => this.productIdUnique || "Cet identifiant est déjà utilisé, veuillez en enter un autre"
             },
-            recetteIdUnique: true,
             nouvQuantiteIngredient: "",
             nouvMesureIngredient: "",
             nouvNomIngredient: "",
@@ -150,63 +138,6 @@ export default {
         };
     },
     methods: {
-        async addRecette()
-        {
-            this.recetteIdUnique = true;
-            const formValid = await this.$refs.recetteform.validate();
-            if (!formValid.valid)
-            {
-                return;
-            }
-
-            createRecette(this.recette).then(() =>
-            {
-                if (this.etapes.length != 0)
-                {
-                    for (let i = 0; i < this.etapes.length; i++)
-                    {
-                        console.log("i etape :",i);
-                        const etape = {
-                            ordre: i + 1,
-                            recetteId: this.recette.recetteId,
-                            description: this.etapes[i].description
-                        }
-                        console.log("etape " + (i + 1), etape)
-                        addEtape(etape);
-                    }
-                }
-            }).then(() =>
-            {
-                if (this.ingredients.length != 0)
-                {
-                    for (let i = 0; i < this.ingredients.length; i++)
-                    {
-                        const ingredient = {
-                            recetteId: this.recette.recetteId,
-                            ordre: i + 1,
-                            quantite: this.ingredients[i].quantite,
-                            uniteMesure: this.ingredients[i].uniteMesure,
-                            nom: this.ingredients[i].nom
-                        }
-                        console.log("ingredient " + (i + 1), ingredient)
-                        addIngredient(ingredient);
-                    }
-                }
-            }).then(() =>
-            {
-                this.$router.push('/recettes/' + this.recette.recetteId);
-                this.recetteIdUnique = true;
-            }).catch(err =>
-            {
-                console.error(err);
-                alert(err.message);
-                if (err.status === 409)
-                {
-                    this.recetteIdUnique = false;
-                }
-                this.$refs.recetteform.validate();
-            })
-        },
         addIngredient()
         {
             if (this.nouvNomIngredient == "")
@@ -276,6 +207,42 @@ export default {
                 this.etapes[index + 1] = this.etapes.splice(index, 1, this.etapes[index + 1])[0];
             }
         },
+    },
+    mounted()
+    {
+        fetchRecette(this.id).then(recette =>
+        {
+            this.recette = recette;
+            this.loading = false;
+            this.loadError = false;
+        }).catch(err =>
+        {
+            console.error(err);
+            this.loading = false;
+            this.loadError = true;
+        });
+        fetchIngredientsByRecetteId(this.id).then(ingredients =>
+        {
+            this.ingredients = ingredients;
+            this.loading = false;
+            this.loadError = false;
+        }).catch(err =>
+        {
+            console.error(err);
+            this.loading = false;
+            this.loadError = true;
+        });
+        fetchEtapesByRecetteId(this.id).then(etapes =>
+        {
+            this.etapes = etapes;
+            this.loading = false;
+            this.loadError = false;
+        }).catch(err =>
+        {
+            console.error(err);
+            this.loading = false;
+            this.loadError = true;
+        });
     }
 
 
@@ -291,5 +258,4 @@ export default {
     text-align: center;
     width: 100%;
     max-width: 80rem;
-}
-</style>
+}</style>

@@ -44,7 +44,7 @@ export default {
             console.error(err);
             this.loading = false;
             this.loadError = true;
-        })
+        });
     },
     computed: {
         recetteDetailUrl()

@@ -15,6 +15,7 @@ import App from './App.vue';
 import FormulaireLogin from './pages/FormulaireLogin.vue';
 import ListeRecettes from './pages/ListeRecettes/ListeRecettes.vue';
 import NewRecette from './pages/NewRecette.vue';
+import UpdateRecette from './pages/UpdateRecette.vue';
 import PageDetailRecette from './pages/DetailedRecipe/PageDetailRecette.vue';
 
 
@@ -28,6 +29,7 @@ const router = createRouter({
         { path: '', component:  ListeRecettes},
         { path: '/recettes/:id', component: PageDetailRecette, props: true },
         { path: '/admin/new-recipe', component: NewRecette},
+        { path: '/admin/update-recipe/:id', component: UpdateRecette, props: true},
         { path: '/login', component: FormulaireLogin }
     ]
 });

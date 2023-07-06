@@ -91,8 +91,8 @@ router.post('/',
         {
             return next(new HttpError(403, "Droit administrateur requis"));
         }
-
-        const id = req.body.id;
+        console.log("body received : ",req.body);
+        const id = req.body.recetteId;
         if (!id || id === '')
         {
             // Le return fait en sorte qu'on n'exécutera pas le reste de la fonction
@@ -108,13 +108,13 @@ router.post('/',
             }
 
             const nouvRecette = {
-                id: "" + id,
+                recetteId: "" + req.body.recetteId,
                 nom: "" + req.body.nom,
                 image: "" + req.body.image,
                 descCourt: "" + req.body.descCourt,
                 descLong: "" + req.body.descLong,
                 tempsPrepMin: "" + req.body.tempsPrepMin,
-                tempsCuissonMin: "" + req.body.tempsCuissonMin,
+                tempsCuissMin: "" + req.body.tempsCuissMin,
                 nbPortions: "" + req.body.nbPortions,
                 isActive: "" + req.body.isActive
             };

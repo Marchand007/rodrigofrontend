@@ -12,7 +12,7 @@
             </v-sheet>
             <v-sheet v-if="session.user && session.user.isAdmin">
                 <v-card-actions>
-                    <v-btn>Editer</v-btn>
+                    <v-btn @click="goToUpdatePage">Editer</v-btn>
                 </v-card-actions>
             </v-sheet>
         </v-sheet>
@@ -36,7 +36,11 @@ export default {
             session: session
         };
     },
-
+    methods : {
+        goToUpdatePage() {
+        this.$router.push("/admin/update-recipe/" + this.id);
+        }
+    },
     computed: { 
         recetteDetailUrl()
         {

@@ -8,7 +8,7 @@
             </v-row>
         </v-container>
         
-        <v-card class="ma-2" v-if="session.user"> //VA FALLOIR GOSSER AVEC CA POUR AFFICHAGE
+        <v-card class="ma-2" v-if="session.user">
                 <v-card-title>Ajouter un commentaire</v-card-title>
                 <div>
                     <v-row no-gutters>

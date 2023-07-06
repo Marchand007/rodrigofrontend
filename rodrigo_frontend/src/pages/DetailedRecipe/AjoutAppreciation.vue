@@ -3,10 +3,8 @@
         <div class="text-center">
             <v-rating v-model="rating" hover></v-rating>
             <pre>{{ rating }}</pre>
-        </div>
-        <v-card-action>
             <v-btn v-on:click="this.addAppreciation()">Envoyer Appréciation</v-btn>
-        </v-card-action>
+        </div>
     </v-col>
 </template>
 
@@ -37,14 +35,11 @@ export default {
                 note: this.rating
             };
             addAppreciationToRecipeId(appreciation).then(response => {
-                console.log("RESULT", response.message); //INSERE DANS LA BD ET AU FRONT-END, MAIS ERREUR AVEC LA REPONSE (pas de "Alert")
+                console.log("RESULT", response.message);
                 alert(response.message);
+                this.rating = 0;
             });
-
-            this.reinitialiserSectionAppreciation();
-        },
-        reinitialiserSectionAppreciation() {
-            this.rating = 0;
+            //this.$router.push('/recettes/' + this.id); DEMANDER AU PROF DEMAIN !!!
         }
     }
 }

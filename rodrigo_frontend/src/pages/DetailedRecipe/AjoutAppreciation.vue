@@ -17,15 +17,18 @@ export default {
     props: {
         id: String
     },
-    data() {
+    data()
+    {
         return {
             session: session,
             rating: 0
         }
     },
     methods: {
-        addAppreciation() {
-            if (!session.user) {
+        addAppreciation()
+        {
+            if (!session.user)
+            {
                 alert("Impossible de soumettre le commentaire sans connexion");
             }
 
@@ -34,7 +37,8 @@ export default {
                 recetteId: this.id,
                 note: this.rating
             };
-            addAppreciationToRecipeId(appreciation).then(response => {
+            addAppreciationToRecipeId(appreciation).then(response =>
+            {
                 console.log("RESULT", response.message);
                 alert(response.message);
                 this.rating = 0;

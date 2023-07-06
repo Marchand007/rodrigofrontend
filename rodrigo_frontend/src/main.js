@@ -26,10 +26,10 @@ const app = createApp(App);
 const router = createRouter({
     history: createWebHistory(),
     routes: [
-        { path: '', component:  ListeRecettes},
+        { path: '', component: ListeRecettes },
         { path: '/recettes/:id', component: PageDetailRecette, props: true },
-        { path: '/admin/new-recipe', component: NewRecette},
-        { path: '/admin/update-recipe/:id', component: UpdateRecette, props: true},
+        { path: '/admin/new-recipe', component: NewRecette },
+        { path: '/admin/update-recipe/:id', component: UpdateRecette, props: true },
         { path: '/login', component: FormulaireLogin }
     ]
 });

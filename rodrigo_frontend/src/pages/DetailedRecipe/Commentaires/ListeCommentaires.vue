@@ -1,7 +1,8 @@
 <template>
     <v-card class="ma-4">
         <v-card-title>Commentaires utilisateurs</v-card-title>
-        <CommentaireRecette  v-for="(commentaire, i) in this.commentaires" :key="i" :commentaire="commentaire"></CommentaireRecette>
+        <CommentaireRecette v-for="(commentaire, i) in this.commentaires" :key="i" :commentaire="commentaire">
+        </CommentaireRecette>
 
     </v-card>
 </template>

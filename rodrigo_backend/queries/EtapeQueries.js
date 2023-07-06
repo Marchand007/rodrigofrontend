@@ -36,7 +36,7 @@ const insertEtape = async (etape) =>
 exports.insertEtape = insertEtape;
 
 
-const updateEtape= async (recetteId) =>
+const updateEtape = async (recetteId) =>
 {
     const result = await pool.query(
         `UPDATE Recette SET nom = $2, desc_court = $3, desc_long = $4, long_desc = $5, temps_prep_min = $6, temps_cuisson_min = $6, nb_portions = $7

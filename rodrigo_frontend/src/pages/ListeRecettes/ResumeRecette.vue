@@ -2,7 +2,7 @@
     <v-card class="ma-2">
         <v-sheet class="d-flex flex-no-wrap">
             <v-sheet class="w-25">
-                    <v-img :src="imageSrc" max-height="5rem" />
+                <v-img :src="imageSrc" max-height="5rem" />
             </v-sheet>
             <v-sheet>
                 <v-card-title><router-link :to="recetteDetailUrl">{{ nom }}</router-link></v-card-title>
@@ -36,12 +36,13 @@ export default {
             session: session
         };
     },
-    methods : {
-        goToUpdatePage() {
-        this.$router.push("/admin/update-recipe/" + this.id);
+    methods: {
+        goToUpdatePage()
+        {
+            this.$router.push("/admin/update-recipe/" + this.id);
         }
     },
-    computed: { 
+    computed: {
         recetteDetailUrl()
         {
             return "/recettes/" + this.id;

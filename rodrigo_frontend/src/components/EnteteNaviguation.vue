@@ -1,5 +1,5 @@
 <template>
-    <v-app-bar app prominent dense dark :elevation="4" >
+    <v-app-bar app prominent dense dark :elevation="4">
         <v-app-bar-nav-icon @click="this.$router.push('/')">
             <v-img width="60" aspect-ratio="0"
                 src="http://logos.textgiraffe.com/logos/logo-name/Rodrigo-designstyle-friday-m.png" />
@@ -10,7 +10,8 @@
             </p>
         </v-toolbar-title>
         <router-link class="routerlink" to="/"><v-tab>Les recettes</v-tab></router-link>
-        <router-link class="routerlink" to="/admin/new-recipe"><v-tab v-if="session.user && session.user.isAdmin">Ajouter une
+        <router-link class="routerlink" to="/admin/new-recipe"><v-tab v-if="session.user && session.user.isAdmin">Ajouter
+                une
                 recette</v-tab></router-link>
 
         <div v-if="session.user">
@@ -18,7 +19,7 @@
                 Bienvenue, {{ session.user.nomComplet }}
             </v-tab>
             <v-tab @click="disconnect()">
-                DECONNEXION
+                DÉCONNEXION
             </v-tab>
         </div>
 
@@ -47,13 +48,14 @@ export default {
             session: session
         };
     },
-    methods : {
-        disconnect() {
+    methods: {
+        disconnect()
+        {
             session.disconnect()
             this.$router.push('/');
         }
     }
-    
+
 }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
- <v-btn @click="goToUpdatePage()" size="x-small" v-if="session.user && session.user.isAdmin">Modifier la recette</v-btn>
+    <v-btn @click="goToUpdatePage()" size="x-small" v-if="session.user && session.user.isAdmin">Modifier la recette</v-btn>
     <h2 class="text-h4">{{ recette.nom }}</h2>
     <v-rating v-model="moyenneAppreciation" density="compact" hover half-increments readonly>
     </v-rating>
@@ -23,7 +23,7 @@
                 <v-row no-gutters>
                     <v-col>
                         <v-sheet class="pa-2 ma-2">
-                            <span>Temps de prepration : </span>
+                            <span>Temps de préparation : </span>
                             <span v-if="recette.tempsPrepMin != null && recette.tempsPrepMin > 0">
                                 {{ recette.tempsPrepMin }} minutes</span>
                             <span v-else>N/A </span>
@@ -74,12 +74,13 @@ export default {
             loadError: false
         };
     },
-    methods : {
-        goToUpdatePage() {
-        this.$router.push("/admin/update-recipe/" + this.id);
+    methods: {
+        goToUpdatePage()
+        {
+            this.$router.push("/admin/update-recipe/" + this.id);
         }
     },
-    computed: { 
+    computed: {
         imageSrc()
         {
             return addApiPrefixToPath(this.recette.image);

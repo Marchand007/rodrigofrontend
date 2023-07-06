@@ -165,7 +165,7 @@ export default {
                 {
                     for (let i = 0; i < this.etapes.length; i++)
                     {
-                        console.log("i etape :",i);
+                        console.log("i etape :", i);
                         const etape = {
                             ordre: i + 1,
                             recetteId: this.recette.recetteId,

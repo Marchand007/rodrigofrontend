@@ -1,7 +1,8 @@
 const pool = require('./DBPool');
 const { DateTime } = require('luxon');
 
-const getCommentByRecetteId = async (recetteId) => {
+const getCommentByRecetteId = async (recetteId) =>
+{
     const result = await pool.query(
         `SELECT C.courriel_utilisateur, C.texte, C.date_publication, U.nom_complet
         FROM commentaire as C
@@ -10,7 +11,8 @@ const getCommentByRecetteId = async (recetteId) => {
         ORDER BY date_publication ASC`,
         [recetteId]
     );
-    return result.rows.map(row => {
+    return result.rows.map(row =>
+    {
         const commentaire = {
             nomUtilisateur: row.nom_complet,
             courrielUtilisateur: row.courriel_utilisateur,
@@ -23,7 +25,8 @@ const getCommentByRecetteId = async (recetteId) => {
 
 exports.getCommentByRecetteId = getCommentByRecetteId;
 
-const getUserCommentByRecetteId = async(courriel_utilisateur, recetteId) => {
+const getUserCommentByRecetteId = async (courriel_utilisateur, recetteId) =>
+{
     const result = await pool.query(
         `SELECT COUNT(courriel_utilisateur)
         FROM commentaire
@@ -35,8 +38,9 @@ const getUserCommentByRecetteId = async(courriel_utilisateur, recetteId) => {
 exports.getUserCommentByRecetteId = getUserCommentByRecetteId;
 
 
-const insertCommentToRecipe = async (comment) => {
-    
+const insertCommentToRecipe = async (comment) =>
+{
+
     //TRY CATCH
     const commentDateTime = DateTime.now();
 

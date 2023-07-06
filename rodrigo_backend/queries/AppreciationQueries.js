@@ -34,11 +34,16 @@ const getUserAppreciationByRecetteId = async(courriel_utilisateur, recetteId) =>
 exports.getUserAppreciationByRecetteId = getUserAppreciationByRecetteId;
 
 const insertAppreciationToRecipe = async (appreciation) => {
+    //TRY CATCH
     const result = await pool.query(
         `INSERT INTO appreciation(courriel_utilisateur, recette_id, note)
         VALUES ($1, $2, $3)`,
         [appreciation.courrielUtilisateur, appreciation.recetteId, appreciation.note]
     );
+    
+    return {
+        message : "L'ajout de l'appreciation a bien été fait"
+    };
 };
 
 exports.insertAppreciationToRecipe = insertAppreciationToRecipe;

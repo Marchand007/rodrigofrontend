@@ -113,11 +113,11 @@ const insertRecette = async (recette) =>
 {
     const result = await pool.query(
         `INSERT INTO Recette (recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions, is_active) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-        [recette.id, recette.nom, recette.descCourt, recette.descLong, recette.tempsPrepMin, recette.tempsCuissonMin, recette.nbPortions, true]
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        [recette.recetteId, recette.nom, recette.descCourt, recette.descLong, recette.tempsPrepMin, recette.tempsCuissMin, recette.nbPortions, recette.isActive]
     );
 
-    return getRecetteById(recette.id);
+    return getRecetteById(recette.recetteId);
 };
 exports.insertRecette = insertRecette;
 
@@ -132,7 +132,6 @@ const updateRecette = async (recette) =>
 
     if (result.rowCount === 0)
     {
-        // Aucune rangée modifiée, veut dire que l'id n'existe pas
         return undefined;
     }
 

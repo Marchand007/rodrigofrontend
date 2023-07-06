@@ -23,17 +23,17 @@ const getEtapesByRecetteId = async (recetteId) =>
 exports.getEtapesByRecetteId = getEtapesByRecetteId;
 
 
-const insertEtapes = async (recetteId) =>
+const insertEtape = async (etape) =>
 {
     const result = await pool.query(
-        `INSERT INTO Recette (recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions, is_active) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-        [recetteId]
+        `INSERT INTO Etape (recette_id, ordre, description)
+        VALUES ($1, $2, $3)`,
+        [etape.recetteId, etape.ordre, etape.description]
     );
 
-    return getRecetteById(recetteId);
+    return result;
 };
-exports.insertEtapes = insertEtapes;
+exports.insertEtape = insertEtape;
 
 
 const updateEtape= async (recetteId) =>

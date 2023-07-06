@@ -9,7 +9,7 @@ const BasicStrategy = require('passport-http').BasicStrategy;
 const crypto = require('crypto');
 
 
-const recetteRouter = require('./routes/recetteRouter');
+const recetteRouter = require('./routes/RecetteRouter');
 
 const commentRouter = require('./routes/commentRouter');
 
@@ -97,8 +97,8 @@ app.use('/comments', commentRouter);
 app.use('/etapes', etapeRouter);
 
 app.use('/ingredients', ingredientRouter);
-app.use('/appreciation', appreciationRouter);
 
+app.use('/appreciation', appreciationRouter);
 
 app.get('/login',
   passport.authenticate('basic', { session: false }),

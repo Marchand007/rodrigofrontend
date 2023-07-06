@@ -11,15 +11,16 @@ router.get('/:id', (req, res, next) =>
 {
     const id = req.params.id;
     console.log("id:", id);
-    if (id == null || id === "") {
+    if (id == null || id === "")
+    {
         return next(new HttpError(400, `Le parametre Id est requis`));
     }
     appreciationQueries.getAppreciationByRecetteId(id).then(appreciation =>
     {
-        
+
         if (appreciation)
         {
-           
+
             res.json(appreciation);
         } else
         {
@@ -32,23 +33,28 @@ router.get('/:id', (req, res, next) =>
 });
 
 router.post('/',
-    passport.authenticate('basic', {session: false}),
-    (req,res,next) => {
+    passport.authenticate('basic', { session: false }),
+    (req, res, next) =>
+    {
 
         const recetteId = req.body.recetteId;
-        if(!recetteId || recetteId === ""){
+        if (!recetteId || recetteId === "")
+        {
             return next(new HttpError(400, 'Le champ recetteId est requis'));
         }
 
         const user = req.user;
-    
-        if(!user){
+
+        if (!user)
+        {
             return next(new HttpError(403, "Vous devez avoir un compte utilisateur pour ajouter une appreciation"));
         }
 
-        appreciationQueries.getUserAppreciationByRecetteId(user.courrielUtilisateur, recetteId).then(result => {
+        appreciationQueries.getUserAppreciationByRecetteId(user.courrielUtilisateur, recetteId).then(result =>
+        {
 
-            if(result == 1){
+            if (result == 1)
+            {
                 return next(new HttpError(400, `${user.courrielUtilisateur} a deja donne une appreciation sur la recette ${recetteId}`));
             }
 
@@ -59,9 +65,11 @@ router.post('/',
             };
 
             return appreciationQueries.insertAppreciationToRecipe(nouvAppreciation);
-        }).then(result => {
+        }).then(result =>
+        {
             res.json(result);
-        }).catch(err => {
+        }).catch(err =>
+        {
             next(err);
         });
     });

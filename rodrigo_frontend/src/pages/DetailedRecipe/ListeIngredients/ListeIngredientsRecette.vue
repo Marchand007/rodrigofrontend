@@ -2,7 +2,7 @@
     <v-col cols="4">
         <v-list>
             <v-list-subheader>
-                <h2><u>Ingredients</u></h2>
+                <h2><u>Ingrédients</u></h2>
             </v-list-subheader>
             <IngredientRecette v-for="(ingredient, i) in this.ingredients" :key="i" :ingredient="ingredient">
             </IngredientRecette>

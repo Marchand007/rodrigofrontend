@@ -2,11 +2,11 @@
     <v-col cols="8">
         <v-list>
             <v-list-subheader>
-                <h2><u>Etapes</u></h2>
+                <h2><u>Étapes</u></h2>
             </v-list-subheader>
             <EtapeRecette v-for="(etape, i) in this.etapes" :key="i" :etape="etape">
             </EtapeRecette>
-        
+
         </v-list>
 
     </v-col>

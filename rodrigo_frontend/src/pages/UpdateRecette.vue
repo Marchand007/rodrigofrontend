@@ -21,12 +21,13 @@
                     <v-container>
                         <v-row>
                             <v-col cols="1" sm="4">
-                                <v-text-field class="mr-2" v-model="recette.tempsPrepMin" label="Temps de preparation (minutes)"
-                                    density="compact" type="number" min="0" step="1" :rules="[]"></v-text-field>
+                                <v-text-field class="mr-2" v-model="recette.tempsPrepMin"
+                                    label="Temps de preparation (minutes)" density="compact" type="number" min="0" step="1"
+                                    :rules="[]"></v-text-field>
                             </v-col>
                             <v-col cols="1" sm="4">
-                                <v-text-field v-model="recette.tempsCuissMin" label="Temps de cuisson (minutes)" density="compact"
-                                    type="number" step="1" min="0" :rules="[]"></v-text-field>
+                                <v-text-field v-model="recette.tempsCuissMin" label="Temps de cuisson (minutes)"
+                                    density="compact" type="number" step="1" min="0" :rules="[]"></v-text-field>
                             </v-col>
                             <v-col cols="1" sm="4">
                                 <v-text-field v-model="recette.nbPortions" label="Nombre de portions" density="compact"
@@ -36,32 +37,34 @@
                     </v-container>
                     <v-text-field v-model="recette.descCourt" label="Description Courte" density="compact"
                         :rules="[rules.required]"></v-text-field>
-                    <v-textarea id="description" v-model="recette.descLong" label="Description longue" :rules="[rules.required]"
-                        auto-grow></v-textarea>
+                    <v-textarea id="description" v-model="recette.descLong" label="Description longue"
+                        :rules="[rules.required]" auto-grow></v-textarea>
                 </v-sheet>
                 <v-sheet class="boxed-center">
                     <v-sheet-title>Liste des ingredients</v-sheet-title>
                     <v-form @submit.prevent="addIngredient" validate-on="submit" ref="ingredientAddForm">
 
-                    <v-container v-for="(ingredient, i) in ingredients">
-                        <v-row>
+                        <v-container v-for="(ingredient, i) in ingredients">
+                            <v-row>
 
-                            <span> {{ i + 1 }}</span>
-                            <v-text-field class="ml-2" v-model="ingredients[i].quantite" density="compact">
-                            </v-text-field>
-                            <v-text-field class="ml-2" v-model="ingredients[i].uniteMesure" density="compact">
-                            </v-text-field>
-                            <v-text-field class="ml-2" v-model="ingredients[i].nom" density="compact"
-                                :rules="[rules.required]">
-                            </v-text-field>
+                                <span> {{ i + 1 }}</span>
+                                <v-text-field class="ml-2" v-model="ingredients[i].quantite" density="compact">
+                                </v-text-field>
+                                <v-text-field class="ml-2" v-model="ingredients[i].uniteMesure" density="compact">
+                                </v-text-field>
+                                <v-text-field class="ml-2" v-model="ingredients[i].nom" density="compact"
+                                    :rules="[rules.required]">
+                                </v-text-field>
 
-                            <v-btn class="ml-5" @click="deleteIngredient(i)" size="small">Supprimer l'ingrédient</v-btn>
-                            <v-btn class="ml-5" @click="upIngredient(i)" size="small" :disabled="i <= 0">Monter l'ingrédient</v-btn>
-                            <v-btn class="ml-5" @click="downIngredient(i)" size="small" :disabled="i >= ingredients.length - 1">Descendre l'ingrédient</v-btn>
+                                <v-btn class="ml-5" @click="deleteIngredient(i)" size="small">Supprimer l'ingrédient</v-btn>
+                                <v-btn class="ml-5" @click="upIngredient(i)" size="small" :disabled="i <= 0">Monter
+                                    l'ingrédient</v-btn>
+                                <v-btn class="ml-5" @click="downIngredient(i)" size="small"
+                                    :disabled="i >= ingredients.length - 1">Descendre l'ingrédient</v-btn>
 
-                        </v-row>
-                    </v-container>
-                    <v-container>
+                            </v-row>
+                        </v-container>
+                        <v-container>
                             <v-row>
                                 <v-text-field class="ml-2" label="Quantite" v-model="nouvQuantiteIngredient"
                                     density="compact">
@@ -82,18 +85,20 @@
                     <v-sheet-title class="ma-5">Liste des etapes</v-sheet-title>
                     <v-form @submit.prevent="addEtape" validate-on="submit" ref="etapeAddForm">
 
-                    <v-container v-for="(etape, i) in etapes">
-                        <v-row>
-                            <span> {{ i + 1 }}</span>
-                            <v-text-field class="ml-2" v-model="etapes[i].description" density="compact">
+                        <v-container v-for="(etape, i) in etapes">
+                            <v-row>
+                                <span> {{ i + 1 }}</span>
+                                <v-text-field class="ml-2" v-model="etapes[i].description" density="compact">
 
-                            </v-text-field>
-                            <v-btn class="ml-5" @click="deleteEtape(i)" size="small">Supprimer l'étape</v-btn>
-                            <v-btn class="ml-5" @click="upEtape(i)" size="small" :disabled="i <= 0">Monter l'étape</v-btn>
-                            <v-btn class="ml-5" @click="downEtape(i)" size="small" :disabled="i >= etapes.length - 1">Descendre l'étape</v-btn>
-                        </v-row>
-                    </v-container>
-                    <v-container>
+                                </v-text-field>
+                                <v-btn class="ml-5" @click="deleteEtape(i)" size="small">Supprimer l'étape</v-btn>
+                                <v-btn class="ml-5" @click="upEtape(i)" size="small" :disabled="i <= 0">Monter
+                                    l'étape</v-btn>
+                                <v-btn class="ml-5" @click="downEtape(i)" size="small"
+                                    :disabled="i >= etapes.length - 1">Descendre l'étape</v-btn>
+                            </v-row>
+                        </v-container>
+                        <v-container>
                             <v-row>
                                 <v-text-field class="ml-2" label="Description de la nouvelle étape" v-model="nouvNomEtape"
                                     density="compact" :rules="[rules.required]">

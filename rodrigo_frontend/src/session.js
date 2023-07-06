@@ -1,7 +1,9 @@
 import { reactive } from "vue";
 
-class AuthError extends Error {
-    constructor(status, message) {
+class AuthError extends Error
+{
+    constructor(status, message)
+    {
         super(message);
         this.status = status;
     }
@@ -12,38 +14,47 @@ const session = reactive({
     user_email: null,
     password: null,
 
-    initialize(){
-        if(sessionStorage.user_email){
+    initialize()
+    {
+        if (sessionStorage.user_email)
+        {
             this.user_email = sessionStorage.user_email;
         }
-        if(sessionStorage.password){
+        if (sessionStorage.password)
+        {
             this.password = sessionStorage.password;
         }
-        if(this.user == null && this.user_email != null){
+        if (this.user == null && this.user_email != null)
+        {
             this.fetchUser().catch(err => console.error("L'authentification initiale a échouée: ", err));
         }
     },
-    login(user_email, password){
+    login(user_email, password)
+    {
         this.setCredentials(user_email, password);
         return this.fetchUser();
     },
-    setCredentials(user_email,password){
+    setCredentials(user_email, password)
+    {
         this.user_email = user_email;
         sessionStorage.user_email = user_email;
         this.password = password;
         sessionStorage.password = password;
     },
-    clearCredentials(){
+    clearCredentials()
+    {
         this.user_email = null;
         sessionStorage.removeItem('user_email');
         this.password = null;
         sessionStorage.removeItem('password');
     },
-    disconnect(){
+    disconnect()
+    {
         this.user = null;
         this.clearCredentials();
     },
-    async fetchUser(){
+    async fetchUser()
+    {
         const response = await fetch("/api/login", {
             method: "GET",
             headers: {
@@ -51,26 +62,33 @@ const session = reactive({
             }
         });
 
-        if(response.ok){
+        if (response.ok)
+        {
             const user = await response.json();
             this.user = user;
             return user;
-        } else {
+        } else
+        {
             this.user = null;
-            if(response.status === 401){
+            if (response.status === 401)
+            {
                 throw new AuthError(response.status, "Adresse courriel ou mot de passe incorrect");
-            } else {
+            } else
+            {
                 throw new AuthError(response.status, "Erreur lors de l'authentification: " + response.status);
             }
         }
     },
-    getAuthHeaders(){
-        if(this.user_email){
+    getAuthHeaders()
+    {
+        if (this.user_email)
+        {
             return {
                 "Authorization": "Basic " + btoa(this.user_email + ":" + this.password),
                 "X-Requested-With": "XMLHttpRequest"
             };
-        } else {
+        } else
+        {
             return {};
         }
     }

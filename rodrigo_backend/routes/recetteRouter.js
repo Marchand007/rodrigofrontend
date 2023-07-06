@@ -91,7 +91,7 @@ router.post('/',
         {
             return next(new HttpError(403, "Droit administrateur requis"));
         }
-        console.log("body received : ",req.body);
+        console.log("body received : ", req.body);
         const id = req.body.recetteId;
         if (!id || id === '')
         {

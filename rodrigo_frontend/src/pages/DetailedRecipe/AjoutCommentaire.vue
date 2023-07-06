@@ -15,7 +15,8 @@ export default {
     props: {
         id: String,
     },
-    data() {
+    data()
+    {
         return {
             session: session,
             texteCommentaire: ""
@@ -23,8 +24,10 @@ export default {
     },
 
     methods: {
-        addCommentaire() {
-            if (!session.user) {
+        addCommentaire()
+        {
+            if (!session.user)
+            {
                 alert("Impossible de soumettre le commentaire sans connexion");
             }
 
@@ -34,7 +37,8 @@ export default {
                 texte: this.texteCommentaire
             };
 
-            addCommentaireToRecipeId(commentaire).then((response) => {
+            addCommentaireToRecipeId(commentaire).then((response) =>
+            {
                 console.log("RESULT", response.message);
                 alert(response.message);
                 this.texteCommentaire = "";

@@ -37,6 +37,7 @@ exports.getUserCommentByRecetteId = getUserCommentByRecetteId;
 
 const insertCommentToRecipe = async (comment) => {
     
+    //TRY CATCH
     const commentDateTime = DateTime.now();
 
     const result = await pool.query(
@@ -44,6 +45,10 @@ const insertCommentToRecipe = async (comment) => {
         VALUES ($1, $2, $3, $4)`,
         [comment.courrielUtilisateur, comment.recetteId, comment.texte, commentDateTime]
     );
+
+    return {
+        message: "Le commentaire a bien été enregistré!"
+    };
 };
 
 exports.insertCommentToRecipe = insertCommentToRecipe;

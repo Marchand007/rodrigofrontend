@@ -10,10 +10,11 @@
 import session from '../../session';
 import { addCommentaireToRecipeId } from '../.././RecetteService';
 
-
 export default {
+    inject :['refresh'],
     props: {
         id: String,
+        refreshCounter: Number
     },
     data()
     {
@@ -42,8 +43,8 @@ export default {
                 console.log("RESULT", response.message);
                 alert(response.message);
                 this.texteCommentaire = "";
+                this.refresh();
             });
-            //this.$router.push('/recettes/' + this.id); DEMANDER AU PROF DEMAIN !!!
         }
     }
 }

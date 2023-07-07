@@ -1,6 +1,6 @@
 <template>
     <v-sheet class="ma-2">
-        <InfosRecette :id="id"></InfosRecette>
+        <InfosRecette :id="id" :refreshCounter="refreshCounter"></InfosRecette>
         <v-container>
             <v-row no-gutters>
                 <ListeIngredientsRecette :id="id"></ListeIngredientsRecette>
@@ -14,7 +14,6 @@
                 <v-row no-gutters>
                     <AjoutCommentaire :id="id"></AjoutCommentaire>
                     <AjoutAppreciation :id="id"></AjoutAppreciation>
-
                 </v-row>
             </div>
         </v-card>
@@ -24,7 +23,7 @@
             <h5 class="ma-2">Vous devez avoir un compte utilisateur pour ajouter un commentaire et/ou une appréciation</h5>
         </v-card>
 
-        <ListeCommentaires :id="id"></ListeCommentaires>
+        <ListeCommentaires :id="id" :refreshCounter="refreshCounter"></ListeCommentaires>
     </v-sheet>
 </template>
 
@@ -42,7 +41,7 @@ import AjoutAppreciation from './AjoutAppreciation.vue';
 
 export default {
     props: {
-        id: String,
+        id: String
     },
     components: {
         InfosRecette,
@@ -57,9 +56,19 @@ export default {
         return {
             loading: true,
             loadError: false,
-            session: session
+            session: session,
+            refreshCounter: 0
         };
-
+    },
+    provide(){
+        return{
+            refresh:this.refreshPageDetaillee
+        };
+    },
+    methods:{
+        refreshPageDetaillee() {
+            this.refreshCounter++;
+        }
     }
 }
 </script>

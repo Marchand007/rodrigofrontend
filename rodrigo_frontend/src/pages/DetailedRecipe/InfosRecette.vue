@@ -62,6 +62,7 @@ import session from '../../session';
 export default {
     props: {
         id: String,
+        refreshCounter: Number
     },
     data()
     {
@@ -83,7 +84,8 @@ export default {
     computed: {
         imageSrc()
         {
-            return addApiPrefixToPath(this.recette.image);
+            //EN PARLER AVEC MAX LUNDI
+            return this.recette.image ? addApiPrefixToPath(this.recette.image) : null;
         }
     },
     mounted()

@@ -1,33 +1,26 @@
 import session from './session';
 
-class ServiceError extends Error
-{
-    constructor(status, message)
-    {
+class ServiceError extends Error {
+    constructor(status, message) {
         super(message);
         this.status = status;
     }
 }
 
-async function getResponseMessage(response)
-{
-    try
-    {
+async function getResponseMessage(response) {
+    try {
         const obj = await response.json();
         return obj.message ? obj.message : "Erreur inconnue";
-    } catch (err)
-    {
+    } catch (err) {
         return "" + err;
     }
 }
 
-async function createServiceError(response)
-{
+async function createServiceError(response) {
     return new ServiceError(response.status, await getResponseMessage(response));
 }
 
-const convertToRecette = jsonRecette =>
-{
+const convertToRecette = jsonRecette => {
     return {
         id: jsonRecette.id,
         nom: jsonRecette.nom,
@@ -41,8 +34,7 @@ const convertToRecette = jsonRecette =>
     };
 };
 
-const convertToCommentaire = jsonCommentaire =>
-{
+const convertToCommentaire = jsonCommentaire => {
     return {
         courrielUtilisateur: jsonCommentaire.courrielUtilisateur,
         recetteId: jsonCommentaire.recetteId,
@@ -56,16 +48,13 @@ const convertToCommentaire = jsonCommentaire =>
  * 
  * @returns Promesse permettant d'obtenir la liste des produits
  */
-export async function fetchRecettes()
-{
+export async function fetchRecettes() {
     const response = await fetch('/api/recettes');
 
-    if (response.ok)
-    {
+    if (response.ok) {
         const respJson = await response.json();
         return respJson.map(r => convertToRecette(r));
-    } else
-    {
+    } else {
         throw await createServiceError(response);
     }
 }
@@ -76,21 +65,17 @@ export async function fetchRecettes()
  * @param {String} recetteId L'identifiant du produit à récupérer
  * @returns Promesse permettant d'obtenir le produit demandé
  */
-export async function fetchRecette(recetteId)
-{
+export async function fetchRecette(recetteId) {
     const response = await fetch(`/api/recettes/${recetteId}`);
 
-    if (response.ok)
-    {
+    if (response.ok) {
         return convertToRecette(await response.json());
-    } else
-    {
+    } else {
         throw await createServiceError(response);
     }
 };
 
-export async function updateRecette(recette)
-{
+export async function updateRecette(recette) {
     const response = await fetch(`/api/recettes/${recette.id}`, {
         method: "PUT",
         headers: {
@@ -100,17 +85,14 @@ export async function updateRecette(recette)
         body: JSON.stringify(recette)
     });
 
-    if (response.ok)
-    {
+    if (response.ok) {
         return convertToRecette(await response.json());
-    } else
-    {
+    } else {
         throw await createServiceError(response);
     }
 }
 
-export async function createRecette(recette)
-{
+export async function createRecette(recette) {
     const response = await fetch(`/api/recettes`, {
         method: "POST",
         headers: {
@@ -120,18 +102,15 @@ export async function createRecette(recette)
         body: JSON.stringify(recette)
     });
 
-    if (response.ok)
-    {
+    if (response.ok) {
         return response.json();
-    } else
-    {
+    } else {
         throw await createServiceError(response);
     }
 }
 
 
-export async function updateRecetteImage(recetteId, formData)
-{
+export async function updateRecetteImage(recetteId, formData) {
     const response = await fetch(`/api/recettes/${recetteId}/image`, {
         method: "POST",
         headers: {
@@ -140,30 +119,26 @@ export async function updateRecetteImage(recetteId, formData)
         body: formData
     });
 
-    if (response.ok)
-    {
+    if (response.ok) {
         return;
-    } else
-    {
+    } else {
         throw await createServiceError(response);
     }
 }
 
-export async function fetchEtapesByRecetteId(recetteId)
-{
+//ETAPES//
+
+export async function fetchEtapesByRecetteId(recetteId) {
     const response = await fetch(`/api/etapes/${recetteId}`);
 
-    if (response.ok)
-    {
+    if (response.ok) {
         return await response.json();
-    } else
-    {
+    } else {
         throw await createServiceError(response);
     }
 }
 
-export async function addEtape(etape)
-{
+export async function addEtape(etape) {
     const response = await fetch(`/api/etapes`, {
         method: "POST",
         headers: {
@@ -173,31 +148,26 @@ export async function addEtape(etape)
         body: JSON.stringify(etape)
     });
 
-    if (response.ok)
-    {
+    if (response.ok) {
         return response.json();
-    } else
-    {
+    } else {
         throw await createServiceError(response);
     }
 }
 
+//INGREDIENTS//
 
-export async function fetchIngredientsByRecetteId(recetteId)
-{
+export async function fetchIngredientsByRecetteId(recetteId) {
     const response = await fetch(`/api/ingredients/${recetteId}`);
 
-    if (response.ok)
-    {
+    if (response.ok) {
         return await response.json();
-    } else
-    {
+    } else {
         throw await createServiceError(response);
     }
 }
 
-export async function addIngredient(ingredient)
-{
+export async function addIngredient(ingredient) {
     const response = await fetch(`/api/ingredients`, {
         method: "POST",
         headers: {
@@ -207,32 +177,26 @@ export async function addIngredient(ingredient)
         body: JSON.stringify(ingredient)
     });
 
-    if (response.ok)
-    {
+    if (response.ok) {
         return response.json();
-    } else
-    {
+    } else {
         throw await createServiceError(response);
     }
 }
 
+//APPRECIATION//
 
-
-export async function fetchAppreciationByRecetteId(recetteId)
-{
+export async function fetchAppreciationByRecetteId(recetteId) {
     const response = await fetch(`/api/appreciation/${recetteId}`);
 
-    if (response.ok)
-    {
+    if (response.ok) {
         return await response.json();
-    } else
-    {
+    } else {
         throw await createServiceError(response);
     }
 }
 
-export async function addAppreciationToRecipeId(appreciation)
-{
+export async function addAppreciationToRecipeId(appreciation){
     const response = await fetch(`/api/appreciation`, {
         method: "POST",
         headers: {
@@ -242,33 +206,26 @@ export async function addAppreciationToRecipeId(appreciation)
         body: JSON.stringify(appreciation)
     });
 
-    if (response.ok)
-    {
+    if (response.ok) {
         return response.json();
-    } else
-    {
+    } else {
         throw await createServiceError(response);
     }
 }
 
+//COMMENTAIRES//
 
-
-
-export async function fetchCommentairesByRecetteId(recetteId)
-{
+export async function fetchCommentairesByRecetteId(recetteId) {
     const response = await fetch(`/api/comments/${recetteId}`);
 
-    if (response.ok)
-    {
+    if (response.ok) {
         return await response.json();
-    } else
-    {
+    } else {
         throw await createServiceError(response);
     }
 }
 
-export async function addCommentaireToRecipeId(commentaire)
-{
+export async function addCommentaireToRecipeId(commentaire){
     const response = await fetch(`/api/comments`, {
         method: "POST",
         headers: {
@@ -278,11 +235,9 @@ export async function addCommentaireToRecipeId(commentaire)
         body: JSON.stringify(commentaire)
     });
 
-    if (response.ok)
-    {
+    if (response.ok) {
         return response.json();
-    } else
-    {
+    } else {
         throw await createServiceError(response);
     }
 }

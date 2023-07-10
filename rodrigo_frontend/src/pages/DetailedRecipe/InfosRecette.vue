@@ -64,8 +64,7 @@ export default {
         id: String,
         refreshCounter: Number
     },
-    data()
-    {
+    data() {
         return {
             session: session,
             recette: {},
@@ -76,41 +75,41 @@ export default {
         };
     },
     methods: {
-        goToUpdatePage()
-        {
+        goToUpdatePage() {
             this.$router.push("/admin/update-recipe/" + this.id);
+        },
+        chargerAppreciations() {
+            fetchAppreciationByRecetteId(this.id).then(appreciation => {
+                this.nombreAppreciation = appreciation.nombreAppreciation;
+                this.moyenneAppreciation = appreciation.moyenneAppreciation;
+            }).catch(err => {
+                console.error(err);
+            });
         }
     },
     computed: {
-        imageSrc()
-        {
-            //EN PARLER AVEC MAX LUNDI
+        imageSrc() {
             return this.recette.image ? addApiPrefixToPath(this.recette.image) : null;
         }
     },
-    mounted()
-    {
-        fetchAppreciationByRecetteId(this.id).then(appreciation =>
-        {
-            this.nombreAppreciation = appreciation.nombreAppreciation;
-            this.moyenneAppreciation = appreciation.moyenneAppreciation;
-        }).catch(err =>
-        {
-            console.error(err);
-        });
-
-        fetchRecette(this.id).then(recette =>
-        {
+    mounted() {
+        fetchRecette(this.id).then(recette => {
             this.recette = recette;
             this.loading = false;
             this.loadError = false;
-        }).catch(err =>
-        {
+        }).catch(err => {
             console.error(err);
             this.loading = false;
             this.loadError = true;
-        })
+        }),
+        this.chargerAppreciations();
     },
+    watch: {
+        refreshCounter() {
+            console.log("VALUE :", this.refreshCounter);
+            this.chargerAppreciations();
+        }
+    }
 }
 </script>
 

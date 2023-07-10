@@ -1,6 +1,6 @@
 const pool = require('./DBPool');
 
-const createUserAccount = async (userAccountEmail, passwordHash, passwordSalt, fullname) => {
+const createUserAccount = async (userAccountEmail, fullname, passwordHash, passwordSalt) => {
     const client = await pool.connect();
 
     try {
@@ -12,7 +12,7 @@ const createUserAccount = async (userAccountEmail, passwordHash, passwordSalt, f
         }
 
         const result = await (client || pool).query(
-            `INSERT INTO utilisateur (courriel_utilisateur, nom_complet, password_hash, password, password_salt)
+            `INSERT INTO utilisateur (courriel_utilisateur, nom_complet, password_hash, password_salt)
             VALUES($1, $2, $3, $4)`,
             [userAccountEmail, fullname, passwordHash, passwordSalt]
         );

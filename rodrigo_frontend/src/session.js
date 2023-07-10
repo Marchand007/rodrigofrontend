@@ -99,11 +99,13 @@ const session = reactive({
                 "Content-Type": "application/json"
             },
             body:JSON.stringify({
-                courrielUtilisateur: userAccountEmail,
-                nomCompletUtilisateur: userFullName,
+                courriel_utilisateur: userAccountEmail,
+                nom_complet: userFullName,
                 motDePasse: password
             })
         });
+
+        console.log("RESULT: ", response);
 
         if(response.ok){
             const user = await response.json();

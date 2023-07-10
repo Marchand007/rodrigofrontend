@@ -2,19 +2,22 @@
     <div class="boxed-center">
         <v-sheet class="ma-2" max-width="40rem">
             <v-sheet class="ma-2" max-width="40rem">
-            <v-form @submit.prevent="createUserAccount" validate-on="submit lazy" ref="newUserForm">
-                <v-text-field v-model="userAccountEmail" label="Adresse courriel" :rules="[rules.required, rules.passwordValid]"
-                    density="compact"></v-text-field>
-                <v-text-field v-model="password" label="Mot de passe" type="password"
-                    :rules="[rules.required, rules.passwordValid]" density="compact"></v-text-field>
-                <v-text-field></v-text-field>
-                <v-btn type="submit" :disabled="!userAccountEmail || !password">Se connecter</v-btn>
-            </v-form>
-        </v-sheet>
+                <v-form @submit.prevent="createUserAccount" validate-on="submit lazy" ref="newUserForm">
+                    <v-text-field v-model="userAccountEmail" label="Adresse courriel"
+                        :rules="[rules.required, rules.validEmail, rules.userAccountIdUnique]"
+                        density="compact"></v-text-field>
+                    <v-text-field v-model="userFullName" label="Nom complet"
+                        :rules="[rules.required, rules.validFullName]"></v-text-field>
+                    <v-text-field v-model="password" label="Mot de passe" type="password"
+                        :rules="[rules.required, rules.passwordValid]" density="compact"></v-text-field>
+                    <v-text-field v-model="passwordConf" label="Confirmer le mot de passe"
+                        :rules="[rules.required, rules.passwordsMatch]" type="password" density="compact"></v-text-field>
+                    <v-btn type="submit" :disabled="!userAccountEmail || !userFullName || !password || !passwordConf">Créer
+                        un compte</v-btn>
+                </v-form>
+            </v-sheet>
         </v-sheet>
     </div>
-
-
 </template>
 
 <script>
@@ -29,6 +32,18 @@ export default {
             userFullName: '',
             rules: {
                 required: value => !!value || "Le champ est requis",
+                validEmail: () => {
+                    let validEmailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+                    this.userAccountEmail.match(validEmailRegex) || "Veuillez entrer une adresse courriel valide"
+                },
+                validFullName: () => {
+                    let validFullNameRegex = /(^[A-Z][a-z]+)(-){0,1}([ ]{0,1})([A-Z][a-z]+)?([ ]{1})?([A-Z][a-z]+)(-{0,1})([ ]{0,1})([A-Z][a-z]+)?$/;
+                    this.userFullName.match(validFullNameRegex) || "Veuillez entrer un nom complet valide"
+                },
+                validPassword: () => {
+                    let validPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+                    this.password.match(validPasswordRegex) || "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule et 1 caractère spécial"
+                },
                 passwordsMatch: () => this.password === this.passwordConf || "Les mots de passe ne correspondent pas",
                 userAccountEmailUnique: () => this.userAccountEmail || "Cette adressse courriel est déjà utilisée, veuillez en entrer une autre"
             },
@@ -45,7 +60,8 @@ export default {
                     () => {
                         alert("Compte créé avec succès, veuillez vous authentifier pour accéder à votre compte.");
                         this.userAccountUnique = true;
-                        this.$router.replace('/login');
+                        session.login(this.userAccountEmail, this.password);
+                        this.$router.replace('/');
                     }).catch(authError => {
                         alert(authError.message);
                         if (authError.status === 409) {
@@ -59,3 +75,14 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.boxed-center {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    margin: 1rem auto;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    width: 40%;
+    max-width: 80rem;
+}</style>

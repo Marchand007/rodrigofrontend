@@ -29,9 +29,11 @@
                     SE CONNECTER
                 </v-tab>
             </router-link>
-            <v-tab>
-                S'INSCRIRE
-            </v-tab>
+            <router-link class="routerlink" to="/login/new">
+                <v-tab>
+                    S'INSCRIRE
+                </v-tab>
+            </router-link>
         </div>
     </v-app-bar>
 </template>
@@ -42,15 +44,13 @@ import session from '../session';
 
 
 export default {
-    data: function ()
-    {
+    data: function () {
         return {
             session: session
         };
     },
     methods: {
-        disconnect()
-        {
+        disconnect() {
             session.disconnect()
             this.$router.push('/');
         }

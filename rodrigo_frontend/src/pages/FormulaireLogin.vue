@@ -9,7 +9,7 @@
                 <v-btn type="submit" :disabled="!userAccountEmail || !password">Se connecter</v-btn>
             </v-form>
             <div class="text-body ma-3">Vous n'avez pas de compte utilisateur ?&nbsp;
-                <router-link to="/login" replace>Créez-en un !</router-link>
+                <router-link to="/login/new" replace>Créez-en un !</router-link>
             </div>
         </v-sheet>
     </div>

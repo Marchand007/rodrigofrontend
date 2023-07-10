@@ -99,9 +99,9 @@ const session = reactive({
                 "Content-Type": "application/json"
             },
             body:JSON.stringify({
-                courriel_utilisateur: userAccountEmail,
-                nom_complet: userFullName,
-                motDePasse: password
+                courrielUtilisateur: userAccountEmail,
+                nomComplet: userFullName,
+                password: password
             })
         });
 

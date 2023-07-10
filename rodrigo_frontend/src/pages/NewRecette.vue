@@ -3,6 +3,8 @@
         <h2>Creation d'une nouvelle recette</h2>
         <v-sheet v-if="session.user && session.user.isAdmin">
             <v-form @submit.prevent="addRecette" validate-on="submit lazy" ref="recetteform">
+                <v-file-input :rules="[rules.required]" accept="image/*" label="Nouvelle image" prepend-icon="mdi-camera" id="product-image"
+                            ref="productImage" v-model="fichierImage"></v-file-input>
                 <v-sheet class="boxed-center">
                     <v-sheet-title>Informations de la recette</v-sheet-title>
                     <v-container>
@@ -118,7 +120,7 @@
 <script>
 
 import session from '../session';
-import { createRecette } from '../RecetteService';
+import { fetchRecette, createRecette, updateRecetteImage } from '../RecetteService';
 
 export default {
     data()
@@ -138,7 +140,7 @@ export default {
                 ingredients: [],
                 etapes: [],
             },
-
+            fichierImage: null,
             rules: {
                 required: value => !!value || "Le champ est requis",
                 recetteIdUnique: () => this.recetteIdUnique || "Cet identifiant est déjà utilisé, veuillez en enter un autre"
@@ -151,6 +153,15 @@ export default {
         };
     },
     methods: {
+        refreshRecette(id) {
+            this.recette = null;
+
+            fetchRecette(id).then(recette => {
+                this.recette = recette;
+            }).catch(err => {
+                this.recette = null;
+            });
+        },
         async addRecette()
         {
             this.recetteIdUnique = true;
@@ -163,8 +174,13 @@ export default {
             createRecette(this.recette)
             .then((reponse) =>
             {
+
+                this.submitImage();
                 this.$router.push('/recettes/' + this.recette.recetteId);
                 this.recetteIdUnique = true;
+
+
+        
             }).catch(err =>
             {
                 console.error(err);
@@ -175,6 +191,21 @@ export default {
                 }
                 this.$refs.recetteform.validate();
             })
+        },
+        async submitImage() {
+            if (this.fichierImage) {
+                const formData = new FormData();
+                formData.append('recette-image', this.fichierImage[0]);
+
+                try {
+                    await updateRecetteImage(this.recette.recetteId, formData);
+                   //this.edition = false;
+                    this.refreshRecette(this.id);
+                } catch (err) {
+                    console.error(err);
+                    alert(err.message);
+                }
+            }
         },
         addIngredient()
         {

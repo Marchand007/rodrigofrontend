@@ -16,7 +16,7 @@
             <v-sheet align="right" v-if="session.user && session.user.isAdmin" color="transparent">
                 <v-card-actions>
                     <v-btn @click="goToUpdatePage">Editer</v-btn>
-                    <v-btn v-if="isActive == true" class="ma-4" @click="goToUpdatePage">Supprimer la recette</v-btn>
+                    <v-btn v-if="isActive == true" class="ma-4" @click="deleteRecette()">Supprimer la recette</v-btn>
                     <v-btn v-if="false" class="ma-4" @click="goToUpdatePage">Réactiver la recette</v-btn>
                 </v-card-actions>
             </v-sheet>
@@ -26,6 +26,9 @@
 <script>
 import { addApiPrefixToPath } from '../../../src/api_utils.js';
 import session from '../../../src/session';
+
+import { deleteRecetteById } from '../../RecetteService';
+
 
 export default {
     props: {
@@ -46,6 +49,11 @@ export default {
         goToUpdatePage()
         {
             this.$router.push("/admin/update-recipe/" + this.id);
+        },
+        deleteRecette() {
+            deleteRecetteById(this.id).then(result => {
+                this.$router.push('/');
+            })
         }
     },
     computed: {

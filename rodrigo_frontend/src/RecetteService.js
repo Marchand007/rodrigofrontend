@@ -84,8 +84,23 @@ export async function updateRecette(recette) {
         },
         body: JSON.stringify(recette)
     });
+    if (response.ok)
+    {
+        return response.json();
+    } else
+    {
 
-
+        throw await createServiceError(response);
+    }
+}
+export async function deleteRecetteById(recetteId) {
+    const response = await fetch(`/api/recettes/${recetteId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+    });
     if (response.ok)
     {
         return response.json();

@@ -24,6 +24,10 @@ const app = createApp(App);
 
 
 const router = createRouter({
+    scrollBehavior(to, from, savedPosition) {
+        // always scroll to top
+        return { top: 0 }
+      },
     history: createWebHistory(),
     routes: [
         { path: '', component: ListeRecettes },
@@ -31,7 +35,8 @@ const router = createRouter({
         { path: '/admin/new-recipe', component: NewRecette },
         { path: '/admin/update-recipe/:id', component: UpdateRecette, props: true },
         { path: '/login', component: FormulaireLogin }
-    ]
+    ],
+    
 });
 
 app.use(router);

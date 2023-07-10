@@ -73,7 +73,6 @@ router.post('/',
         }
 
         const user = req.user;
-
         if (!user)
         {
             return next(new HttpError(403, "Vous devez avoir un compte utilisateur pour ajouter une appreciation"));
@@ -81,7 +80,6 @@ router.post('/',
 
         appreciationQueries.getUserAppreciationByRecetteId(recetteId, user.courrielUtilisateur).then(result =>
         {
-
             if (result.note > 0)
             {
                 return next(new HttpError(400, `${user.courrielUtilisateur} a deja donne une appreciation sur la recette ${recetteId}`));

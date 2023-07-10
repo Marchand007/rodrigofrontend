@@ -1,32 +1,44 @@
 <template>
-    <v-sheet class="ma-2">
-        <InfosRecette :id="id" :refreshCounter="refreshCounter"></InfosRecette>
-        <v-container>
-            <v-row no-gutters>
-                <ListeIngredientsRecette :id="id"></ListeIngredientsRecette>
-                <ListeEtapesRecette :id="id"></ListeEtapesRecette>
-            </v-row>
-        </v-container>
-
-        <v-card class="ma-2" v-if="session.user">
-            <v-card-title>Ajouter un commentaire</v-card-title>
-            <div>
+    <div v-if="(session.user && session.user.isAdmin) || isActive == true">
+        <v-sheet class="ma-2">
+            <InfosRecette :id="id" :refreshCounter="refreshCounter"></InfosRecette>
+            <v-container>
                 <v-row no-gutters>
-                    <AjoutCommentaire :id="id"></AjoutCommentaire>
-                    <AjoutAppreciation :id="id"></AjoutAppreciation>
+                    <ListeIngredientsRecette :id="id"></ListeIngredientsRecette>
+                    <ListeEtapesRecette :id="id"></ListeEtapesRecette>
                 </v-row>
-            </div>
-        </v-card>
+            </v-container>
 
-        <v-card v-else>
-            <v-card-title>Ajouter un commentaire</v-card-title>
-            <h5 class="ma-2">Vous devez avoir un compte utilisateur pour ajouter un commentaire et/ou une appréciation</h5>
-        </v-card>
+            <v-card class="ma-2" v-if="session.user">
+                <v-card-title>Ajouter un commentaire</v-card-title>
+                <div>
+                    <v-row no-gutters>
+                        <AjoutCommentaire :id="id"></AjoutCommentaire>
+                        <AjoutAppreciation :id="id"></AjoutAppreciation>
+                    </v-row>
+                </div>
+            </v-card>
 
-        <ListeCommentaires :id="id" :refreshCounter="refreshCounter"></ListeCommentaires>
-    </v-sheet>
+            <v-card v-else>
+                <v-card-title>Ajouter un commentaire</v-card-title>
+                <h5 class="ma-2">Vous devez avoir un compte utilisateur pour ajouter un commentaire et/ou une appréciation
+                </h5>
+            </v-card>
+
+            <ListeCommentaires :id="id" :refreshCounter="refreshCounter"></ListeCommentaires>
+        </v-sheet>
+    </div>
+    <div v-else>
+
+    </div>
+    <div>
+        <v-sheet class="ma-2">
+     <v-card>
+            <v-card-title align="center">Cette recette n'est pas disponible</v-card-title>
+     </v-card>
+</v-sheet>
+    </div>
 </template>
-
 <script>
 
 
@@ -38,6 +50,9 @@ import ListeEtapesRecette from './ListeEtapes/ListeEtapesRecette.vue';
 import ListeCommentaires from './Commentaires/ListeCommentaires.vue';
 import AjoutCommentaire from './AjoutCommentaire.vue';
 import AjoutAppreciation from './AjoutAppreciation.vue';
+
+import { fetchRecette } from '../../RecetteService';
+
 
 export default {
     props: {
@@ -54,21 +69,38 @@ export default {
     data()
     {
         return {
+            isActive: false,
             loading: true,
             loadError: false,
             session: session,
             refreshCounter: 0
         };
     },
-    provide(){
-        return{
-            refresh:this.refreshPageDetaillee
+    provide()
+    {
+        return {
+            refresh: this.refreshPageDetaillee
         };
     },
-    methods:{
-        refreshPageDetaillee() {
+    methods: {
+        refreshPageDetaillee()
+        {
             this.refreshCounter++;
         }
+    },
+    mounted()
+    {
+        fetchRecette(this.id).then(recette =>
+        {
+            this.isActive = recette.isActive;
+            this.loading = false;
+            this.loadError = false;
+        }).catch(err =>
+        {
+            console.error(err);
+            this.loading = false;
+            this.loadError = true;
+        })
     }
 }
 </script>

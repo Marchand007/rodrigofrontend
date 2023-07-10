@@ -1,21 +1,25 @@
 <template>
-    <v-card class="ma-2">
-        <v-sheet class="d-flex flex-no-wrap">
-            <v-sheet class="w-25">
-                <v-img :src="imageSrc" max-height="5rem" />
+    <v-card v-if="(session.user && session.user.isAdmin == true) || isActive == true" class="ma-2" :color="bgcolor">
+            <v-sheet class="w-100" color="transparent">
+                <v-img class="ma-4" :src="imageSrc" max-height="5rem" />
             </v-sheet>
-            <v-sheet>
-                <v-card-title><router-link :to="recetteDetailUrl">{{ nom }}</router-link></v-card-title>
+            <v-sheet align="center" color="transparent">
+                <v-card-title>
+                    <router-link :to="recetteDetailUrl">{{ nom }}</router-link>
+                    <div v-if="isActive == false" class="text-body-1">(recette desactive)</div>
+                </v-card-title>
                 <v-card-text>
+
                     <div class="text-body-1">{{ descCourt }}</div>
                 </v-card-text>
             </v-sheet>
-            <v-sheet v-if="session.user && session.user.isAdmin">
+            <v-sheet align="right" v-if="session.user && session.user.isAdmin" color="transparent">
                 <v-card-actions>
                     <v-btn @click="goToUpdatePage">Editer</v-btn>
+                    <v-btn v-if="isActive == true" class="ma-4" @click="goToUpdatePage">Supprimer la recette</v-btn>
+                    <v-btn v-if="false" class="ma-4" @click="goToUpdatePage">Réactiver la recette</v-btn>
                 </v-card-actions>
             </v-sheet>
-        </v-sheet>
     </v-card>
 </template>
 
@@ -28,12 +32,14 @@ export default {
         id: String,
         nom: String,
         descCourt: String,
-        image: String
+        image: String,
+        isActive: Boolean
     },
     data: function ()
     {
         return {
-            session: session
+            session: session,
+            bgcolor: this.isActive ? "transparent" : "#ffc0a4"
         };
     },
     methods: {

@@ -40,7 +40,6 @@ const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, c
             [courriel_utilisateur, recetteId]
         );
         const row = result.rows[0];
-        console.log("row out :",row);
 
         if (row.note > 0)
         {
@@ -51,9 +50,11 @@ const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, c
                 [courriel_utilisateur, recetteId]
             );
             const row = resultAppreciation.rows[0];
-            console.log("row in :",row);
-            return row;
+            return row; 
         }
+
+        await client.query("COMMIT");
+
         return row;
 
     }
@@ -72,6 +73,7 @@ exports.getUserAppreciationByRecetteId = getUserAppreciationByRecetteId;
 
 const insertAppreciationToRecipe = async (appreciation) =>
 {
+    console.log("appreciation recu : ", appreciation.courrielUtilisateur, appreciation.recetteId, appreciation.note)
     //TRY CATCH
     const result = await pool.query(
         `INSERT INTO appreciation(courriel_utilisateur, recette_id, note)
@@ -79,7 +81,8 @@ const insertAppreciationToRecipe = async (appreciation) =>
         [appreciation.courrielUtilisateur, appreciation.recetteId, appreciation.note]
     );
     return {
-        message: "L'ajout de l'appreciation a bien été fait"
+        message: "L'ajout de l'appreciation a bien été fait",
+        note: appreciation.note
     };
 };
 

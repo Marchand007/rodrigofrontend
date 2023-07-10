@@ -24,7 +24,6 @@ const getAllRecettes = async () =>
     const result = await pool.query(
         `SELECT recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions, is_active
         FROM Recette 
-        WHERE is_active = true
         ORDER BY recette_id`
     );
 

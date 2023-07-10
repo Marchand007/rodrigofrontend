@@ -121,7 +121,7 @@ const insertRecette = async (recette, clientParam) =>
         await client.query(
             `INSERT INTO Recette (recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions, is_active) 
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-            [recette.recetteId, recette.nom, recette.descCourt, recette.descLong, recette.tempsPrepMin, recette.tempsCuissMin, recette.nbPortions, recette.isActive]
+            [recette.recetteId, recette.nom, recette.descCourt, recette.descLong, recette.tempsPrepMin, recette.tempsCuissonMin, recette.nbPortions, recette.isActive]
         );
         for (let i = 0; i < recette.ingredients.length; i++)
         {

@@ -1,5 +1,38 @@
 const pool = require('./DBPool');
 
+const createUserAccount = async (userAccountEmail, passwordHash, passwordSalt, fullname) => {
+    const client = await pool.connect();
+
+    try {
+        await client.query('BEGIN');
+
+        const existingUserAccount = await getLoginByUserAccountEmail(userAccountEmail, client);
+        if(existingUserAccount) {
+            throw new createHttpError(409, `Un compte avec le courriel ${userAccountEmail} existe déjà`);
+        }
+
+        const result = await (client || pool).query(
+            `INSERT INTO utilisateur (courriel_utilisateur, nom_complet, password_hash, password, password_salt)
+            VALUES($1, $2, $3, $4)`,
+            [userAccountEmail, fullname, passwordHash, passwordSalt]
+        );
+
+        const userAccount = getLoginByUserAccountEmail(userAccountEmail, client);
+
+        client.query('COMMIT');
+        
+        return userAccount;
+
+    } catch (error) {
+        await client.query("ROLLBACK");
+        throw error;
+    } finally{
+        client.release();
+    }
+};
+
+exports.createUserAccount = createUserAccount;
+
 const getLoginByUserAccountEmail = async (userAccountEmail, client) =>
 {
     const result = await (client || pool).query(

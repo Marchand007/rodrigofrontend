@@ -91,7 +91,36 @@ const session = reactive({
         {
             return {};
         }
-    }
+    },
+    async createUserAccount(userAccountEmail, userFullName, password){
+        const response = await fetch("/api/login", {
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body:JSON.stringify({
+                courrielUtilisateur: userAccountEmail,
+                nomCompletUtilisateur: userFullName,
+                motDePasse: password
+            })
+        });
+
+        if(response.ok){
+            const user = await response.json();
+            return user;
+        } else {
+            this.user = null;
+            if(response.status === 409){
+                const respBody = await response.json();
+                if(respBody && respBody.message){
+                    throw new AuthError(response.status, respBody.message);
+                }
+                throw new AuthError(response.status, "Erreur lors de la création du compte");
+            } else {
+                throw new AuthError(response.status, "Erreur lors de la création du compte: " + response.status);
+            }
+        }
+    },
 });
 
 export default session;

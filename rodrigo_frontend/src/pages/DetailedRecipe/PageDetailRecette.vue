@@ -31,7 +31,7 @@
     <div v-else>
 
     </div>
-    <div>
+    <div v-else>
         <v-sheet class="ma-2">
      <v-card>
             <v-card-title align="center">Cette recette n'est pas disponible</v-card-title>

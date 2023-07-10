@@ -1,6 +1,6 @@
 <template>
     <v-col cols="8">
-        <v-textarea class="ml-2" v-model="texteCommentaire" label="Text"></v-textarea>
+        <v-textarea class="ml-2" v-model="texteCommentaire"></v-textarea>
         <v-btn class="ma-2" @click="this.addCommentaire()">Envoyer votre commentaire</v-btn>
     </v-col>
 </template>

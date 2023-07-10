@@ -1,4 +1,5 @@
 const pool = require('./DBPool');
+const HttpError = require('../HttpError');
 
 const createUserAccount = async (userAccountEmail, fullname, passwordHash, passwordSalt) => {
     const client = await pool.connect();
@@ -8,7 +9,7 @@ const createUserAccount = async (userAccountEmail, fullname, passwordHash, passw
 
         const existingUserAccount = await getLoginByUserAccountEmail(userAccountEmail, client);
         if(existingUserAccount) {
-            throw new createHttpError(409, `Un compte avec le courriel ${userAccountEmail} existe déjà`);
+            throw new HttpError(409, `Un compte avec le courriel ${userAccountEmail} existe déjà`);
         }
 
         const result = await (client || pool).query(

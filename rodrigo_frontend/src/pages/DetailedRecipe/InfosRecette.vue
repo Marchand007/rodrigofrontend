@@ -5,9 +5,9 @@
     </v-rating>
     <span>({{ nombreAppreciation }})</span>
     <v-card class="ma-2">
-        <v-sheet class="d-flex flex-no-wrap">
-            <v-sheet class="w-75 ma-4">
-                <v-img :src="imageSrc" max-height="60rem" max-width="60rem" />
+        <v-sheet class="d-flex">
+            <v-sheet class="ma-4">
+                <v-img :src="imageSrc" width="20rem" />
             </v-sheet>
             <v-sheet>
                 <v-card-title>Mais c'est quoi du {{ recette.nom }} ??</v-card-title>

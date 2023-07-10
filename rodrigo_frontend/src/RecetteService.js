@@ -201,6 +201,18 @@ export async function fetchAppreciationByRecetteId(recetteId)
     }
 }
 
+export async function fetchAppreciatioForUserByRecetteId(recetteId)
+{
+    const user = session.user_email;
+    const response = await fetch(`/api/appreciation/${recetteId}/${user}`);
+
+    if (response.ok) {
+        return await response.json();
+    } else {
+        throw await createServiceError(response);
+    }
+}
+
 export async function addAppreciationToRecipeId(appreciation){
     const response = await fetch(`/api/appreciation`, {
         method: "POST",

@@ -216,7 +216,7 @@ export async function fetchAppreciationByRecetteId(recetteId)
     }
 }
 
-export async function fetchAppreciatioForUserByRecetteId(recetteId)
+export async function fetchAppreciationForUserByRecetteId(recetteId)
 {
     const user = session.user_email;
     const response = await fetch(`/api/appreciation/${recetteId}/${user}`);
@@ -249,6 +249,18 @@ export async function addAppreciationToRecipeId(appreciation){
 
 export async function fetchCommentairesByRecetteId(recetteId) {
     const response = await fetch(`/api/comments/${recetteId}`);
+
+    if (response.ok) {
+        return await response.json();
+    } else {
+        throw await createServiceError(response);
+    }
+}
+
+export async function fetchCommentaireForUserByRecetteId(recetteId)
+{
+    const user = session.user_email;
+    const response = await fetch(`/api/comments/${recetteId}/${user}`);
 
     if (response.ok) {
         return await response.json();

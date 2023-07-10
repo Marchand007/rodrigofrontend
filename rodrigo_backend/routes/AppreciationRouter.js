@@ -53,7 +53,7 @@ router.get('/:id/:user', (req, res, next) =>
             res.json(appreciation);
         } else
         {
-            return next(new HttpError(404, `Recette ${id} introuvable`));
+            return next(new HttpError(404, `Appreciation de ${user} pour la recette ${recetteId} introuvable`));
         }
     }).catch(err =>
     {

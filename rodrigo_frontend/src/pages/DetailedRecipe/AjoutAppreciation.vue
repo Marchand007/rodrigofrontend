@@ -11,7 +11,7 @@
 <script>
 
 import session from '../../session';
-import { addAppreciationToRecipeId, fetchAppreciatioForUserByRecetteId } from '../../RecetteService';
+import { addAppreciationToRecipeId, fetchAppreciationForUserByRecetteId } from '../../RecetteService';
 
 export default {
     inject: ['refresh'],
@@ -19,19 +19,16 @@ export default {
         id: String,
         refreshCounter: Number
     },
-    data()
-    {
+    data() {
         return {
             session: session,
             rating: 0,
-            disabled : false
+            disabled: false
         }
     },
     methods: {
-        addAppreciation()
-        {
-            if (!session.user)
-            {
+        addAppreciation() {
+            if (!session.user) {
                 alert("Impossible de soumettre le commentaire sans connexion");
             }
 
@@ -40,8 +37,7 @@ export default {
                 recetteId: this.id,
                 note: this.rating
             };
-            addAppreciationToRecipeId(appreciation).then(response =>
-            {
+            addAppreciationToRecipeId(appreciation).then(response => {
                 alert(response.message);
                 this.rating = response.note;
                 this.disabled = true;
@@ -49,19 +45,17 @@ export default {
             });
         },
         loadAppreciation() {
-            fetchAppreciatioForUserByRecetteId(this.id).then(response =>
-        {
-           
-            if (response.note > 0)
-            {
-                this.rating = response.note;
-                this.disabled = true;
-            }
-        });
+            fetchAppreciationForUserByRecetteId(this.id).then(response => {
+
+                if (response.note > 0) {
+                    this.rating = response.note;
+                    this.disabled = true;
+                }
+                
+            });
         }
     },
-    mounted()
-    {
+    mounted() {
         this.loadAppreciation();
     }
 }

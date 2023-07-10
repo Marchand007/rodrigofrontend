@@ -45,8 +45,6 @@ class BasicStrategyModified extends BasicStrategy {
   }
 }
 
-
-
 passport.use(new BasicStrategyModified((user_email, password, cb) => {
   userAccountQueries.getLoginByUserAccountEmail(user_email).then(login => {
     if (!login || !login.isActive) {

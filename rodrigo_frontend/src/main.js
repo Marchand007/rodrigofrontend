@@ -32,7 +32,6 @@ const router = createRouter({
         { path: '/recettes/:id', component: PageDetailRecette, props: true },
         { path: '/admin/new-recipe', component: NewRecette },
         { path: '/admin/update-recipe/:id', component: UpdateRecette, props: true },
-
         { path: '/login', component: FormulaireLogin },
         { path: '/login/new', component: FormulaireNouvUser }
     ]

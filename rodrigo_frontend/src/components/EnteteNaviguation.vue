@@ -6,7 +6,7 @@
         </v-app-bar-nav-icon>
         <v-toolbar-title align-content="right">
             <p class="font-weight-light text-disabled">
-                Les meilleurs recettes du web sont celles de Rodrigo
+                Les meilleures recettes du web sont celles de Rodrigo
             </p>
         </v-toolbar-title>
         <router-link class="routerlink" to="/"><v-tab>Les recettes</v-tab></router-link>

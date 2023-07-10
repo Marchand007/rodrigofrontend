@@ -31,7 +31,6 @@ router.get('/:id', (req, res, next) =>
 {
 
     const id = req.params.id;
-    console.log("id:", id);
     recetteQueries.getRecetteById(id).then(recette =>
     {
         if (recette)
@@ -58,7 +57,6 @@ const onePixelTransparentPngImage = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAA
 router.get('/:id/image', (req, res, next) =>
 {
     const id = req.params.id;
-    console.log("id:", id);
     recetteQueries.getRecetteImageContent(id).then(imageInfo =>
     {
         if (imageInfo && imageInfo.imageContent)
@@ -91,7 +89,6 @@ router.post('/',
         {
             return next(new HttpError(403, "Droit administrateur requis"));
         }
-        console.log("body received : ", req.body);
         const id = req.body.recetteId;
         if (!id || id === '')
         {
@@ -116,12 +113,18 @@ router.post('/',
                 tempsPrepMin: "" + req.body.tempsPrepMin,
                 tempsCuissMin: "" + req.body.tempsCuissMin,
                 nbPortions: "" + req.body.nbPortions,
-                isActive: "" + req.body.isActive
+                isActive: "" + req.body.isActive,
+                ingredients: req.body.ingredients,
+                etapes: req.body.etapes
             };
 
             return recetteQueries.insertRecette(nouvRecette);
         }).then(result =>
         {
+            if (!result)
+            {
+                return next(new HttpError(404, `Recette ${id} introuvable`));
+            }
             res.json(result);
         }).catch(err =>
         {
@@ -154,15 +157,17 @@ router.put('/:id',
         }
 
         const nouvRecette = {
-            id: "" + id,
+            recetteId: "" + id,
             nom: "" + req.body.nom,
             image: "" + req.body.image,
             descCourt: "" + req.body.descCourt,
             descLong: "" + req.body.descLong,
             tempsPrepMin: "" + req.body.tempsPrepMin,
-            tempsCuissonMin: "" + req.body.tempsCuissonMin,
+            tempsCuissMin: "" + req.body.tempsCuissMin,
             nbPortions: "" + req.body.nbPortions,
-            isActive: "" + req.body.isActive
+            isActive: "" + req.body.isActive,
+            ingredients: req.body.ingredients,
+            etapes: req.body.etapes
         };
 
         recetteQueries.updateRecette(nouvRecette).then(result =>

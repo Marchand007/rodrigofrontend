@@ -39,7 +39,6 @@ export default {
             };
             addAppreciationToRecipeId(appreciation).then(response =>
             {
-                console.log("RESULT", response.message);
                 alert(response.message);
                 this.rating = 0;
             });

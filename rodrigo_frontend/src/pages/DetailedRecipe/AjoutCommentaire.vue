@@ -1,14 +1,14 @@
 <template>
     <v-col cols="8">
-        <v-textarea class="ml-2" v-model="texteCommentaire"></v-textarea>
-        <v-btn class="ma-2" @click="this.addCommentaire()">Envoyer votre commentaire</v-btn>
+        <v-textarea class="ml-2" :readonly="disabled" v-model="texteCommentaire" label="Ajouter votre commentaire ici"></v-textarea>
+        <v-btn class="ma-2" :disabled="disabled" @click="this.addCommentaire()">Envoyer votre commentaire</v-btn>
     </v-col>
 </template>
 
 <script>
 
 import session from '../../session';
-import { addCommentaireToRecipeId } from '../.././RecetteService';
+import { addCommentaireToRecipeId, fetchCommentaireForUserByRecetteId } from '../.././RecetteService';
 
 export default {
     inject :['refresh'],
@@ -20,7 +20,8 @@ export default {
     {
         return {
             session: session,
-            texteCommentaire: ""
+            texteCommentaire: "",
+            disabled: false
         }
     },
 
@@ -42,9 +43,24 @@ export default {
             {
                 alert(response.message);
                 this.texteCommentaire = "";
+                this.disabled = true;
+                this.loadCommentaire();
                 this.refresh();
             });
+        },
+        loadCommentaire(){
+            fetchCommentaireForUserByRecetteId(this.id).then(response => {
+                
+                if(response.texte){
+                    this.texteCommentaire = "Vous avez déjà publié un commentaire pour cette recette",
+                    this.disabled = true;
+                }
+
+            });
         }
+    },
+    mounted() {
+        this.loadCommentaire();
     }
 }
 

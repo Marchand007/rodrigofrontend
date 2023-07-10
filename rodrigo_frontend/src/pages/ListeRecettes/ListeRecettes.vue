@@ -6,7 +6,7 @@
     </v-flex>
     <v-sheet class="ma-2">
         <ResumeRecette v-for="recette in recettes" :key="recette.id" :id="recette.id" :nom="recette.nom"
-            :descCourt="recette.descCourt" :image="recette.image" />
+            :descCourt="recette.descCourt" :isActive="recette.isActive" :image="recette.image" />
     </v-sheet>
 </template>
 

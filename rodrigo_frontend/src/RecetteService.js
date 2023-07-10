@@ -84,8 +84,23 @@ export async function updateRecette(recette) {
         },
         body: JSON.stringify(recette)
     });
+    if (response.ok)
+    {
+        return response.json();
+    } else
+    {
 
-
+        throw await createServiceError(response);
+    }
+}
+export async function deleteRecetteById(recetteId) {
+    const response = await fetch(`/api/recettes/${recetteId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        },
+    });
     if (response.ok)
     {
         return response.json();
@@ -193,6 +208,18 @@ export async function addIngredient(ingredient) {
 export async function fetchAppreciationByRecetteId(recetteId)
 {
     const response = await fetch(`/api/appreciation/${recetteId}`);
+
+    if (response.ok) {
+        return await response.json();
+    } else {
+        throw await createServiceError(response);
+    }
+}
+
+export async function fetchAppreciatioForUserByRecetteId(recetteId)
+{
+    const user = session.user_email;
+    const response = await fetch(`/api/appreciation/${recetteId}/${user}`);
 
     if (response.ok) {
         return await response.json();

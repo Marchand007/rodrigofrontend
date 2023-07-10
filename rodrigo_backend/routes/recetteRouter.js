@@ -35,10 +35,6 @@ router.get('/:id', (req, res, next) =>
     {
         if (recette)
         {
-            if (!recette.isActive)
-            {
-                return next(new HttpError(404, `Impossible de charger cette recette car elle est supprimée`));
-            }
             res.json(recette);
         } else
         {
@@ -111,7 +107,7 @@ router.post('/',
                 descCourt: "" + req.body.descCourt,
                 descLong: "" + req.body.descLong,
                 tempsPrepMin: "" + req.body.tempsPrepMin,
-                tempsCuissMin: "" + req.body.tempsCuissMin,
+                tempsCuissonMin: "" + req.body.tempsCuissonMin,
                 nbPortions: "" + req.body.nbPortions,
                 isActive: "" + req.body.isActive,
                 ingredients: req.body.ingredients,
@@ -163,7 +159,7 @@ router.put('/:id',
             descCourt: "" + req.body.descCourt,
             descLong: "" + req.body.descLong,
             tempsPrepMin: "" + req.body.tempsPrepMin,
-            tempsCuissMin: "" + req.body.tempsCuissMin,
+            tempsCuissonMin: "" + req.body.tempsCuissonMin,
             nbPortions: "" + req.body.nbPortions,
             isActive: "" + req.body.isActive,
             ingredients: req.body.ingredients,

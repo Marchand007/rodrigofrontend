@@ -23,28 +23,66 @@ const getAppreciationByRecetteId = async (recetteId) =>
 
 exports.getAppreciationByRecetteId = getAppreciationByRecetteId;
 
-const getUserAppreciationByRecetteId = async (courriel_utilisateur, recetteId) =>
+const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, clientParam) =>
 {
-    const result = await pool.query(
-        `SELECT COUNT(courriel_utilisateur)
+    const client = clientParam || await pool.connect();
+
+    if (!clientParam)
+    {
+        await client.query('BEGIN');
+    }
+    try
+    {
+        const result = await client.query(
+            `SELECT COUNT(courriel_utilisateur) as note
         FROM Appreciation
         WHERE courriel_utilisateur = $1 AND recette_id = $2`,
-        [courriel_utilisateur, recetteId]
-    );
+            [courriel_utilisateur, recetteId]
+        );
+        const row = result.rows[0];
+
+        if (row.note > 0)
+        {
+            const resultAppreciation = await client.query(
+                `SELECT note
+            FROM Appreciation
+            WHERE courriel_utilisateur = $1 AND recette_id = $2`,
+                [courriel_utilisateur, recetteId]
+            );
+            const row = resultAppreciation.rows[0];
+            return row; 
+        }
+
+        await client.query("COMMIT");
+
+        return row;
+
+    }
+    catch (error)
+    {
+        await client.query("ROLLBACK");
+        throw error;
+    }
+    finally
+    {
+        client.release();
+
+    }
 }
 exports.getUserAppreciationByRecetteId = getUserAppreciationByRecetteId;
 
 const insertAppreciationToRecipe = async (appreciation) =>
 {
+    console.log("appreciation recu : ", appreciation.courrielUtilisateur, appreciation.recetteId, appreciation.note)
     //TRY CATCH
     const result = await pool.query(
         `INSERT INTO appreciation(courriel_utilisateur, recette_id, note)
         VALUES ($1, $2, $3)`,
         [appreciation.courrielUtilisateur, appreciation.recetteId, appreciation.note]
     );
-
     return {
-        message: "L'ajout de l'appreciation a bien été fait"
+        message: "L'ajout de l'appreciation a bien été fait",
+        note: appreciation.note
     };
 };
 

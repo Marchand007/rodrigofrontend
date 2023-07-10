@@ -26,7 +26,7 @@
                                     :rules="[]"></v-text-field>
                             </v-col>
                             <v-col cols="1" sm="4">
-                                <v-text-field v-model="recette.tempsCuissMin" label="Temps de cuisson (minutes)"
+                                <v-text-field v-model="recette.tempsCuissonMin" label="Temps de cuisson (minutes)"
                                     density="compact" type="number" step="1" min="0" :rules="[]"></v-text-field>
                             </v-col>
                             <v-col cols="1" sm="4">

@@ -1,9 +1,9 @@
 <template>
     <v-col cols="4">
         <div class="text-center">
-            <v-rating v-model="rating" hover></v-rating>
+            <v-rating :readonly="disabled" v-model="rating" hover></v-rating>
             <pre>{{ rating }}</pre>
-            <v-btn v-on:click="this.addAppreciation()">Envoyer Appréciation</v-btn>
+            <v-btn :disabled="disabled" v-on:click="this.addAppreciation()">Envoyer Appréciation</v-btn>
         </div>
     </v-col>
 </template>
@@ -11,10 +11,10 @@
 <script>
 
 import session from '../../session';
-import { addAppreciationToRecipeId } from '../../RecetteService';
+import { addAppreciationToRecipeId, fetchAppreciatioForUserByRecetteId } from '../../RecetteService';
 
 export default {
-    inject:['refresh'],
+    inject: ['refresh'],
     props: {
         id: String,
         refreshCounter: Number
@@ -23,7 +23,8 @@ export default {
     {
         return {
             session: session,
-            rating: 0
+            rating: 0,
+            disabled : false
         }
     },
     methods: {
@@ -42,11 +43,26 @@ export default {
             addAppreciationToRecipeId(appreciation).then(response =>
             {
                 alert(response.message);
-                this.rating = 0;
+                this.rating = response.note;
+                this.disabled = true;
                 this.refresh();
             });
-            //this.$router.push('/recettes/' + this.id); DEMANDER AU PROF DEMAIN !!!
+        },
+        loadAppreciation() {
+            fetchAppreciatioForUserByRecetteId(this.id).then(response =>
+        {
+           
+            if (response.note > 0)
+            {
+                this.rating = response.note;
+                this.disabled = true;
+            }
+        });
         }
+    },
+    mounted()
+    {
+        this.loadAppreciation();
     }
 }
 

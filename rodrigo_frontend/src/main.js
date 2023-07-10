@@ -22,12 +22,17 @@ import PageDetailRecette from './pages/DetailedRecipe/PageDetailRecette.vue';
 const app = createApp(App);
 
 const router = createRouter({
+    scrollBehavior(to, from, savedPosition) {
+        // always scroll to top
+        return { top: 0 }
+      },
     history: createWebHistory(),
     routes: [
         { path: '', component: ListeRecettes },
         { path: '/recettes/:id', component: PageDetailRecette, props: true },
         { path: '/admin/new-recipe', component: NewRecette },
         { path: '/admin/update-recipe/:id', component: UpdateRecette, props: true },
+
         { path: '/login', component: FormulaireLogin },
         { path: '/login/new', component: FormulaireNouvUser }
     ]

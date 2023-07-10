@@ -31,6 +31,36 @@ router.get('/:id', (req, res, next) =>
     });
 });
 
+
+router.get('/:id/:user', (req, res, next) =>
+{
+    const id = req.params.id;
+    const user = req.params.user;
+
+    if (id == null || id === "")
+    {
+        return next(new HttpError(400, `Le parametre Id est requis`));
+    }
+    if (user == null || user === "")
+    {
+        return next(new HttpError(400, `Le parametre user est requis`));
+    }
+
+    appreciationQueries.getUserAppreciationByRecetteId(id, user).then(appreciation =>
+    {
+        if (appreciation)
+        {
+            res.json(appreciation);
+        } else
+        {
+            return next(new HttpError(404, `Recette ${id} introuvable`));
+        }
+    }).catch(err =>
+    {
+        return next(err);
+    });
+});
+
 router.post('/',
     passport.authenticate('basic', { session: false }),
     (req, res, next) =>
@@ -43,16 +73,14 @@ router.post('/',
         }
 
         const user = req.user;
-
         if (!user)
         {
             return next(new HttpError(403, "Vous devez avoir un compte utilisateur pour ajouter une appreciation"));
         }
 
-        appreciationQueries.getUserAppreciationByRecetteId(user.courrielUtilisateur, recetteId).then(result =>
+        appreciationQueries.getUserAppreciationByRecetteId(recetteId, user.courrielUtilisateur).then(result =>
         {
-
-            if (result == 1)
+            if (result.note > 0)
             {
                 return next(new HttpError(400, `${user.courrielUtilisateur} a deja donne une appreciation sur la recette ${recetteId}`));
             }

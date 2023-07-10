@@ -25,7 +25,7 @@
                                     density="compact" type="number" min="0" step="1" :rules="[]"></v-text-field>
                             </v-col>
                             <v-col cols="1" sm="4">
-                                <v-text-field v-model="recette.tempsCuissMin" label="Temps de cuisson (minutes)"
+                                <v-text-field v-model="recette.tempsCuissonMin" label="Temps de cuisson (minutes)"
                                     density="compact" type="number" step="1" min="0" :rules="[]"></v-text-field>
                             </v-col>
                             <v-col cols="1" sm="4">
@@ -131,7 +131,7 @@ export default {
                 descCourt: "",
                 descLong: "",
                 tempsPrepMin: 0,
-                tempsCuissMin: 0,
+                tempsCuissonMin: 0,
                 nbPortions: 0,
                 image: "",
                 isActive: true,

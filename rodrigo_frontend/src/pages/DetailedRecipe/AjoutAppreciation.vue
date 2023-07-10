@@ -14,8 +14,10 @@ import session from '../../session';
 import { addAppreciationToRecipeId } from '../../RecetteService';
 
 export default {
+    inject:['refresh'],
     props: {
-        id: String
+        id: String,
+        refreshCounter: Number
     },
     data()
     {
@@ -41,6 +43,7 @@ export default {
             {
                 alert(response.message);
                 this.rating = 0;
+                this.refresh();
             });
             //this.$router.push('/recettes/' + this.id); DEMANDER AU PROF DEMAIN !!!
         }

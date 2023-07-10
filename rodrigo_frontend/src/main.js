@@ -10,18 +10,16 @@ import { aliases, mdi } from 'vuetify/iconsets/mdi';
 import '@mdi/font/css/materialdesignicons.css';
 
 import App from './App.vue';
-//need more import
 
 import FormulaireLogin from './pages/FormulaireLogin.vue';
+import FormulaireNouvUser from './pages/FormulaireNouvUser.vue';
 import ListeRecettes from './pages/ListeRecettes/ListeRecettes.vue';
 import NewRecette from './pages/NewRecette.vue';
 import UpdateRecette from './pages/UpdateRecette.vue';
 import PageDetailRecette from './pages/DetailedRecipe/PageDetailRecette.vue';
 
 
-
 const app = createApp(App);
-
 
 const router = createRouter({
     scrollBehavior(to, from, savedPosition) {
@@ -34,9 +32,10 @@ const router = createRouter({
         { path: '/recettes/:id', component: PageDetailRecette, props: true },
         { path: '/admin/new-recipe', component: NewRecette },
         { path: '/admin/update-recipe/:id', component: UpdateRecette, props: true },
-        { path: '/login', component: FormulaireLogin }
-    ],
-    
+
+        { path: '/login', component: FormulaireLogin },
+        { path: '/login/new', component: FormulaireNouvUser }
+    ]
 });
 
 app.use(router);

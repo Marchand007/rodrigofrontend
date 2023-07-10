@@ -124,6 +124,46 @@ app.get('/login',
   }
 );
 
+app.post('/login',
+  (req, res, next) => {
+    if (!req.body.courrielUtilisateur || req.body.courrielUtilisateur === '') {
+      return next(new HttpError(400, "Propriété courrielUtilisateur requise"));
+    }
+
+    if (!req.body.password || req.body.password === '') {
+      return next(new HttpError(400, "Propriété password requise"));
+    }
+
+    const saltBuf = crypto.randomBytes(16);
+    const salt = saltBuf.toString("base64");
+
+    crypto.pbkdf2(req.body.password, salt, 100000, 64, "sha512", async (err, derivedKey) => {
+      if (err) {
+        return next(err);
+      }
+
+      const passwordHashBase64 = derivedKey.toString("base64");
+
+      try {
+        const userAccountWithPasswordHash = await userAccountQueries.createUserAccount(req.body.courrielUtilisateur, req.body.nomComplet,
+          passwordHashBase64, salt);
+
+        const userDetails = {
+          courrielUtilisateur: userAccountWithPasswordHash.courrielUtilisateur,
+          nomComplet: userAccountWithPasswordHash.nomComplet,
+          isAdmin: userAccountWithPasswordHash.isAdmin,
+          isActive: userAccountWithPasswordHash.isActive
+        };
+
+        res.json(userDetails);
+      } catch (err) {
+        return next(err);
+      }
+
+    });
+  }
+);
+
 // *** GESTION DES ERREURS ***
 
 // Gestionnaire d'erreur, sera invoqué si on appelle next(...) en passant

@@ -1,5 +1,6 @@
 <template>
     <v-btn @click="goToUpdatePage()" size="x-small" v-if="session.user && session.user.isAdmin">Modifier la recette</v-btn>
+    <v-btn class="ma-4" @click="deleteRecette()" size="x-small" v-if="session.user && session.user.isAdmin">Supprimer la recette</v-btn>
     <h2 class="text-h4">{{ recette.nom }}</h2>
     <v-rating v-model="moyenneAppreciation" density="compact" hover half-increments readonly>
     </v-rating>
@@ -7,7 +8,7 @@
     <v-card class="ma-2">
         <v-sheet class="d-flex">
             <v-sheet class="ma-4">
-                <v-img :src="imageSrc" width="20rem" />
+                <v-img :src="imageSrc" width="30rem" />
             </v-sheet>
             <v-sheet>
                 <v-card-title>Mais c'est quoi du {{ recette.nom }} ??</v-card-title>
@@ -51,12 +52,13 @@
             </v-card>
         </v-container>
     </v-card>
+
 </template>
 
 
 <script>
 import { addApiPrefixToPath } from '../../../src/api_utils.js';
-import { fetchRecette, fetchAppreciationByRecetteId } from '../../RecetteService';
+import { fetchRecette, fetchAppreciationByRecetteId, deleteRecetteById } from '../../RecetteService';
 import session from '../../session';
 
 export default {
@@ -85,6 +87,12 @@ export default {
             }).catch(err => {
                 console.error(err);
             });
+        },
+        deleteRecette() {
+            console.log("ici",this.id);
+            deleteRecetteById(this.id).then(result => {
+                this.$router.push('/');
+            })
         }
     },
     computed: {

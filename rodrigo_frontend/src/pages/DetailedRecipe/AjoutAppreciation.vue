@@ -43,17 +43,18 @@ export default {
             addAppreciationToRecipeId(appreciation).then(response =>
             {
                 alert(response.message);
+                this.rating = response.note;
+                this.disabled = true;
                 this.refresh();
-                this.loadAppreciation();
             });
         },
         loadAppreciation() {
-            fetchAppreciatioForUserByRecetteId(this.id).then(reponse =>
+            fetchAppreciatioForUserByRecetteId(this.id).then(response =>
         {
            
-            if (reponse.note > 0)
+            if (response.note > 0)
             {
-                this.rating = reponse.note;
+                this.rating = response.note;
                 this.disabled = true;
             }
         });

@@ -35,10 +35,6 @@ router.get('/:id', (req, res, next) =>
     {
         if (recette)
         {
-            if (!recette.isActive)
-            {
-                return next(new HttpError(404, `Impossible de charger cette recette car elle est supprimée`));
-            }
             res.json(recette);
         } else
         {

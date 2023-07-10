@@ -40,7 +40,6 @@ export default {
 
             addCommentaireToRecipeId(commentaire).then((response) =>
             {
-                console.log("RESULT", response.message);
                 alert(response.message);
                 this.texteCommentaire = "";
                 this.refresh();

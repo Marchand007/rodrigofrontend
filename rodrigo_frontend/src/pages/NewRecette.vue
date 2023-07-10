@@ -43,15 +43,15 @@
                     <v-sheet-title>Liste des ingredients</v-sheet-title>
                     <v-form @submit.prevent="addIngredient" validate-on="submit" ref="ingredientAddForm">
 
-                        <v-container v-for="(ingredient, i) in ingredients">
+                        <v-container v-for="(ingredient, i) in recette.ingredients">
                             <v-row>
 
                                 <span> {{ i + 1 }}</span>
-                                <v-text-field class="ml-2" v-model="ingredients[i].quantite" density="compact">
+                                <v-text-field class="ml-2" v-model="recette.ingredients[i].quantite" density="compact">
                                 </v-text-field>
-                                <v-text-field class="ml-2" v-model="ingredients[i].uniteMesure" density="compact">
+                                <v-text-field class="ml-2" v-model="recette.ingredients[i].uniteMesure" density="compact">
                                 </v-text-field>
-                                <v-text-field class="ml-2" v-model="ingredients[i].nom" density="compact"
+                                <v-text-field class="ml-2" v-model="recette.ingredients[i].nom" density="compact"
                                     :rules="[rules.required]">
                                 </v-text-field>
 
@@ -59,7 +59,7 @@
                                 <v-btn class="ml-5" @click="upIngredient(i)" size="small" :disabled="i <= 0">Monter
                                     l'ingrédient</v-btn>
                                 <v-btn class="ml-5" @click="downIngredient(i)" size="small"
-                                    :disabled="i >= ingredients.length - 1">Descendre l'ingrédient</v-btn>
+                                    :disabled="i >= recette.ingredients.length - 1">Descendre l'ingrédient</v-btn>
 
                             </v-row>
                         </v-container>
@@ -84,17 +84,17 @@
                     <v-sheet-title class="ma-5">Liste des etapes</v-sheet-title>
                     <v-form @submit.prevent="addEtape" validate-on="submit" ref="etapeAddForm">
 
-                        <v-container v-for="(etape, i) in etapes">
+                        <v-container v-for="(etape, i) in recette.etapes">
                             <v-row>
                                 <span> {{ i + 1 }}</span>
-                                <v-text-field class="ml-2" v-model="etapes[i].description" density="compact">
+                                <v-text-field class="ml-2" v-model="recette.etapes[i].description" density="compact">
 
                                 </v-text-field>
                                 <v-btn class="ml-5" @click="deleteEtape(i)" size="small">Supprimer l'étape</v-btn>
                                 <v-btn class="ml-5" @click="upEtape(i)" size="small" :disabled="i <= 0">Monter
                                     l'étape</v-btn>
                                 <v-btn class="ml-5" @click="downEtape(i)" size="small"
-                                    :disabled="i >= etapes.length - 1">Descendre l'étape</v-btn>
+                                    :disabled="i >= recette.etapes.length - 1">Descendre l'étape</v-btn>
                             </v-row>
                         </v-container>
                         <v-container>
@@ -118,7 +118,7 @@
 <script>
 
 import session from '../session';
-import { createRecette, addEtape, addIngredient } from '../RecetteService';
+import { createRecette } from '../RecetteService';
 
 export default {
     data()
@@ -134,10 +134,11 @@ export default {
                 tempsCuissMin: 0,
                 nbPortions: 0,
                 image: "",
-                isActive: true
+                isActive: true,
+                ingredients: [],
+                etapes: [],
             },
-            ingredients: [],
-            etapes: [],
+
             rules: {
                 required: value => !!value || "Le champ est requis",
                 recetteIdUnique: () => this.recetteIdUnique || "Cet identifiant est déjà utilisé, veuillez en enter un autre"
@@ -159,40 +160,8 @@ export default {
                 return;
             }
 
-            createRecette(this.recette).then(() =>
-            {
-                if (this.etapes.length != 0)
-                {
-                    for (let i = 0; i < this.etapes.length; i++)
-                    {
-                        console.log("i etape :", i);
-                        const etape = {
-                            ordre: i + 1,
-                            recetteId: this.recette.recetteId,
-                            description: this.etapes[i].description
-                        }
-                        console.log("etape " + (i + 1), etape)
-                        addEtape(etape);
-                    }
-                }
-            }).then(() =>
-            {
-                if (this.ingredients.length != 0)
-                {
-                    for (let i = 0; i < this.ingredients.length; i++)
-                    {
-                        const ingredient = {
-                            recetteId: this.recette.recetteId,
-                            ordre: i + 1,
-                            quantite: this.ingredients[i].quantite,
-                            uniteMesure: this.ingredients[i].uniteMesure,
-                            nom: this.ingredients[i].nom
-                        }
-                        console.log("ingredient " + (i + 1), ingredient)
-                        addIngredient(ingredient);
-                    }
-                }
-            }).then(() =>
+            createRecette(this.recette)
+            .then((reponse) =>
             {
                 this.$router.push('/recettes/' + this.recette.recetteId);
                 this.recetteIdUnique = true;
@@ -220,28 +189,28 @@ export default {
                 quantite: this.nouvQuantiteIngredient,
                 uniteMesure: this.nouvMesureIngredient,
             }
-            this.ingredients.push(nouvIngredient);
+            this.recette.ingredients.push(nouvIngredient);
             this.nouvNomIngredient = "";
             this.nouvQuantiteIngredient = "";
             this.nouvMesureIngredient = "";
         },
         deleteIngredient(index)
         {
-            this.ingredients.splice(index, 1);
+            this.recette.ingredients.splice(index, 1);
 
         },
         upIngredient(index)
         {
             if (index > 0)
             {
-                this.ingredients[index - 1] = this.ingredients.splice(index, 1, this.ingredients[index - 1])[0];
+                this.recette.ingredients[index - 1] = this.recette.ingredients.splice(index, 1, this.recette.ingredients[index - 1])[0];
             }
         },
         downIngredient(index)
         {
-            if (index < this.ingredients.length - 1)
+            if (index < this.recette.ingredients.length - 1)
             {
-                this.ingredients[index + 1] = this.ingredients.splice(index, 1, this.ingredients[index + 1])[0];
+                this.recette.ingredients[index + 1] = this.recette.ingredients.splice(index, 1, this.recette.ingredients[index + 1])[0];
             }
         },
         addEtape()
@@ -255,25 +224,25 @@ export default {
             const nouvEtape = {
                 description: this.nouvNomEtape,
             }
-            this.etapes.push(nouvEtape);
+            this.recette.etapes.push(nouvEtape);
             this.nouvNomEtape = "";
         },
         deleteEtape(index)
         {
-            this.etapes.splice(index, 1);
+            this.recette.etapes.splice(index, 1);
         },
         upEtape(index)
         {
             if (index > 0)
             {
-                this.etapes[index - 1] = this.etapes.splice(index, 1, this.etapes[index - 1])[0];
+                this.recette.etapes[index - 1] = this.recette.etapes.splice(index, 1, this.recette.etapes[index - 1])[0];
             }
         },
         downEtape(index)
         {
-            if (index < this.etapes.length - 1)
+            if (index < this.recette.etapes.length - 1)
             {
-                this.etapes[index + 1] = this.etapes.splice(index, 1, this.etapes[index + 1])[0];
+                this.recette.etapes[index + 1] = this.recette.etapes.splice(index, 1, this.recette.etapes[index + 1])[0];
             }
         },
     }

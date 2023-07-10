@@ -85,9 +85,13 @@ export async function updateRecette(recette) {
         body: JSON.stringify(recette)
     });
 
-    if (response.ok) {
-        return convertToRecette(await response.json());
-    } else {
+
+    if (response.ok)
+    {
+        return response.json();
+    } else
+    {
+
         throw await createServiceError(response);
     }
 }
@@ -138,6 +142,7 @@ export async function fetchEtapesByRecetteId(recetteId) {
     }
 }
 
+
 export async function addEtape(etape) {
     const response = await fetch(`/api/etapes`, {
         method: "POST",
@@ -156,7 +161,6 @@ export async function addEtape(etape) {
 }
 
 //INGREDIENTS//
-
 export async function fetchIngredientsByRecetteId(recetteId) {
     const response = await fetch(`/api/ingredients/${recetteId}`);
 
@@ -166,6 +170,7 @@ export async function fetchIngredientsByRecetteId(recetteId) {
         throw await createServiceError(response);
     }
 }
+
 
 export async function addIngredient(ingredient) {
     const response = await fetch(`/api/ingredients`, {
@@ -185,8 +190,8 @@ export async function addIngredient(ingredient) {
 }
 
 //APPRECIATION//
-
-export async function fetchAppreciationByRecetteId(recetteId) {
+export async function fetchAppreciationByRecetteId(recetteId)
+{
     const response = await fetch(`/api/appreciation/${recetteId}`);
 
     if (response.ok) {

@@ -70,7 +70,6 @@ const getRecetteById = async (recetteId) =>
             isActive: row.is_active,
         };
 
-        console.log("recette avant le addimagepathtorecette : ", recette)
         return addImagePathToRecette(recette);
     }
     return undefined;
@@ -109,33 +108,121 @@ const getRecetteImageContent = async (recetteId) =>
 exports.getRecetteImageContent = getRecetteImageContent;
 
 
-const insertRecette = async (recette) =>
+const insertRecette = async (recette, clientParam) =>
 {
-    const result = await pool.query(
-        `INSERT INTO Recette (recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions, is_active) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-        [recette.recetteId, recette.nom, recette.descCourt, recette.descLong, recette.tempsPrepMin, recette.tempsCuissMin, recette.nbPortions, recette.isActive]
-    );
+    const client = clientParam || await pool.connect();
 
-    return getRecetteById(recette.recetteId);
+    if (!clientParam)
+    {
+        await client.query('BEGIN');
+    }
+    try
+    {
+        await client.query(
+            `INSERT INTO Recette (recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions, is_active) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+            [recette.recetteId, recette.nom, recette.descCourt, recette.descLong, recette.tempsPrepMin, recette.tempsCuissMin, recette.nbPortions, recette.isActive]
+        );
+        for (let i = 0; i < recette.ingredients.length; i++)
+        {
+            client.query(
+                `INSERT INTO Ingredient (recette_id, ordre, quantite, unite_mesure, nom) 
+            VALUES ($1, $2, $3, $4, $5)`,
+                [recette.recetteId, i + 1, recette.ingredients[i].quantite, recette.ingredients[i].uniteMesure, recette.ingredients[i].nom]
+            )
+        };
+        for (let i = 0; i < recette.etapes.length; i++)
+        {
+            client.query(
+                `INSERT INTO Etape (recette_id, ordre, description)
+        VALUES ($1, $2, $3)`,
+                [recette.recetteId, i + 1, recette.etapes[i].description]
+            )
+        };
+        await client.query("COMMIT");
+
+
+
+        return getRecetteById(recette.recetteId);
+    } catch (error)
+    {
+
+        await client.query("ROLLBACK");
+        throw error;
+    } finally
+    {
+        client.release();
+    }
 };
 exports.insertRecette = insertRecette;
 
 
-const updateRecette = async (recette) =>
+const updateRecette = async (recette, clientParam) =>
 {
-    const result = await pool.query(
-        `UPDATE Recette SET nom = $2, desc_court = $3, desc_long = $4, long_desc = $5, temps_prep_min = $6, temps_cuisson_min = $6, nb_portions = $7
-        WHERE recette_id = $1`,
-        [recette.id, recette.nom, recette.descCourt, recette.descLong, recette.tempsPrepMin, recette.tempsCuissonMin, recette.nbPortions]
-    );
-
-    if (result.rowCount === 0)
+    const client = clientParam || await pool.connect();
+    console.log("recette recu :", recette);
+    if (!clientParam)
     {
-        return undefined;
+        await client.query('BEGIN');
     }
+    try
+    {
+        const result = await client.query(
+            `UPDATE Recette SET nom = $2, desc_court = $3, desc_long = $4, temps_prep_min = $5, temps_cuisson_min = $6, nb_portions = $7
+        WHERE recette_id = $1`,
+            [recette.recetteId, recette.nom, recette.descCourt, recette.descLong, recette.tempsPrepMin, recette.tempsCuissonMin, recette.nbPortions]
+        );
 
-    return getRecetteById(recette.id);
+        if (result.rowCount === 0)
+        {
+            return undefined;
+        }
+
+        await client.query(
+            `DELETE FROM Ingredient
+        WHERE recette_id = $1`,
+            [recette.recetteId]
+        );
+        if (recette.ingredients)
+        {
+            for (let i = 0; i < recette.ingredients.length; i++)
+            {
+                client.query(
+                    `INSERT INTO Ingredient (recette_id, ordre, quantite, unite_mesure, nom) 
+        VALUES ($1, $2, $3, $4, $5)`,
+                    [recette.recetteId, i + 1, recette.ingredients[i].quantite, recette.ingredients[i].uniteMesure, recette.ingredients[i].nom]
+                )
+            };
+        }
+        await client.query(
+            `DELETE FROM Etape
+        WHERE recette_id = $1`,
+            [recette.recetteId]
+        );
+        if (recette.etapes)
+        {
+            for (let i = 0; i < recette.etapes.length; i++)
+            {
+                client.query(
+                    `INSERT INTO Etape (recette_id, ordre, description)
+    VALUES ($1, $2, $3)`,
+                    [recette.recetteId, i + 1, recette.etapes[i].description]
+                )
+            };
+        }
+        await client.query("COMMIT");
+
+        console.log("recetteId : ", recette.recetteId)
+        return getRecetteById(recette.recetteId);
+    } catch (error)
+    {
+
+        await client.query("ROLLBACK");
+        throw error;
+    } finally
+    {
+        client.release();
+    }
 };
 exports.updateRecette = updateRecette;
 

@@ -10,7 +10,6 @@ const appreciationQueries = require("../queries/AppreciationQueries");
 router.get('/:id', (req, res, next) =>
 {
     const id = req.params.id;
-    console.log("id:", id);
     if (id == null || id === "")
     {
         return next(new HttpError(400, `Le parametre Id est requis`));

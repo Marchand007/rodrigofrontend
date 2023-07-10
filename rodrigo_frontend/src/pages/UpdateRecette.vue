@@ -2,7 +2,7 @@
     <div class="boxed-center">
         <h2>Modification d'une recette</h2>
         <v-sheet v-if="session.user && session.user.isAdmin">
-            <v-form @submit.prevent="" validate-on="submit lazy" ref="recetteform">
+            <v-form @submit.prevent="updateRecette" validate-on="submit lazy" ref="recetteform">
                 <v-sheet class="boxed-center">
                     <v-sheet-title>Informations de la recette</v-sheet-title>
                     <v-container>
@@ -44,15 +44,15 @@
                     <v-sheet-title>Liste des ingredients</v-sheet-title>
                     <v-form @submit.prevent="addIngredient" validate-on="submit" ref="ingredientAddForm">
 
-                        <v-container v-for="(ingredient, i) in ingredients">
+                        <v-container v-for="(ingredient, i) in recette.ingredients">
                             <v-row>
 
                                 <span> {{ i + 1 }}</span>
-                                <v-text-field class="ml-2" v-model="ingredients[i].quantite" density="compact">
+                                <v-text-field class="ml-2" v-model="recette.ingredients[i].quantite" density="compact">
                                 </v-text-field>
-                                <v-text-field class="ml-2" v-model="ingredients[i].uniteMesure" density="compact">
+                                <v-text-field class="ml-2" v-model="recette.ingredients[i].uniteMesure" density="compact">
                                 </v-text-field>
-                                <v-text-field class="ml-2" v-model="ingredients[i].nom" density="compact"
+                                <v-text-field class="ml-2" v-model="recette.ingredients[i].nom" density="compact"
                                     :rules="[rules.required]">
                                 </v-text-field>
 
@@ -60,7 +60,7 @@
                                 <v-btn class="ml-5" @click="upIngredient(i)" size="small" :disabled="i <= 0">Monter
                                     l'ingrédient</v-btn>
                                 <v-btn class="ml-5" @click="downIngredient(i)" size="small"
-                                    :disabled="i >= ingredients.length - 1">Descendre l'ingrédient</v-btn>
+                                    :disabled="i >= recette.ingredients.length - 1">Descendre l'ingrédient</v-btn>
 
                             </v-row>
                         </v-container>
@@ -85,17 +85,17 @@
                     <v-sheet-title class="ma-5">Liste des etapes</v-sheet-title>
                     <v-form @submit.prevent="addEtape" validate-on="submit" ref="etapeAddForm">
 
-                        <v-container v-for="(etape, i) in etapes">
+                        <v-container v-for="(etape, i) in recette.etapes">
                             <v-row>
                                 <span> {{ i + 1 }}</span>
-                                <v-text-field class="ml-2" v-model="etapes[i].description" density="compact">
+                                <v-text-field class="ml-2" v-model="recette.etapes[i].description" density="compact">
 
                                 </v-text-field>
                                 <v-btn class="ml-5" @click="deleteEtape(i)" size="small">Supprimer l'étape</v-btn>
                                 <v-btn class="ml-5" @click="upEtape(i)" size="small" :disabled="i <= 0">Monter
                                     l'étape</v-btn>
                                 <v-btn class="ml-5" @click="downEtape(i)" size="small"
-                                    :disabled="i >= etapes.length - 1">Descendre l'étape</v-btn>
+                                    :disabled="i >= recette.etapes.length - 1">Descendre l'étape</v-btn>
                             </v-row>
                         </v-container>
                         <v-container>
@@ -108,6 +108,7 @@
                         </v-container>
                     </v-form>
                 </v-sheet>
+                <v-btn class="w-50 ml-5" type="submit" size="large">Mettre la recette à jour</v-btn>
             </v-form>
         </v-sheet>
         <v-sheet v-else class="ma-2">Vous n'avez pas les permissions pour voir cette page</v-sheet>
@@ -118,7 +119,7 @@
 <script>
 
 import session from '../session';
-import { fetchRecette, fetchEtapesByRecetteId, fetchIngredientsByRecetteId } from '../RecetteService';
+import { updateRecette, fetchRecette, fetchEtapesByRecetteId, fetchIngredientsByRecetteId } from '../RecetteService';
 
 
 export default {
@@ -129,9 +130,10 @@ export default {
     {
         return {
             session: session,
-            recette: {},
-            ingredients: [],
-            etapes: [],
+            recette: {
+                ingredients: [],
+                etapes: []
+            },
             rules: {
                 required: value => !!value || "Le champ est requis",
                 productIdUnique: () => this.productIdUnique || "Cet identifiant est déjà utilisé, veuillez en enter un autre"
@@ -143,6 +145,27 @@ export default {
         };
     },
     methods: {
+        async updateRecette()
+        {
+            const formValid = await this.$refs.recetteform.validate();
+            if (!formValid.valid)
+            {
+                return;
+            }
+
+            updateRecette(this.recette)
+                .then((reponse) =>
+                {
+                    console.log("recette : ", this.recette.id);
+                    this.$router.push('/recettes/' + this.recette.id);
+                }).catch(err =>
+                {
+                    console.error(err);
+                    alert(err.message);
+
+                    this.$refs.recetteform.validate();
+                })
+        },
         addIngredient()
         {
             if (this.nouvNomIngredient == "")
@@ -156,28 +179,28 @@ export default {
                 quantite: this.nouvQuantiteIngredient,
                 uniteMesure: this.nouvMesureIngredient,
             }
-            this.ingredients.push(nouvIngredient);
+            this.recette.ingredients.push(nouvIngredient);
             this.nouvNomIngredient = "";
             this.nouvQuantiteIngredient = "";
             this.nouvMesureIngredient = "";
         },
         deleteIngredient(index)
         {
-            this.ingredients.splice(index, 1);
+            this.recette.ingredients.splice(index, 1);
 
         },
         upIngredient(index)
         {
             if (index > 0)
             {
-                this.ingredients[index - 1] = this.ingredients.splice(index, 1, this.ingredients[index - 1])[0];
+                this.recette.ingredients[index - 1] = this.recette.ingredients.splice(index, 1, this.recette.ingredients[index - 1])[0];
             }
         },
         downIngredient(index)
         {
-            if (index < this.ingredients.length - 1)
+            if (index < this.recette.ingredients.length - 1)
             {
-                this.ingredients[index + 1] = this.ingredients.splice(index, 1, this.ingredients[index + 1])[0];
+                this.recette.ingredients[index + 1] = this.recette.ingredients.splice(index, 1, this.recette.ingredients[index + 1])[0];
             }
         },
         addEtape()
@@ -191,25 +214,25 @@ export default {
             const nouvEtape = {
                 description: this.nouvNomEtape,
             }
-            this.etapes.push(nouvEtape);
+            this.recette.etapes.push(nouvEtape);
             this.nouvNomEtape = "";
         },
         deleteEtape(index)
         {
-            this.etapes.splice(index, 1);
+            this.recette.etapes.splice(index, 1);
         },
         upEtape(index)
         {
             if (index > 0)
             {
-                this.etapes[index - 1] = this.etapes.splice(index, 1, this.etapes[index - 1])[0];
+                this.recette.etapes[index - 1] = this.recette.etapes.splice(index, 1, this.recette.etapes[index - 1])[0];
             }
         },
         downEtape(index)
         {
-            if (index < this.etapes.length - 1)
+            if (index < this.recette.etapes.length - 1)
             {
-                this.etapes[index + 1] = this.etapes.splice(index, 1, this.etapes[index + 1])[0];
+                this.recette.etapes[index + 1] = this.recette.etapes.splice(index, 1, this.recette.etapes[index + 1])[0];
             }
         },
     },
@@ -228,7 +251,7 @@ export default {
         });
         fetchIngredientsByRecetteId(this.id).then(ingredients =>
         {
-            this.ingredients = ingredients;
+            this.recette.ingredients = ingredients;
             this.loading = false;
             this.loadError = false;
         }).catch(err =>
@@ -239,7 +262,7 @@ export default {
         });
         fetchEtapesByRecetteId(this.id).then(etapes =>
         {
-            this.etapes = etapes;
+            this.recette.etapes = etapes;
             this.loading = false;
             this.loadError = false;
         }).catch(err =>
@@ -263,4 +286,5 @@ export default {
     text-align: center;
     width: 100%;
     max-width: 80rem;
-}</style>
+}
+</style>

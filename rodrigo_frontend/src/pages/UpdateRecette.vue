@@ -108,7 +108,8 @@
                         </v-container>
                     </v-form>
                 </v-sheet>
-                <v-btn class="w-50 ml-5" type="submit" size="large">Mettre la recette à jour</v-btn>
+                <v-btn class="w-25 mx-5" type="submit" size="large">Mettre la recette à jour</v-btn>
+                <v-btn v-if="recette.isActive == true" class="w-25 mx-5" @click="deleteRecette()" size="large">Supprimer le recette</v-btn>
             </v-form>
         </v-sheet>
         <v-sheet v-else class="ma-2">Vous n'avez pas les permissions pour voir cette page</v-sheet>
@@ -119,7 +120,7 @@
 <script>
 
 import session from '../session';
-import { updateRecette, fetchRecette, fetchEtapesByRecetteId, fetchIngredientsByRecetteId } from '../RecetteService';
+import { updateRecette, fetchRecette, fetchEtapesByRecetteId, fetchIngredientsByRecetteId, deleteRecetteById } from '../RecetteService';
 
 
 export default {
@@ -165,6 +166,11 @@ export default {
 
                     this.$refs.recetteform.validate();
                 })
+        },
+        deleteRecette() {
+            deleteRecetteById(this.id).then(result => {
+                this.$router.push('/');
+            })
         },
         addIngredient()
         {

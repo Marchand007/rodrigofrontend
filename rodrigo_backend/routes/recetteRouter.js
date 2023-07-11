@@ -227,7 +227,7 @@ router.post('/:id/image',
             // après l'appel à next(...).
             return next(new HttpError(400, 'Le champ id est requis'));
         }
-
+console.log("id recu : ",id)
         recetteQueries.getRecetteById(id).then(recette =>
         {
             if (!recette)

@@ -43,7 +43,7 @@
                 </v-sheet>
                 <v-sheet class="boxed-center">
                     <v-sheet-title>Liste des ingredients</v-sheet-title>
-                    <v-form @submit.prevent="addIngredient" validate-on="submit" ref="ingredientAddForm">
+                   
 
                         <v-container v-for="(ingredient, i) in recette.ingredients">
                             <v-row>
@@ -65,8 +65,11 @@
 
                             </v-row>
                         </v-container>
+
                         <v-container>
+                            <v-form @submit.prevent="addIngredient" validate-on="submit lazy" ref="ingredientAddForm">
                             <v-row>
+                               
                                 <v-text-field class="ml-2" label="Quantite" v-model="nouvQuantiteIngredient"
                                     density="compact">
                                 </v-text-field>
@@ -77,14 +80,16 @@
                                     density="compact" :rules="[rules.required]">
                                 </v-text-field>
                                 <v-btn class="w-25 ml-5" type="submit">Ajouter l'ingrédient</v-btn>
+
                             </v-row>
+                        </v-form>
                         </v-container>
-                    </v-form>
+
 
                 </v-sheet>
                 <v-sheet class="boxed-center">
                     <v-sheet-title class="ma-5">Liste des etapes</v-sheet-title>
-                    <v-form @submit.prevent="addEtape" validate-on="submit" ref="etapeAddForm">
+                    
 
                         <v-container v-for="(etape, i) in recette.etapes">
                             <v-row>
@@ -99,6 +104,8 @@
                                     :disabled="i >= recette.etapes.length - 1">Descendre l'étape</v-btn>
                             </v-row>
                         </v-container>
+
+                        <v-form @submit.prevent="addEtape" validate-on="submit" ref="etapeAddForm">
                         <v-container>
                             <v-row>
                                 <v-text-field class="ml-2" label="Description de la nouvelle étape" v-model="nouvNomEtape"
@@ -142,7 +149,10 @@ export default {
             },
             fichierImage: null,
             rules: {
-                required: value => !!value || "Le champ est requis",
+                required:  value =>  {
+                    console.log("validation required :", value);
+                    return !!value || "Le champ est requis";
+                },
                 recetteIdUnique: () => this.recetteIdUnique || "Cet identifiant est déjà utilisé, veuillez en enter un autre"
             },
             recetteIdUnique: true,
@@ -180,7 +190,6 @@ export default {
                 this.recetteIdUnique = true;
 
 
-        
             }).catch(err =>
             {
                 console.error(err);
@@ -209,6 +218,7 @@ export default {
         },
         addIngredient()
         {
+            console.log("addIngredient");
             if (this.nouvNomIngredient == "")
             {
                 alert("champs requis");

@@ -13,12 +13,10 @@
                     <div class="text-body-1">{{ descCourt }}</div>
                 </v-card-text>
             </v-sheet>
-            <v-sheet align="right" v-if="session.user && session.user.isAdmin" color="transparent">
-                <v-card-actions>
-                    <v-btn @click="goToUpdatePage">Editer</v-btn>
+            <v-sheet align="center" v-if="session.user && session.user.isAdmin" color="transparent">
+                    <v-btn @click="goToUpdatePage" class="ma-4">Editer</v-btn>
                     <v-btn v-if="isActive == true" class="ma-4" @click="deleteRecette()">Supprimer la recette</v-btn>
                     <v-btn v-if="false" class="ma-4" @click="goToUpdatePage">Réactiver la recette</v-btn>
-                </v-card-actions>
             </v-sheet>
     </v-card>
 </template>

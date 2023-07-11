@@ -5,7 +5,7 @@ const passport = require('passport');
 const HttpError = require("../HttpError");
 
 const appreciationQueries = require("../queries/AppreciationQueries");
-
+const recetteQueries = require("../queries/RecetteQueries");
 
 router.get('/:id', (req, res, next) =>
 {
@@ -14,20 +14,39 @@ router.get('/:id', (req, res, next) =>
     {
         return next(new HttpError(400, `Le parametre Id est requis`));
     }
-    appreciationQueries.getAppreciationByRecetteId(id).then(appreciation =>
+
+    recetteQueries.getRecetteById(id).then(recette =>
     {
-
-        if (appreciation)
+        console.log("req.user : ",req.user);
+        if (recette.isActive == false)
         {
-
-            res.json(appreciation);
-        } else
-        {
-            return next(new HttpError(404, `Recette ${id} introuvable`));
+            return next(new HttpError(403, `Les appréciation pour cette recette ne sont pas disponible`));
         }
-    }).catch(err =>
-    {
-        return next(err);
+
+        const newProduct = {
+            id: "" + id,
+            name: "" + req.body.name,
+            price: + req.body.price,
+            desc: "" + req.body.desc,
+            image: "" + req.body.image,
+            longDesc: "" + req.body.longDesc
+        };
+
+        return appreciationQueries.getAppreciationByRecetteId(id).then(appreciation =>
+        {
+
+            if (appreciation)
+            {
+
+                res.json(appreciation);
+            } else
+            {
+                return next(new HttpError(404, `Recette ${id} introuvable`));
+            }
+        }).catch(err =>
+        {
+            return next(err);
+        });
     });
 });
 

@@ -32,6 +32,7 @@ const router = createRouter({
         { path: '/recettes/:id', component: PageDetailRecette, props: true },
         { path: '/admin/new-recipe', component: NewRecette },
         { path: '/admin/update-recipe/:id', component: UpdateRecette, props: true },
+
         { path: '/login', component: FormulaireLogin },
         { path: '/login/new', component: FormulaireNouvUser }
     ]
@@ -54,3 +55,13 @@ const vuetify = createVuetify({
 app.use(vuetify);
 
 app.mount("#app");
+
+//Question pour le prof
+
+// update liste de recette apres la suppresion
+
+//on a juste recette service.. on serait tu mieux de toute splitter ?
+
+//mettre indication sur page detail que elle est supprimer
+
+//ne pas accepter appreciation / commentaire / etape / ingredient SI elle est desactiver

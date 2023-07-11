@@ -1,14 +1,14 @@
 <template>
     <v-btn @click="goToUpdatePage()" size="x-small" v-if="session.user && session.user.isAdmin">Modifier la recette</v-btn>
     <v-btn class="ma-4" @click="deleteRecette()" size="x-small" v-if="session.user && session.user.isAdmin && recette.isActive == true">Supprimer la recette</v-btn>
-    <h2 class="text-h4">{{ recette.nom }}</h2>
+    <h2 class="text-h4">{{ recette.nom }}<span v-if="recette.isActive == false"> (recette désactivée)</span> </h2>
     <v-rating v-model="moyenneAppreciation" density="compact" hover half-increments readonly>
     </v-rating>
     <span>({{ nombreAppreciation }})</span>
     <v-card class="ma-2">
         <v-sheet class="d-flex">
             <v-sheet class="ma-4">
-                <v-img :src="imageSrc" width="30rem" />
+                <v-img :src="imageSrc" width="30rem" /> 
             </v-sheet>
             <v-sheet>
                 <v-card-title>Mais c'est quoi du {{ recette.nom }} ??</v-card-title>

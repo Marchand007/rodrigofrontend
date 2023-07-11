@@ -160,12 +160,13 @@ const updateRecette = async (recette, clientParam) =>
 {
     const client = clientParam || await pool.connect();
     console.log("recette recu :", recette);
-    if (!clientParam)
-    {
-        await client.query('BEGIN');
-    }
+
     try
     {
+        if (!clientParam)
+        {
+            await client.query('BEGIN');
+        }
         const result = await client.query(
             `UPDATE Recette SET nom = $2, desc_court = $3, desc_long = $4, temps_prep_min = $5, temps_cuisson_min = $6, nb_portions = $7
         WHERE recette_id = $1`,

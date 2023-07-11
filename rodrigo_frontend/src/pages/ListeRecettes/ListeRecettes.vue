@@ -26,8 +26,14 @@ export default {
             loadError: false
         };
     },
+    provide()
+    {
+        return {
+            loadRecettes: this.loadRecettes
+        };
+    },
     methods : {
-        loadRecette() { 
+        loadRecettes() { 
             fetchRecettes().then(recettes =>
         {
             this.recettes = recettes;
@@ -43,7 +49,7 @@ export default {
     },
     mounted()
     {
-        this.loadRecette();
+        this.loadRecettes();
     }
 }
 </script>

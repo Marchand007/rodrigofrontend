@@ -5,14 +5,28 @@ const passport = require('passport');
 const HttpError = require("../HttpError");
 
 const commentQueries = require("../queries/CommentQueries");
+const recetteQueries = require("../queries/RecetteQueries");
 
 router.get('/:id', (req, res, next) => {
     const recetteId = req.params.id;
     if (!recetteId || recetteId === '') {
         return next(new HttpError(400, 'Le champ recetteId est requis'));
     }
+
+    recetteQueries.getRecetteById(id).then(recette => {
+        if (!recette) {
+            return next(new HttpError(404, `La recette ${id} est inexistante ou introuvable`));
+        }
+    }).catch(err => {
+        return next(err);
+    });
+
     commentQueries.getCommentByRecetteId(recetteId).then(comment => {
         if (comment) {
+            console.log("commentRouter commentaire value : ", comment);
+            if (comment.length == 0) {
+                return next(new HttpError(404, `La recette ${recetteId} est introuvable ou n'existe pas`));
+            }
             res.json(comment);
         }
 
@@ -24,15 +38,21 @@ router.get('/:id', (req, res, next) => {
 router.post('/',
     passport.authenticate('basic', { session: false }),
     (req, res, next) => {
+
         const recetteId = req.body.recetteId;
-        if (recetteId == "") {
+        if (!recetteId || recetteId == "") {
             return next(new HttpError(400, 'Le champ recetteId est requis'));
         }
 
+        recetteQueries.getRecetteById(recetteId).then(recette => {
+            if (!recette) {
+                return next(new HttpError(404, `La recette ${recetteId} est inexistante ou introuvable`));
+            }
+        }).catch(err => {
+            return next(err);
+        });
+
         const user = req.user;
-        if (!user) {
-            return next(new HttpError(403, "Vous devez avoir un compte utilisateur pour publier un commentaire"));
-        }
 
             const nouvCommentaire = {
                 courrielUtilisateur: "" + user.courrielUtilisateur,

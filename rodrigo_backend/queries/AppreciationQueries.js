@@ -1,7 +1,6 @@
 const pool = require('./DBPool');
 
-const getAppreciationByRecetteId = async (recetteId) =>
-{
+const getAppreciationByRecetteId = async (recetteId) => {
     const result = await pool.query(
         `SELECT COUNT(appreciation_id), AVG(note)
         FROM Appreciation 
@@ -10,8 +9,7 @@ const getAppreciationByRecetteId = async (recetteId) =>
     );
 
     const row = result.rows[0];
-    if (row)
-    {
+    if (row) {
         const appreciation = {
             moyenneAppreciation: row.avg,
             nombreAppreciation: row.count
@@ -23,9 +21,9 @@ const getAppreciationByRecetteId = async (recetteId) =>
 
 exports.getAppreciationByRecetteId = getAppreciationByRecetteId;
 
-const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, clientParam) =>
-{
+const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, clientParam) => {
     const client = clientParam || await pool.connect();
+
 
 
     try
@@ -34,6 +32,7 @@ const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, c
         {
             await client.query('BEGIN');
         }
+
         const result = await client.query(
             `SELECT COUNT(courriel_utilisateur) as note
         FROM Appreciation
@@ -42,8 +41,7 @@ const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, c
         );
         const row = result.rows[0];
 
-        if (row.note > 0)
-        {
+        if (row.note > 0) {
             const resultAppreciation = await client.query(
                 `SELECT note
             FROM Appreciation
@@ -51,7 +49,7 @@ const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, c
                 [courriel_utilisateur, recetteId]
             );
             const row = resultAppreciation.rows[0];
-            return row; 
+            return row;
         }
 
         await client.query("COMMIT");
@@ -59,32 +57,32 @@ const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, c
         return row;
 
     }
-    catch (error)
-    {
+    catch (error) {
         await client.query("ROLLBACK");
         throw error;
     }
-    finally
-    {
+    finally {
         client.release();
 
     }
 }
 exports.getUserAppreciationByRecetteId = getUserAppreciationByRecetteId;
 
-const insertAppreciationToRecipe = async (appreciation) =>
-{
-    console.log("appreciation recu : ", appreciation.courrielUtilisateur, appreciation.recetteId, appreciation.note)
-    //TRY CATCH
-    const result = await pool.query(
-        `INSERT INTO appreciation(courriel_utilisateur, recette_id, note)
-        VALUES ($1, $2, $3)`,
-        [appreciation.courrielUtilisateur, appreciation.recetteId, appreciation.note]
-    );
-    return {
-        message: "L'ajout de l'appreciation a bien été fait",
-        note: appreciation.note
-    };
+const insertAppreciationToRecipe = async (appreciation) => {
+
+    try {
+        const result = await pool.query(
+            `INSERT INTO appreciation(courriel_utilisateur, recette_id, note)
+            VALUES ($1, $2, $3)`,
+            [appreciation.courrielUtilisateur, appreciation.recetteId, appreciation.note]
+        );
+        return {
+            message: "L'ajout de l'appreciation a bien été fait",
+            note: appreciation.note
+        };
+    } catch (error) {
+        throw error;
+    }
 };
 
 exports.insertAppreciationToRecipe = insertAppreciationToRecipe;

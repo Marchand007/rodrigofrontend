@@ -24,7 +24,7 @@ router.get('/:id', (req, res, next) => {
     commentQueries.getCommentByRecetteId(recetteId).then(comment => {
         if (comment) {
             console.log("commentRouter commentaire value : ", comment);
-            if(comment.length == 0){
+            if (comment.length == 0) {
                 return next(new HttpError(404, `La recette ${recetteId} est introuvable ou n'existe pas`));
             }
             res.json(comment);
@@ -60,7 +60,7 @@ router.get('/:id/:user', (req, res, next) => {
 
     commentQueries.getUserCommentByRecetteId(id, user).then(commentaire => {
         if (commentaire) {
-            if(commentaire.result == 0){
+            if (commentaire.result == 0) {
                 return next(new HttpError(404, `La recette ${id} est introuvable ou n'existe pas`));
             }
             res.json(commentaire);
@@ -77,10 +77,10 @@ router.post('/',
     (req, res, next) => {
 
         const recetteId = req.body.recetteId;
-        if (!recetteId ||recetteId == "") {
+        if (!recetteId || recetteId == "") {
             return next(new HttpError(400, 'Le champ recetteId est requis'));
         }
-        
+
         recetteQueries.getRecetteById(recetteId).then(recette => {
             if (!recette) {
                 return next(new HttpError(404, `La recette ${recetteId} est inexistante ou introuvable`));

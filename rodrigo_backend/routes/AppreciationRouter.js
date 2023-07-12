@@ -62,7 +62,7 @@ router.get('/:id/:user',
                 if (userEmail.courrielUtilisateur != req.user.courrielUtilisateur) {
                     return next(new HttpError(403, `Vous devez être le même utilisateur pour voir l'appréciation`));
                 }
-            }else {
+            } else {
                 return next(new HttpError(404, `Le compte utilisateur ${user} est inexistant ou introuvable`));
             }
         }).catch(err => {
@@ -86,7 +86,7 @@ router.get('/:id/:user',
 router.post('/',
     passport.authenticate('basic', { session: false }),
     (req, res, next) => {
-        
+
         const recetteId = req.body.recetteId;
 
         if (!recetteId || recetteId === "") {
@@ -102,7 +102,7 @@ router.post('/',
         });
 
         const user = req.user;
-        
+
         appreciationQueries.getUserAppreciationByRecetteId(recetteId, user.courrielUtilisateur).then(result => {
             if (result.note > 0) {
                 return next(new HttpError(400, `${user.courrielUtilisateur} a déjà donné une note d'appréciation de ${result.note} sur la recette ${recetteId}`));

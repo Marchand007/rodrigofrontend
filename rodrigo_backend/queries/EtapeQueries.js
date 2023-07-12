@@ -1,7 +1,6 @@
 const pool = require('./DBPool');
 
-const getEtapesByRecetteId = async (recetteId) =>
-{
+const getEtapesByRecetteId = async (recetteId) => {
     const result = await pool.query(
         `SELECT etape_id, ordre, description
         FROM Etape 
@@ -10,8 +9,7 @@ const getEtapesByRecetteId = async (recetteId) =>
         [recetteId]
     );
 
-    return result.rows.map(row =>
-    {
+    return result.rows.map(row => {
         const etape = {
             id: row.etape_id,
             ordre: row.ordre,

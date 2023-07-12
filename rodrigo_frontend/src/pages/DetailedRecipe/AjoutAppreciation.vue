@@ -48,7 +48,7 @@ export default {
         },
         loadAppreciation() {
             fetchAppreciationForUserByRecetteId(this.id).then(response => {
-
+console.log(response)
                 if (response.note > 0) {
                     this.rating = response.note;
                     this.disabledAppr = true;

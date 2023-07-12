@@ -199,7 +199,7 @@ const updateRecette = async (recette, clientParam) => {
 exports.updateRecette = updateRecette;
 
 
-const hideRecette = async (recetteId) => {
+const deleteRecette = async (recetteId) => {
     const result = await pool.query(
         `DELETE FROM Recette
         WHERE recette_id = $1`,
@@ -209,10 +209,11 @@ const hideRecette = async (recetteId) => {
     if (result.rowCount === 0) {
         return undefined;
     }
-
-    return {};
+    return {
+        message: "Supression reussi"
+    };
 };
-exports.hideRecette = hideRecette;
+exports.deleteRecette = deleteRecette;
 
 
 const updateRecetteImage = async (recetteId, imageBuffer, imageContentType) => {

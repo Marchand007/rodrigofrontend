@@ -98,7 +98,7 @@ export async function deleteRecetteById(recetteId) {
         headers: {
             "Content-Type": "application/json",
             ...session.getAuthHeaders()
-        },
+        }
     });
     if (response.ok)
     {
@@ -225,7 +225,6 @@ export async function fetchAppreciationForUserByRecetteId(recetteId)
             ...session.getAuthHeaders()
         }
     }
-    
     );
 
     if (response.ok) {

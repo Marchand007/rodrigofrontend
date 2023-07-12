@@ -70,9 +70,7 @@ router.get('/:id/:user',
 
         appreciationQueries.getUserAppreciationByRecetteId(recetteId, user).then(appreciation => {
             if (appreciation) {
-                if (appreciation.note == 0) {
-                    return next(new HttpError(404, `${user} n'a pas encore donné une note d'appréciation sur la recette ${id}`));
-                }
+               
                 res.json(appreciation);
             } else {
                 return next(new HttpError(404, `Appreciation de ${user} pour la recette ${recetteId} introuvable`));

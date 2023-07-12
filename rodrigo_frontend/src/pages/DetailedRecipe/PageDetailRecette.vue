@@ -10,22 +10,40 @@
             </v-container>
 
             <v-card class="ma-2" v-if="session.user">
-                <v-card-title>Ajouter un commentaire</v-card-title>
-                <div>
-                    <v-row no-gutters>
-                        <AjoutCommentaire :id="id"></AjoutCommentaire>
-                        <AjoutAppreciation :id="id"></AjoutAppreciation>
-                    </v-row>
-                </div>
+                <v-card-actions>
+                    <v-btn :icon="showAjout ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="this.showAjout = !this.showAjout"></v-btn>
+                    <v-card-title>
+                        Ajouter un commentaire / appréciation
+                    </v-card-title>
+                </v-card-actions>
+                <v-expand-transition>
+                    <div v-show="showAjout">
+                        <v-row no-gutters>
+                            <AjoutCommentaire class="mt-4" :id="id"></AjoutCommentaire>
+                            <AjoutAppreciation class="mt-4" :id="id"></AjoutAppreciation>
+                        </v-row>
+                    </div>
+                </v-expand-transition>
             </v-card>
 
-            <v-card v-else>
-                <v-card-title>Ajouter un commentaire</v-card-title>
-                <h5 class="ma-2">Vous devez avoir un compte utilisateur pour ajouter un commentaire et/ou une appréciation
-                </h5>
+            <v-card v-else align="center">
+                <v-card-text>Vous devez avoir un compte utilisateur pour ajouter un commentaire et/ou une appréciation
+                </v-card-text>
             </v-card>
 
-            <ListeCommentaires :id="id" :refreshCounter="refreshCounter"></ListeCommentaires>
+            <v-card class="ma-2">
+                <v-card-actions>
+                    <v-btn :icon="showListeCommentaire ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="this.showListeCommentaire = !this.showListeCommentaire"></v-btn>
+                    <v-card-title>
+                       Liste des commentaires
+                    </v-card-title>
+                </v-card-actions>
+                <v-expand-transition>
+                    <div v-show="showListeCommentaire">
+                            <ListeCommentaires :id="id" :refreshCounter="refreshCounter"></ListeCommentaires>
+                    </div>
+                </v-expand-transition>
+            </v-card>
         </v-sheet>
     </div>
 </template>
@@ -62,7 +80,9 @@ export default {
             loading: true,
             loadError: false,
             session: session,
-            refreshCounter: 0
+            refreshCounter: 0,
+            showAjout: false,
+            showListeCommentaire: false,
         };
     },
     provide()

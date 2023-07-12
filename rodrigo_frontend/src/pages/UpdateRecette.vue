@@ -2,6 +2,8 @@
     <div class="boxed-center">
         <h2>Modification d'une recette</h2>
         <v-sheet v-if="session.user && session.user.isAdmin">
+            <v-file-input accept="image/*" label="Nouvelle image" prepend-icon="mdi-camera" id="recette-image"
+                ref="recetteImage" v-model="fichierImage"></v-file-input>
             <v-form @submit.prevent="updateRecette" validate-on="submit lazy" ref="recetteform">
                 <v-sheet class="boxed-center">
                     <v-sheet-title>Informations de la recette</v-sheet-title>
@@ -19,7 +21,7 @@
                         </v-row>
                     </v-container>
                     <v-container>
-                        <v-row>
+                        <v-row >
                             <v-col cols="1" sm="4">
                                 <v-text-field class="mr-2" v-model="recette.tempsPrepMin"
                                     label="Temps de preparation (minutes)" density="compact" type="number" min="0" step="1"
@@ -109,7 +111,8 @@
                     </v-form>
                 </v-sheet>
                 <v-btn class="w-25 mx-5" type="submit" size="large">Mettre la recette à jour</v-btn>
-                <v-btn v-if="recette.isActive == true" class="w-25 mx-5" @click="deleteRecette()" size="large">Supprimer le recette</v-btn>
+                <v-btn class="w-25 mx-5" @click="deleteRecette()" size="large">Supprimer le
+                    recette</v-btn>
             </v-form>
         </v-sheet>
         <v-sheet v-else class="ma-2">Vous n'avez pas les permissions pour voir cette page</v-sheet>
@@ -120,7 +123,8 @@
 <script>
 
 import session from '../session';
-import { updateRecette, fetchRecette, fetchEtapesByRecetteId, fetchIngredientsByRecetteId, deleteRecetteById } from '../RecetteService';
+import { updateRecette, fetchRecette, fetchEtapesByRecetteId, fetchIngredientsByRecetteId, deleteRecetteById, updateRecetteImage } from '../RecetteService';
+import { ref } from 'vue';
 
 
 export default {
@@ -135,6 +139,7 @@ export default {
                 ingredients: [],
                 etapes: []
             },
+            fichierImage: null,
             rules: {
                 required: value => !!value || "Le champ est requis",
                 productIdUnique: () => this.productIdUnique || "Cet identifiant est déjà utilisé, veuillez en enter un autre"
@@ -146,6 +151,22 @@ export default {
         };
     },
     methods: {
+        refreshRecette(id)
+        {
+            this.recette = null;
+
+            fetchRecette(this.id).then(recette =>
+            {
+                this.recette = recette;
+                this.loading = false;
+                this.loadError = false;
+            }).catch(err =>
+            {
+                console.error(err);
+                this.loading = false;
+                this.loadError = true;
+            });
+        },
         async updateRecette()
         {
             const formValid = await this.$refs.recetteform.validate();
@@ -153,12 +174,14 @@ export default {
             {
                 return;
             }
-
             updateRecette(this.recette)
                 .then((reponse) =>
                 {
-                    console.log("recette : ", this.recette.id);
-                    this.$router.push('/recettes/' + this.recette.id);
+                    if (this.fichierImage)
+                    {
+                        this.submitImage();
+                    }
+                    this.$router.push('/recettes/' + this.id);
                 }).catch(err =>
                 {
                     console.error(err);
@@ -167,10 +190,31 @@ export default {
                     this.$refs.recetteform.validate();
                 })
         },
-        deleteRecette() {
-            deleteRecetteById(this.id).then(result => {
+        deleteRecette()
+        {
+            deleteRecetteById(this.id).then(result =>
+            {
                 this.$router.push('/');
             })
+        },
+        async submitImage()
+        {
+            if (this.fichierImage)
+            {
+                const formData = new FormData();
+                formData.append('recette-image', this.fichierImage[0]);
+
+                try
+                {
+                    await updateRecetteImage(this.id, formData);
+                    //this.edition = false;
+                    this.refreshRecette(this.id);
+                } catch (err)
+                {
+                    console.error(err);
+                    alert(err.message);
+                }
+            }
         },
         addIngredient()
         {
@@ -244,17 +288,8 @@ export default {
     },
     mounted()
     {
-        fetchRecette(this.id).then(recette =>
-        {
-            this.recette = recette;
-            this.loading = false;
-            this.loadError = false;
-        }).catch(err =>
-        {
-            console.error(err);
-            this.loading = false;
-            this.loadError = true;
-        });
+        this.refreshRecette(this.id);
+
         fetchIngredientsByRecetteId(this.id).then(ingredients =>
         {
             this.recette.ingredients = ingredients;

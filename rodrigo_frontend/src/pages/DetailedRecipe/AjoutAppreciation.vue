@@ -1,9 +1,9 @@
 <template>
     <v-col cols="4">
         <div class="text-center">
-            <v-rating :readonly="disabled" v-model="rating" hover></v-rating>
+            <v-rating @click="enableBtn" :readonly="disabledAppr" v-model="rating" hover></v-rating>
             <pre>{{ rating }}</pre>
-            <v-btn :disabled="disabled" v-on:click="this.addAppreciation()">Envoyer Appréciation</v-btn>
+            <v-btn :disabled="disabledBtn" v-on:click="this.addAppreciation()">Envoyer Appréciation</v-btn>
         </div>
     </v-col>
 </template>
@@ -23,7 +23,8 @@ export default {
         return {
             session: session,
             rating: 0,
-            disabled: false
+            disabledBtn: true,
+            disabledAppr: false
         }
     },
     methods: {
@@ -40,7 +41,8 @@ export default {
             addAppreciationToRecipeId(appreciation).then(response => {
                 alert(response.message);
                 this.rating = response.note;
-                this.disabled = true;
+                this.disabledAppr = true;
+                this.disabledBtn = true;
                 this.refresh();
             });
         },
@@ -49,14 +51,17 @@ export default {
 
                 if (response.note > 0) {
                     this.rating = response.note;
-                    this.disabled = true;
+                    this.disabledAppr = true;
                 }
-                
             });
+        },
+        enableBtn() {
+            this.disabledBtn = false;
         }
     },
     mounted() {
         this.loadAppreciation();
+
     }
 }
 

@@ -12,15 +12,14 @@ const addImagePathToRecette = recette => {
         image: getImagePathForRecetteId(recette.id),
         tempsPrepMin: recette.tempsPrepMin,
         tempsCuissonMin: recette.tempsCuissonMin,
-        nbPortions: recette.nbPortions,
-        isActive: recette.isActive
+        nbPortions: recette.nbPortions
     };
 };
 
 
 const getAllRecettes = async () => {
     const result = await pool.query(
-        `SELECT recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions, is_active
+        `SELECT recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions
         FROM Recette 
         ORDER BY recette_id`
     );
@@ -34,7 +33,6 @@ const getAllRecettes = async () => {
             tempsPrepMin: row.temps_prep_min,
             tempsCuissonMin: row.temps_cuisson_min,
             nbPortions: row.nb_portions,
-            isActive: row.is_active
         };
         const recetteWithImagePath = addImagePathToRecette(recette);
         return recetteWithImagePath;
@@ -45,7 +43,7 @@ exports.getAllRecettes = getAllRecettes;
 
 const getRecetteById = async (recetteId) => {
     const result = await pool.query(
-        `SELECT recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions, is_active
+        `SELECT recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions
         FROM Recette
         WHERE recette_id = $1`,
         [recetteId]
@@ -61,7 +59,7 @@ const getRecetteById = async (recetteId) => {
             tempsPrepMin: row.temps_prep_min,
             tempsCuissonMin: row.temps_cuisson_min,
             nbPortions: row.nb_portions,
-            isActive: row.is_active,
+
         };
 
         return addImagePathToRecette(recette);
@@ -97,24 +95,33 @@ const insertRecette = async (recette, clientParam) => {
     }
     try {
         await client.query(
-            `INSERT INTO Recette (recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions, is_active) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-            [recette.recetteId, recette.nom, recette.descCourt, recette.descLong, recette.tempsPrepMin, recette.tempsCuissonMin, recette.nbPortions, recette.isActive]
+            `INSERT INTO Recette (recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            [recette.recetteId, recette.nom, recette.descCourt, recette.descLong, recette.tempsPrepMin, recette.tempsCuissonMin, recette.nbPortions]
         );
-        for (let i = 0; i < recette.ingredients.length; i++) {
-            client.query(
-                `INSERT INTO Ingredient (recette_id, ordre, quantite, unite_mesure, nom) 
+      
+        if (recette.ingredients)
+        {
+            for (let i = 0; i < recette.ingredients.length; i++)
+            {
+                client.query(
+                    `INSERT INTO Ingredient (recette_id, ordre, quantite, unite_mesure, nom) 
             VALUES ($1, $2, $3, $4, $5)`,
-                [recette.recetteId, i + 1, recette.ingredients[i].quantite, recette.ingredients[i].uniteMesure, recette.ingredients[i].nom]
-            )
-        };
-        for (let i = 0; i < recette.etapes.length; i++) {
-            client.query(
-                `INSERT INTO Etape (recette_id, ordre, description)
+                    [recette.recetteId, i + 1, recette.ingredients[i].quantite, recette.ingredients[i].uniteMesure, recette.ingredients[i].nom]
+                )
+            };
+        }
+        if (recette.etapes)
+        {
+            for (let i = 0; i < recette.etapes.length; i++)
+            {
+                client.query(
+                    `INSERT INTO Etape (recette_id, ordre, description)
         VALUES ($1, $2, $3)`,
-                [recette.recetteId, i + 1, recette.etapes[i].description]
-            )
-        };
+                    [recette.recetteId, i + 1, recette.etapes[i].description]
+                )
+            };
+        }
         await client.query("COMMIT");
 
         return getRecetteById(recette.recetteId);
@@ -131,10 +138,14 @@ exports.insertRecette = insertRecette;
 const updateRecette = async (recette, clientParam) => {
     const client = clientParam || await pool.connect();
     console.log("recette recu :", recette);
-    if (!clientParam) {
-        await client.query('BEGIN');
-    }
-    try {
+
+    try
+    {
+        if (!clientParam)
+        {
+            await client.query('BEGIN');
+        }
+
         const result = await client.query(
             `UPDATE Recette SET nom = $2, desc_court = $3, desc_long = $4, temps_prep_min = $5, temps_cuisson_min = $6, nb_portions = $7
         WHERE recette_id = $1`,
@@ -190,7 +201,7 @@ exports.updateRecette = updateRecette;
 
 const hideRecette = async (recetteId) => {
     const result = await pool.query(
-        `UPDATE Recette SET is_active = false
+        `DELETE FROM Recette
         WHERE recette_id = $1`,
         [recetteId]
     );

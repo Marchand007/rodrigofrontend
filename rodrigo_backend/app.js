@@ -9,7 +9,7 @@ const BasicStrategy = require('passport-http').BasicStrategy;
 const crypto = require('crypto');
 
 
-const recetteRouter = require('./routes/RecetteRouter');
+const recetteRouter = require('./routes/recetteRouter');
 
 const commentRouter = require('./routes/commentRouter');
 
@@ -28,6 +28,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 class BasicStrategyModified extends BasicStrategy {
   constructor(options, verify) {

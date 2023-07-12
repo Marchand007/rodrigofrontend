@@ -29,8 +29,7 @@ const convertToRecette = jsonRecette => {
         image: jsonRecette.image,
         tempsPrepMin: jsonRecette.tempsPrepMin,
         tempsCuissonMin: jsonRecette.tempsCuissonMin,
-        nbPortions: jsonRecette.nbPortions,
-        isActive: jsonRecette.isActive
+        nbPortions: jsonRecette.nbPortions
     };
 };
 
@@ -249,18 +248,6 @@ export async function addAppreciationToRecipeId(appreciation){
 
 export async function fetchCommentairesByRecetteId(recetteId) {
     const response = await fetch(`/api/comments/${recetteId}`);
-
-    if (response.ok) {
-        return await response.json();
-    } else {
-        throw await createServiceError(response);
-    }
-}
-
-export async function fetchCommentaireForUserByRecetteId(recetteId)
-{
-    const user = session.user_email;
-    const response = await fetch(`/api/comments/${recetteId}/${user}`);
 
     if (response.ok) {
         return await response.json();

@@ -40,8 +40,6 @@ const getUserCommentByRecetteId = async (recetteId, courriel_utilisateur, client
 
         const row = result.rows[0];
 
-        console.log("RESULT ROW : ", row);
-
         if (row.result > 0) {
             const resultCommentaire = await client.query(
                 `SELECT texte

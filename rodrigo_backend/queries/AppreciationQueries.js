@@ -33,6 +33,7 @@ const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, c
     }
     try
     {
+
         const result = await client.query(
             `SELECT COUNT(courriel_utilisateur) as note
         FROM Appreciation

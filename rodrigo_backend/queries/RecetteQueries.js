@@ -140,12 +140,9 @@ const insertRecette = async (recette, clientParam) =>
         };
         await client.query("COMMIT");
 
-
-
         return getRecetteById(recette.recetteId);
     } catch (error)
     {
-
         await client.query("ROLLBACK");
         throw error;
     } finally

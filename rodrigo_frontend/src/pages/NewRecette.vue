@@ -3,6 +3,8 @@
         <h2>Creation d'une nouvelle recette</h2>
         <v-sheet v-if="session.user && session.user.isAdmin">
             <v-form @submit.prevent="addRecette" validate-on="submit lazy" ref="recetteform">
+                <v-file-input :rules="[rules.required]" accept="image/*" label="Nouvelle image" prepend-icon="mdi-camera" id="product-image"
+                            ref="productImage" v-model="fichierImage"></v-file-input>
                 <v-sheet class="boxed-center">
                     <v-sheet-title>Informations de la recette</v-sheet-title>
                     <v-container>
@@ -41,7 +43,7 @@
                 </v-sheet>
                 <v-sheet class="boxed-center">
                     <v-sheet-title>Liste des ingredients</v-sheet-title>
-                    <v-form @submit.prevent="addIngredient" validate-on="submit" ref="ingredientAddForm">
+                   
 
                         <v-container v-for="(ingredient, i) in recette.ingredients">
                             <v-row>
@@ -63,8 +65,11 @@
 
                             </v-row>
                         </v-container>
+
                         <v-container>
+                            <v-form @submit.prevent="addIngredient" validate-on="submit lazy" ref="ingredientAddForm">
                             <v-row>
+                               
                                 <v-text-field class="ml-2" label="Quantite" v-model="nouvQuantiteIngredient"
                                     density="compact">
                                 </v-text-field>
@@ -75,14 +80,16 @@
                                     density="compact" :rules="[rules.required]">
                                 </v-text-field>
                                 <v-btn class="w-25 ml-5" type="submit">Ajouter l'ingrédient</v-btn>
+
                             </v-row>
+                        </v-form>
                         </v-container>
-                    </v-form>
+
 
                 </v-sheet>
                 <v-sheet class="boxed-center">
                     <v-sheet-title class="ma-5">Liste des etapes</v-sheet-title>
-                    <v-form @submit.prevent="addEtape" validate-on="submit" ref="etapeAddForm">
+                    
 
                         <v-container v-for="(etape, i) in recette.etapes">
                             <v-row>
@@ -97,6 +104,8 @@
                                     :disabled="i >= recette.etapes.length - 1">Descendre l'étape</v-btn>
                             </v-row>
                         </v-container>
+
+                        <v-form @submit.prevent="addEtape" validate-on="submit" ref="etapeAddForm">
                         <v-container>
                             <v-row>
                                 <v-text-field class="ml-2" label="Description de la nouvelle étape" v-model="nouvNomEtape"
@@ -118,7 +127,7 @@
 <script>
 
 import session from '../session';
-import { createRecette } from '../RecetteService';
+import { fetchRecette, createRecette, updateRecetteImage } from '../RecetteService';
 
 export default {
     data()
@@ -138,9 +147,12 @@ export default {
                 ingredients: [],
                 etapes: [],
             },
-
+            fichierImage: null,
             rules: {
-                required: value => !!value || "Le champ est requis",
+                required:  value =>  {
+                    console.log("validation required :", value);
+                    return !!value || "Le champ est requis";
+                },
                 recetteIdUnique: () => this.recetteIdUnique || "Cet identifiant est déjà utilisé, veuillez en enter un autre"
             },
             recetteIdUnique: true,
@@ -151,6 +163,15 @@ export default {
         };
     },
     methods: {
+        refreshRecette(id) {
+            this.recette = null;
+
+            fetchRecette(id).then(recette => {
+                this.recette = recette;
+            }).catch(err => {
+                this.recette = null;
+            });
+        },
         async addRecette()
         {
             this.recetteIdUnique = true;
@@ -163,8 +184,12 @@ export default {
             createRecette(this.recette)
             .then((reponse) =>
             {
+
+                this.submitImage();
                 this.$router.push('/recettes/' + this.recette.recetteId);
                 this.recetteIdUnique = true;
+
+
             }).catch(err =>
             {
                 console.error(err);
@@ -176,8 +201,24 @@ export default {
                 this.$refs.recetteform.validate();
             })
         },
+        async submitImage() {
+            if (this.fichierImage) {
+                const formData = new FormData();
+                formData.append('recette-image', this.fichierImage[0]);
+
+                try {
+                    await updateRecetteImage(this.recette.recetteId, formData);
+                   //this.edition = false;
+                    this.refreshRecette(this.id);
+                } catch (err) {
+                    console.error(err);
+                    alert(err.message);
+                }
+            }
+        },
         addIngredient()
         {
+            console.log("addIngredient");
             if (this.nouvNomIngredient == "")
             {
                 alert("champs requis");

@@ -1,6 +1,6 @@
 <template>
     <v-btn @click="goToUpdatePage()" size="x-small" v-if="session.user && session.user.isAdmin">Modifier la recette</v-btn>
-    <v-btn class="ma-4" @click="deleteRecette()" size="x-small" v-if="session.user && session.user.isAdmin">Supprimer la recette</v-btn>
+    <v-btn class="ma-4" @click="deleteRecette()" size="x-small" v-if="session.user && session.user.isAdmin && recette.isActive == true">Supprimer la recette</v-btn>
     <h2 class="text-h4">{{ recette.nom }}</h2>
     <v-rating v-model="moyenneAppreciation" density="compact" hover half-increments readonly>
     </v-rating>
@@ -89,7 +89,6 @@ export default {
             });
         },
         deleteRecette() {
-            console.log("ici",this.id);
             deleteRecetteById(this.id).then(result => {
                 this.$router.push('/');
             })

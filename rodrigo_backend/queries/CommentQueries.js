@@ -26,7 +26,7 @@ exports.getCommentByRecetteId = getCommentByRecetteId;
 const getUserCommentByRecetteId = async (recetteId, courriel_utilisateur, clientParam) => {
     const client = clientParam || await pool.connect();
 
-    if(!clientParam){
+    if (!clientParam) {
         await client.query('BEGIN');
     }
 
@@ -71,18 +71,22 @@ exports.getUserCommentByRecetteId = getUserCommentByRecetteId;
 
 const insertCommentToRecipe = async (comment) => {
 
-    //TRY CATCH
-    const commentDateTime = DateTime.now();
+    try {
+        const commentDateTime = DateTime.now();
 
-    const result = await pool.query(
-        `INSERT INTO commentaire (courriel_utilisateur, recette_id, texte, date_publication)
+        const result = await pool.query(
+            `INSERT INTO commentaire (courriel_utilisateur, recette_id, texte, date_publication)
         VALUES ($1, $2, $3, $4)`,
-        [comment.courrielUtilisateur, comment.recetteId, comment.texte, commentDateTime]
-    );
+            [comment.courrielUtilisateur, comment.recetteId, comment.texte, commentDateTime]
+        );
 
-    return {
-        message: "Le commentaire a bien été enregistré!"
-    };
+        return {
+            message: "Le commentaire a bien été enregistré!"
+        };
+    } catch (error) {
+        throw error;
+    }
+
 };
 
 exports.insertCommentToRecipe = insertCommentToRecipe;

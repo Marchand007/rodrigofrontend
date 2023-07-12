@@ -1,14 +1,11 @@
-class HttpError extends Error
-{
-  constructor(status, message)
-  {
+class HttpError extends Error {
+  constructor(status, message) {
     super(message);
     this.status = status;
     this.message = message;
   }
 
-  getJsonMessage()
-  {
+  getJsonMessage() {
     return { status: this.status, message: this.message };
   }
 }

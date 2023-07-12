@@ -3,8 +3,7 @@ const pool = require('./DBPool');
 const getImagePathForRecetteId = recetteId => `/recettes/${recetteId}/image`;
 exports.getImagePathForRecetteId = getImagePathForRecetteId;
 
-const addImagePathToRecette = recette =>
-{
+const addImagePathToRecette = recette => {
     return {
         id: recette.id,
         nom: recette.nom,
@@ -19,16 +18,14 @@ const addImagePathToRecette = recette =>
 };
 
 
-const getAllRecettes = async () =>
-{
+const getAllRecettes = async () => {
     const result = await pool.query(
         `SELECT recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions, is_active
         FROM Recette 
         ORDER BY recette_id`
     );
 
-    return result.rows.map(row =>
-    {
+    return result.rows.map(row => {
         const recette = {
             id: row.recette_id,
             nom: row.nom,
@@ -46,8 +43,7 @@ const getAllRecettes = async () =>
 exports.getAllRecettes = getAllRecettes;
 
 
-const getRecetteById = async (recetteId) =>
-{
+const getRecetteById = async (recetteId) => {
     const result = await pool.query(
         `SELECT recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions, is_active
         FROM Recette
@@ -56,8 +52,7 @@ const getRecetteById = async (recetteId) =>
     );
 
     const row = result.rows[0];
-    if (row)
-    {
+    if (row) {
         const recette = {
             id: row.recette_id,
             nom: row.nom,
@@ -75,27 +70,14 @@ const getRecetteById = async (recetteId) =>
 };
 exports.getRecetteById = getRecetteById;
 
-
-/**
- * Fonction permettant d'obtenir le contenu binaire de la colonne image_content et son type
- * (colonne image_content_type). Utilisé par un endpoint qui offre le téléchargement d'une image
- * de produit stockée dans la table product de la BD.
- * 
- * @param {string} recetteId 
- * @returns Promesse pour un objet avec deux propriétés :
- *          imageContent : un Buffer avec le contenu binaire de l'image
- *          imageContentType : une chaîne de caractères avec le Content-Type de l'image (p.ex. "image/jpeg")
- */
-const getRecetteImageContent = async (recetteId) =>
-{
+const getRecetteImageContent = async (recetteId) => {
     const result = await pool.query(
         `SELECT image_content, image_content_type FROM Recette WHERE recette_id = $1`,
         [recetteId]
     );
 
     const row = result.rows[0];
-    if (row)
-    {
+    if (row) {
         return {
             imageContent: row.image_content,
             imageContentType: row.image_content_type
@@ -107,31 +89,26 @@ const getRecetteImageContent = async (recetteId) =>
 exports.getRecetteImageContent = getRecetteImageContent;
 
 
-const insertRecette = async (recette, clientParam) =>
-{
+const insertRecette = async (recette, clientParam) => {
     const client = clientParam || await pool.connect();
 
-    if (!clientParam)
-    {
+    if (!clientParam) {
         await client.query('BEGIN');
     }
-    try
-    {
+    try {
         await client.query(
             `INSERT INTO Recette (recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions, is_active) 
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
             [recette.recetteId, recette.nom, recette.descCourt, recette.descLong, recette.tempsPrepMin, recette.tempsCuissonMin, recette.nbPortions, recette.isActive]
         );
-        for (let i = 0; i < recette.ingredients.length; i++)
-        {
+        for (let i = 0; i < recette.ingredients.length; i++) {
             client.query(
                 `INSERT INTO Ingredient (recette_id, ordre, quantite, unite_mesure, nom) 
             VALUES ($1, $2, $3, $4, $5)`,
                 [recette.recetteId, i + 1, recette.ingredients[i].quantite, recette.ingredients[i].uniteMesure, recette.ingredients[i].nom]
             )
         };
-        for (let i = 0; i < recette.etapes.length; i++)
-        {
+        for (let i = 0; i < recette.etapes.length; i++) {
             client.query(
                 `INSERT INTO Etape (recette_id, ordre, description)
         VALUES ($1, $2, $3)`,
@@ -141,36 +118,30 @@ const insertRecette = async (recette, clientParam) =>
         await client.query("COMMIT");
 
         return getRecetteById(recette.recetteId);
-    } catch (error)
-    {
+    } catch (error) {
         await client.query("ROLLBACK");
         throw error;
-    } finally
-    {
+    } finally {
         client.release();
     }
 };
 exports.insertRecette = insertRecette;
 
 
-const updateRecette = async (recette, clientParam) =>
-{
+const updateRecette = async (recette, clientParam) => {
     const client = clientParam || await pool.connect();
     console.log("recette recu :", recette);
-    if (!clientParam)
-    {
+    if (!clientParam) {
         await client.query('BEGIN');
     }
-    try
-    {
+    try {
         const result = await client.query(
             `UPDATE Recette SET nom = $2, desc_court = $3, desc_long = $4, temps_prep_min = $5, temps_cuisson_min = $6, nb_portions = $7
         WHERE recette_id = $1`,
             [recette.recetteId, recette.nom, recette.descCourt, recette.descLong, recette.tempsPrepMin, recette.tempsCuissonMin, recette.nbPortions]
         );
 
-        if (result.rowCount === 0)
-        {
+        if (result.rowCount === 0) {
             return undefined;
         }
 
@@ -179,10 +150,8 @@ const updateRecette = async (recette, clientParam) =>
         WHERE recette_id = $1`,
             [recette.recetteId]
         );
-        if (recette.ingredients)
-        {
-            for (let i = 0; i < recette.ingredients.length; i++)
-            {
+        if (recette.ingredients) {
+            for (let i = 0; i < recette.ingredients.length; i++) {
                 client.query(
                     `INSERT INTO Ingredient (recette_id, ordre, quantite, unite_mesure, nom) 
         VALUES ($1, $2, $3, $4, $5)`,
@@ -195,10 +164,8 @@ const updateRecette = async (recette, clientParam) =>
         WHERE recette_id = $1`,
             [recette.recetteId]
         );
-        if (recette.etapes)
-        {
-            for (let i = 0; i < recette.etapes.length; i++)
-            {
+        if (recette.etapes) {
+            for (let i = 0; i < recette.etapes.length; i++) {
                 client.query(
                     `INSERT INTO Etape (recette_id, ordre, description)
     VALUES ($1, $2, $3)`,
@@ -210,30 +177,25 @@ const updateRecette = async (recette, clientParam) =>
 
         console.log("recetteId : ", recette.recetteId)
         return getRecetteById(recette.recetteId);
-    } catch (error)
-    {
+    } catch (error) {
 
         await client.query("ROLLBACK");
         throw error;
-    } finally
-    {
+    } finally {
         client.release();
     }
 };
 exports.updateRecette = updateRecette;
 
 
-const hideRecette = async (recetteId) =>
-{
+const hideRecette = async (recetteId) => {
     const result = await pool.query(
         `UPDATE Recette SET is_active = false
         WHERE recette_id = $1`,
         [recetteId]
     );
 
-    if (result.rowCount === 0)
-    {
-        // Aucune rangée modifiée, veut dire que l'id n'existe pas
+    if (result.rowCount === 0) {
         return undefined;
     }
 
@@ -242,16 +204,14 @@ const hideRecette = async (recetteId) =>
 exports.hideRecette = hideRecette;
 
 
-const updateRecetteImage = async (recetteId, imageBuffer, imageContentType) =>
-{
+const updateRecetteImage = async (recetteId, imageBuffer, imageContentType) => {
     const result = await pool.query(
         `UPDATE Recette SET image_content = $2, image_content_type = $3
         WHERE recette_id = $1`,
         [recetteId, imageBuffer, imageContentType]
     );
 
-    if (result.rowCount === 0)
-    {
+    if (result.rowCount === 0) {
         throw new Error("Erreur lors de la mi   se-à-jour de l'image");
     }
 

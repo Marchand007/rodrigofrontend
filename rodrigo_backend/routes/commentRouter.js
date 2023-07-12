@@ -13,9 +13,9 @@ router.get('/:id', (req, res, next) => {
         return next(new HttpError(400, 'Le champ recetteId est requis'));
     }
 
-    recetteQueries.getRecetteById(id).then(recette => {
+    recetteQueries.getRecetteById(recetteId).then(recette => {
         if (!recette) {
-            return next(new HttpError(404, `La recette ${id} est inexistante ou introuvable`));
+            return next(new HttpError(404, `La recette ${recetteId} est inexistante ou introuvable`));
         }
     }).catch(err => {
         return next(err);

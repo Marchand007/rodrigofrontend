@@ -23,53 +23,6 @@ const getCommentByRecetteId = async (recetteId) => {
 
 exports.getCommentByRecetteId = getCommentByRecetteId;
 
-const getUserCommentByRecetteId = async (recetteId, courriel_utilisateur, clientParam) => {
-    const client = clientParam || await pool.connect();
-
-    if(!clientParam){
-        await client.query('BEGIN');
-    }
-
-    try {
-        const result = await client.query(
-            `SELECT COUNT(courriel_utilisateur) as result
-        FROM commentaire
-        WHERE courriel_utilisateur = $1 AND recette_id = $2`,
-            [courriel_utilisateur, recetteId]
-        );
-
-        const row = result.rows[0];
-
-        console.log("RESULT ROW : ", row);
-
-        if (row.result > 0) {
-            const resultCommentaire = await client.query(
-                `SELECT texte
-                FROM commentaire
-                WHERE courriel_utilisateur = $1 AND recette_id = $2`,
-                [courriel_utilisateur, recetteId]
-            );
-
-            const userTexte = resultCommentaire.rows[0];
-            return userTexte;
-        }
-
-        await client.query("COMMIT");
-
-        return row;
-
-    } catch (error) {
-        await client.qwery("ROLLBACK");
-        throw error;
-    } finally {
-        client.release();
-    }
-
-
-};
-
-exports.getUserCommentByRecetteId = getUserCommentByRecetteId;
-
 
 const insertCommentToRecipe = async (comment) => {
 

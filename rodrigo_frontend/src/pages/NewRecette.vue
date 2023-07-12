@@ -10,7 +10,7 @@
                     <v-container>
                         <v-row>
                             <v-col cols="1" sm="6">
-                                <v-text-field class="w-1s00 justify-center" v-model="recette.recetteId"
+                                <v-text-field class="w-1s00 justify-center" v-model.trim="recette.recetteId"
                                     label="Identifiant unique de la recette (exemple : poulet_curry)" density="compact"
                                     :rules="[rules.required, rules.recetteIdUnique]"></v-text-field>
                             </v-col>
@@ -127,7 +127,7 @@
 <script>
 
 import session from '../session';
-import { fetchRecette, createRecette, updateRecetteImage } from '../RecetteService';
+import { createRecette, updateRecetteImage } from '../RecetteService';
 
 export default {
     data()
@@ -143,9 +143,8 @@ export default {
                 tempsCuissonMin: 0,
                 nbPortions: 0,
                 image: "",
-                isActive: true,
                 ingredients: [],
-                etapes: [],
+                etapes: []
             },
             fichierImage: null,
             rules: {
@@ -164,18 +163,6 @@ export default {
         };
     },
     methods: {
-        refreshRecette(id)
-        {
-            this.recette = null;
-
-            fetchRecette(id).then(recette =>
-            {
-                this.recette = recette;
-            }).catch(err =>
-            {
-                this.recette = null;
-            });
-        },
         async addRecette()
         {
             this.recetteIdUnique = true;
@@ -185,16 +172,19 @@ export default {
                 return;
             }
 
-            createRecette(this.recette)
-                .then((reponse) =>
+            await createRecette(this.recette)
+                .then(reponse =>
                 {
-                    if (this.fichierImage || this.fichierImage.length != 0)
+                    if (this.fichierImage && this.fichierImage.length != 0)
                     {
                         this.submitImage();
                     }
-                    this.$router.push('/recettes/' + this.recette.recetteId);
-                    this.recetteIdUnique = true;
+                    else
+                    {
+                        this.$router.push('/recettes/' + this.recette.recetteId);
+                        this.recetteIdUnique = true;
 
+                    }
 
                 }).catch(err =>
                 {
@@ -216,9 +206,11 @@ export default {
 
                 try
                 {
-                    await updateRecetteImage(this.recette.recetteId, formData);
-                    //this.edition = false;
-                    this.refreshRecette(this.id);
+                    await updateRecetteImage(this.recette.recetteId, formData).then(result =>
+                    {
+                        this.$router.push('/recettes/' + this.recette.recetteId);
+                    });
+
                 } catch (err)
                 {
                     console.error(err);
@@ -311,4 +303,5 @@ export default {
     text-align: center;
     width: 100%;
     max-width: 80rem;
-}</style>
+}
+</style>

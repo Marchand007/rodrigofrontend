@@ -1,14 +1,35 @@
 <template>
     <v-btn @click="goToUpdatePage()" size="x-small" v-if="session.user && session.user.isAdmin">Modifier la recette</v-btn>
-    <v-btn class="ma-4" @click="deleteRecette()" size="x-small" v-if="session.user && session.user.isAdmin && recette.isActive == true">Supprimer la recette</v-btn>
-    <h2 class="text-h4">{{ recette.nom }}<span v-if="recette.isActive == false"> (recette désactivée)</span> </h2>
+
+    <v-dialog v-model="dialog" persistent width="auto">
+                <template v-slot:activator="{ props }">
+                    <v-btn v-if="session.user && session.user.isAdmin" class="ma-4" v-bind="props" size="x-small">Supprimer la recette</v-btn>
+                </template>
+                <v-card>
+                    <v-card-title class="text-h5">
+                        Supprimer {{ nom }}
+                    </v-card-title>
+                    <v-card-text>Voulez-vous vraiment supprimer la recette {{ nom }}</v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
+                            Annuler
+                        </v-btn>
+                        <v-btn color="blue-darken-1" variant="text" @click="deleteRecette()">
+                            Confirmer
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+
+    <h2 class="text-h4">{{ recette.nom }}</h2>
     <v-rating v-model="moyenneAppreciation" density="compact" hover half-increments readonly>
     </v-rating>
     <span>({{ nombreAppreciation }})</span>
     <v-card class="ma-2">
         <v-sheet class="d-flex">
             <v-sheet class="ma-4">
-                <v-img :src="imageSrc" width="30rem" /> 
+                <v-img :src="imageSrc" width="600px" /> 
             </v-sheet>
             <v-sheet>
                 <v-card-title>Mais c'est quoi du {{ recette.nom }} ??</v-card-title>
@@ -73,7 +94,8 @@ export default {
             moyenneAppreciation: 0,
             nombreAppreciation: 0,
             loading: true,
-            loadError: false
+            loadError: false,
+            dialog : false
         };
     },
     methods: {
@@ -104,12 +126,13 @@ export default {
             this.recette = recette;
             this.loading = false;
             this.loadError = false;
+            this.chargerAppreciations();
         }).catch(err => {
             console.error(err);
             this.loading = false;
             this.loadError = true;
-        }),
-        this.chargerAppreciations();
+        })
+        
     },
     watch: {
         refreshCounter() {

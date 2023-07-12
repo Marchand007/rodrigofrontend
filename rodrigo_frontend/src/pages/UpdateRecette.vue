@@ -21,7 +21,7 @@
                         </v-row>
                     </v-container>
                     <v-container>
-                        <v-row>
+                        <v-row >
                             <v-col cols="1" sm="4">
                                 <v-text-field class="mr-2" v-model="recette.tempsPrepMin"
                                     label="Temps de preparation (minutes)" density="compact" type="number" min="0" step="1"
@@ -111,7 +111,7 @@
                     </v-form>
                 </v-sheet>
                 <v-btn class="w-25 mx-5" type="submit" size="large">Mettre la recette à jour</v-btn>
-                <v-btn v-if="recette.isActive == true" class="w-25 mx-5" @click="deleteRecette()" size="large">Supprimer le
+                <v-btn class="w-25 mx-5" @click="deleteRecette()" size="large">Supprimer le
                     recette</v-btn>
             </v-form>
         </v-sheet>
@@ -289,7 +289,7 @@ export default {
     mounted()
     {
         this.refreshRecette(this.id);
-        
+
         fetchIngredientsByRecetteId(this.id).then(ingredients =>
         {
             this.recette.ingredients = ingredients;
@@ -327,4 +327,5 @@ export default {
     text-align: center;
     width: 100%;
     max-width: 80rem;
-}</style>
+}
+</style>

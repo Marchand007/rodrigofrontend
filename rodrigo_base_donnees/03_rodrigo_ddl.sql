@@ -15,8 +15,7 @@ CREATE TABLE Recette (
 	temps_cuisson_min integer,
 	nb_portions integer,
 	image_content bytea,
-	image_content_type text,
-	is_active boolean NOT NULL DEFAULT true
+	image_content_type text
 );
 
 
@@ -35,8 +34,7 @@ CREATE TABLE Commentaire (
 	courriel_utilisateur text NOT NULL REFERENCES Utilisateur (courriel_utilisateur) ON DELETE NO ACTION,
 	recette_id text NOT NULL REFERENCES Recette (recette_id) ON DELETE CASCADE,
 	texte text NOT NULL,
-	date_publication timestamp with time zone NOT NULL,
-	UNIQUE (recette_id, courriel_utilisateur)
+	date_publication timestamp with time zone NOT NULL
 );
 
 CREATE TABLE Appreciation (

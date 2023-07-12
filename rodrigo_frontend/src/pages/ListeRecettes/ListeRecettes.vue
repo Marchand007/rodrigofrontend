@@ -4,10 +4,15 @@
 
         <v-img max-width="75%" src="http://logos.textgiraffe.com/logos/logo-name/Rodrigo-designstyle-friday-m.png" />
     </div>
-    <v-sheet class="ma-2">
-        <ResumeRecette v-for="recette in recettes" :key="recette.id" :id="recette.id" :nom="recette.nom"
-            :descCourt="recette.descCourt" :isActive="recette.isActive" :image="recette.image" />
-    </v-sheet>
+
+    <v-container>
+        <v-row class="justify-space-evenly">
+            <v-flex v-for="recette in recettes" xs2>
+                <ResumeRecette :key="recette.id" :id="recette.id" :nom="recette.nom"
+                    :descCourt="recette.descCourt" :image="recette.image" />
+            </v-flex>
+        </v-row>
+    </v-container>
 </template>
 
 <script>
@@ -32,19 +37,20 @@ export default {
             loadRecettes: this.loadRecettes
         };
     },
-    methods : {
-        loadRecettes() { 
+    methods: {
+        loadRecettes()
+        {
             fetchRecettes().then(recettes =>
-        {
-            this.recettes = recettes;
-            this.loading = true;
-            this.loadError = false;
-        }).catch(err =>
-        {
-            console.error(err);
-            this.loading = false;
-            this.loadError = true;
-        });
+            {
+                this.recettes = recettes;
+                this.loading = true;
+                this.loadError = false;
+            }).catch(err =>
+            {
+                console.error(err);
+                this.loading = false;
+                this.loadError = true;
+            });
         }
     },
     mounted()

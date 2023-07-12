@@ -18,10 +18,7 @@ router.get('/:id', (req, res, next) =>
     recetteQueries.getRecetteById(id).then(recette =>
     {
         console.log("req.user : ",req.user);
-        if (recette.isActive == false)
-        {
-            return next(new HttpError(403, `Les appréciation pour cette recette ne sont pas disponible`));
-        }
+
 
         const newProduct = {
             id: "" + id,

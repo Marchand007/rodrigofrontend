@@ -5,11 +5,11 @@ const logger = require('morgan');
 const HttpError = require('./HttpError');
 
 const passport = require('passport');
-const BasicStrategy = require('passport-http').BasicStrategy;
+const BasicStrSategy = require('passport-http').BasicStrategy;
 const crypto = require('crypto');
 
 
-const recetteRouter = require('./routes/RecetteRouter');
+const recetteRouter = require('./routes/recetteRouter');
 
 const commentRouter = require('./routes/commentRouter');
 
@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // basic échoue. Si l'en-tête comporte la chaîne "Basic realm="..."", le comportement
 // des navigateurs est de présenter un dialogue demandant de s'authentifier. On veut
 // éviter cela, donc on ajoute un "x" au début.
-class BasicStrategyModified extends BasicStrategy {
+class BasicStrategyModified extends BasicStrSategy {
   constructor(options, verify) {
     return super(options, verify);
   }

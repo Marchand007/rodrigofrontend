@@ -33,6 +33,7 @@ router.get('/:id', (req, res, next) =>
     const id = req.params.id;
     recetteQueries.getRecetteById(id).then(recette =>
     {
+        console.log("recette recu en reponse : ",recette)
         if (recette)
         {
             res.json(recette);
@@ -109,7 +110,6 @@ router.post('/',
                 tempsPrepMin: "" + req.body.tempsPrepMin,
                 tempsCuissonMin: "" + req.body.tempsCuissonMin,
                 nbPortions: "" + req.body.nbPortions,
-                isActive: "" + req.body.isActive,
                 ingredients: req.body.ingredients,
                 etapes: req.body.etapes
             };
@@ -161,7 +161,6 @@ router.put('/:id',
             tempsPrepMin: "" + req.body.tempsPrepMin,
             tempsCuissonMin: "" + req.body.tempsCuissonMin,
             nbPortions: "" + req.body.nbPortions,
-            isActive: "" + req.body.isActive,
             ingredients: req.body.ingredients,
             etapes: req.body.etapes
         };

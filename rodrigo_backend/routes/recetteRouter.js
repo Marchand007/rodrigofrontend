@@ -20,6 +20,7 @@ router.get('/', (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
 
+
     const recetteId = req.params.id;
     recetteQueries.getRecetteById(recetteId).then(recette => {
         if (recette) {
@@ -87,7 +88,6 @@ router.post('/',
                 tempsPrepMin: "" + req.body.tempsPrepMin,
                 tempsCuissonMin: "" + req.body.tempsCuissonMin,
                 nbPortions: "" + req.body.nbPortions,
-                isActive: "" + req.body.isActive,
                 ingredients: req.body.ingredients,
                 etapes: req.body.etapes
             };
@@ -139,7 +139,6 @@ router.put('/:id',
             tempsPrepMin: "" + req.body.tempsPrepMin,
             tempsCuissonMin: "" + req.body.tempsCuissonMin,
             nbPortions: "" + req.body.nbPortions,
-            isActive: "" + req.body.isActive,
             ingredients: req.body.ingredients,
             etapes: req.body.etapes
         };

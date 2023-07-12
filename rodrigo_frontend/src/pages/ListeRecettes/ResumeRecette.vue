@@ -1,23 +1,72 @@
 <template>
-    <v-card v-if="(session.user && session.user.isAdmin == true) || isActive == true" class="ma-2" :color="bgcolor">
-            <v-sheet class="w-100" color="transparent">
-                <v-img class="ma-4" :src="imageSrc" max-height="5rem" />
-            </v-sheet>
-            <v-sheet align="center" color="transparent">
-                <v-card-title>
-                    <router-link :to="recetteDetailUrl">{{ nom }}</router-link>
-                    <div v-if="isActive == false" class="text-body-1">(recette desactive)</div>
-                </v-card-title>
-                <v-card-text>
+    <!-- <v-card class="mx-2 pa-2" elevation="5" border>
+        <v-img class="ma-4" :src="imageSrc" height="5rem" />
+        <router-link :to="recetteDetailUrl">{{ nom }}</router-link>
+        <v-card-text class="pa-0 pb-2 px-2">{{ descCourt }}</v-card-text>
+    </v-card> -->
 
-                    <div class="text-body-1">{{ descCourt }}</div>
+    <v-card class="ma-4" width="340">
+
+        <v-img class="ma-4" :src="imageSrc" height="200px" />
+
+        <v-card-title>
+            <router-link :to="recetteDetailUrl">{{ nom }}</router-link>
+        </v-card-title>
+
+        <!-- 
+        <v-card-subtitle>
+           
+        </v-card-subtitle>
+    -->
+
+        <v-card-actions>
+            <v-btn color="blue-lighten-2" variant="text">
+                Voir Plus
+            </v-btn>
+
+            <v-spacer></v-spacer>
+
+            <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="chargerAppreciations"></v-btn>
+        </v-card-actions>
+
+        <v-expand-transition>
+            <div v-show="show">
+                <v-divider></v-divider>
+
+                <v-card-text>
+                    {{ descCourt }}
                 </v-card-text>
-            </v-sheet>
-            <v-sheet align="center" v-if="session.user && session.user.isAdmin" color="transparent">
-                    <v-btn @click="goToUpdatePage" class="ma-4">Editer</v-btn>
-                    <v-btn v-if="isActive == true" class="ma-4" @click="deleteRecette()">Supprimer la recette</v-btn>
-                    <v-btn v-if="false" class="ma-4" @click="goToUpdatePage">Réactiver la recette</v-btn>
-            </v-sheet>
+                <v-sheet align="center">
+                <v-rating v-model="moyenneAppreciation" density="compact" hover half-increments readonly>
+    </v-rating> ({{ nombreAppreciation }})
+</v-sheet>
+                <v-sheet align="center">
+                    <v-btn v-if="session.user && session.user.isAdmin" @click="goToUpdatePage" class="ma-2"
+                        size="x-small">Modifier la recette</v-btn>
+                    <v-dialog v-model="dialog" persistent width="auto">
+                        <template v-slot:activator="{ props }">
+                            <v-btn v-if="session.user && session.user.isAdmin" class="ma-2" v-bind="props"
+                                size="x-small">Supprimer la recette</v-btn>
+                        </template>
+                        <v-card>
+                            <v-card-title class="text-h5">
+                                Supprimer {{ nom }}
+                            </v-card-title>
+                            <v-card-text>Voulez-vous vraiment supprimer la recette {{ nom }}</v-card-text>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="green-darken-1" variant="text" @click="dialog = false">
+                                    Annuler
+                                </v-btn>
+                                <v-btn color="green-darken-1" variant="text" @click="deleteRecette()">
+                                    Confirmer
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-sheet>
+            </div>
+        </v-expand-transition>
     </v-card>
 </template>
 
@@ -25,22 +74,25 @@
 import { addApiPrefixToPath } from '../../../src/api_utils.js';
 import session from '../../../src/session';
 
-import { deleteRecetteById } from '../../RecetteService';
+import { deleteRecetteById, fetchAppreciationByRecetteId } from '../../RecetteService';
 
 
 export default {
+    inject: ['loadRecettes'],
     props: {
         id: String,
         nom: String,
         descCourt: String,
         image: String,
-        isActive: Boolean
     },
     data: function ()
     {
         return {
             session: session,
-            bgcolor: this.isActive ? "transparent" : "#ffc0a4"
+            dialog: false,
+            show: false,
+            nombreAppreciation : 0,
+            moyenneAppreciation: 0
         };
     },
     methods: {
@@ -48,10 +100,22 @@ export default {
         {
             this.$router.push("/admin/update-recipe/" + this.id);
         },
-        deleteRecette() {
-            deleteRecetteById(this.id).then(result => {
-                this.$router.push('/');
+        deleteRecette()
+        {
+            this.dialog = false
+            deleteRecetteById(this.id).then(result =>
+            {
+                this.loadRecettes();
             })
+        },
+        chargerAppreciations() {
+            this.show = !this.show
+            fetchAppreciationByRecetteId(this.id).then(appreciation => {
+                this.nombreAppreciation = appreciation.nombreAppreciation;
+                this.moyenneAppreciation = appreciation.moyenneAppreciation;
+            }).catch(err => {
+                console.error(err);
+            });
         }
     },
     computed: {

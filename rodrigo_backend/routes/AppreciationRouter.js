@@ -14,7 +14,6 @@ router.get('/:id', (req, res, next) => {
     if (id == null || id === "") {
         return next(new HttpError(400, `Le parametre Id est requis`));
     }
-
     recetteQueries.getRecetteById(id).then(recette => {
         if (!recette) {
             return next(new HttpError(404, `La recette ${id} est inexistante ou introuvable`));

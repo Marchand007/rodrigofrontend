@@ -1,5 +1,5 @@
 <template>
-    <div v-if="(session.user && session.user.isAdmin) || isActive == true">
+    <div>
         <v-sheet class="ma-2">
             <InfosRecette :id="id" :refreshCounter="refreshCounter"></InfosRecette>
             <v-container>
@@ -27,16 +27,6 @@
 
             <ListeCommentaires :id="id" :refreshCounter="refreshCounter"></ListeCommentaires>
         </v-sheet>
-    </div>
-    <div v-else>
-
-    </div>
-    <div v-else>
-        <v-sheet class="ma-2">
-     <v-card>
-            <v-card-title align="center">Cette recette n'est pas disponible</v-card-title>
-     </v-card>
-</v-sheet>
     </div>
 </template>
 <script>
@@ -69,7 +59,6 @@ export default {
     data()
     {
         return {
-            isActive: false,
             loading: true,
             loadError: false,
             session: session,
@@ -87,20 +76,6 @@ export default {
         {
             this.refreshCounter++;
         }
-    },
-    mounted()
-    {
-        fetchRecette(this.id).then(recette =>
-        {
-            this.isActive = recette.isActive;
-            this.loading = false;
-            this.loadError = false;
-        }).catch(err =>
-        {
-            console.error(err);
-            this.loading = false;
-            this.loadError = true;
-        })
     }
 }
 </script>

@@ -24,10 +24,14 @@ exports.getAppreciationByRecetteId = getAppreciationByRecetteId;
 const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, clientParam) => {
     const client = clientParam || await pool.connect();
 
-    if (!clientParam) {
-        await client.query('BEGIN');
-    }
-    try {
+
+
+    try
+    {
+        if (!clientParam)
+        {
+            await client.query('BEGIN');
+        }
 
         const result = await client.query(
             `SELECT COUNT(courriel_utilisateur) as note

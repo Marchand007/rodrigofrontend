@@ -4,11 +4,10 @@
             <v-sheet class="ma-2" max-width="40rem">
                 <v-form @submit.prevent="createUserAccount" validate-on="submit lazy" ref="newUserForm">
                     <v-text-field v-model="userAccountEmail" label="Adresse courriel"
-                        :rules="[rules.required, rules.validEmail, rules.userAccountIdUnique]"
-                        density="compact">
+                        :rules="[rules.required, rules.validEmail, rules.userAccountIdUnique]" density="compact">
                     </v-text-field>
 
-                    <v-text-field v-model="userFullName" label="Nom complet"
+                    <v-text-field v-model="userFullName" label="Nom complet" 
                         :rules="[rules.required, rules.validFullName]">
                     </v-text-field>
 
@@ -20,8 +19,8 @@
                         :rules="[rules.required, rules.passwordsMatch]" type="password" density="compact">
                     </v-text-field>
 
-                    <v-btn type="submit" :disabled="!userAccountEmail || !userFullName || !password || !passwordConf">Créer
-                        un compte</v-btn>
+                    <v-btn type="submit" :disabled="!userAccountEmail || !userFullName || !password || !passwordConf">
+                        Créer un compte</v-btn>
                 </v-form>
             </v-sheet>
         </v-sheet>
@@ -40,7 +39,7 @@ export default {
             userFullName: '',
             rules: {
                 required: value => !!value || "Le champ est requis",
-                validEmail: value => { 
+                validEmail: value => {
                     const validEmail = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
                     return validEmail.test(value) || "Veuillez entrer une adresse courriel valide"
                 },
@@ -79,7 +78,6 @@ export default {
                     });
             }
         }
-
     }
 }
 </script>
@@ -93,4 +91,5 @@ export default {
     text-align: center;
     width: 40%;
     max-width: 80rem;
-}</style>
+}
+</style>

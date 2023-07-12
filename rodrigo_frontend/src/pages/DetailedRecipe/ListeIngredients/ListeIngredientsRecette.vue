@@ -4,9 +4,12 @@
             <v-list-subheader>
                 <h2><u>Ingrédients</u></h2>
             </v-list-subheader>
-            <IngredientRecette v-for="(ingredient, i) in this.ingredients" :key="i" :ingredient="ingredient">
+            <v-sheet class="ma-2">
+                
+                            <IngredientRecette v-for="(ingredient, i) in this.ingredients" :key="i" :ingredient="ingredient">
             </IngredientRecette>
-
+    
+            </v-sheet>
         </v-list>
     </v-col>
 </template>
@@ -29,7 +32,8 @@ export default {
         return {
             ingredients: [],
             loading: true,
-            loadError: false
+            loadError: false,
+            show: false
         };
     },
     mounted()

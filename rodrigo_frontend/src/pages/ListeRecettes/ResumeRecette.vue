@@ -26,7 +26,7 @@
 
             <v-spacer></v-spacer>
 
-            <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="chargerAppreciations"></v-btn>
+            <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="this.show = !this.show"></v-btn>
         </v-card-actions>
 
         <v-expand-transition>
@@ -37,9 +37,9 @@
                     {{ descCourt }}
                 </v-card-text>
                 <v-sheet align="center">
-                <v-rating v-model="moyenneAppreciation" density="compact" hover half-increments readonly>
-    </v-rating> ({{ nombreAppreciation }})
-</v-sheet>
+                    <v-rating v-model="moyenneAppreciation" density="compact" hover half-increments readonly>
+                    </v-rating> ({{ nombreAppreciation }})
+                </v-sheet>
                 <v-sheet align="center">
                     <v-btn v-if="session.user && session.user.isAdmin" @click="goToUpdatePage" class="ma-2"
                         size="x-small">Modifier la recette</v-btn>
@@ -91,7 +91,7 @@ export default {
             session: session,
             dialog: false,
             show: false,
-            nombreAppreciation : 0,
+            nombreAppreciation: 0,
             moyenneAppreciation: 0
         };
     },
@@ -108,12 +108,14 @@ export default {
                 this.loadRecettes();
             })
         },
-        chargerAppreciations() {
-            this.show = !this.show
-            fetchAppreciationByRecetteId(this.id).then(appreciation => {
+        chargerAppreciations()
+        {
+            fetchAppreciationByRecetteId(this.id).then(appreciation =>
+            {
                 this.nombreAppreciation = appreciation.nombreAppreciation;
                 this.moyenneAppreciation = appreciation.moyenneAppreciation;
-            }).catch(err => {
+            }).catch(err =>
+            {
                 console.error(err);
             });
         }
@@ -127,6 +129,9 @@ export default {
         {
             return addApiPrefixToPath(this.image);
         }
+    },
+    mounted() {
+        this.chargerAppreciations();
     }
 }
 </script>

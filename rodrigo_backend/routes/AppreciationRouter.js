@@ -68,7 +68,7 @@ router.get('/:id/:user',
             return next(err);
         });
 
-        appreciationQueries.getUserAppreciationByRecetteId(id, user).then(appreciation => {
+        appreciationQueries.getUserAppreciationByRecetteId(recetteId, user).then(appreciation => {
             if (appreciation) {
                 if (appreciation.note == 0) {
                     return next(new HttpError(404, `${user} n'a pas encore donné une note d'appréciation sur la recette ${id}`));

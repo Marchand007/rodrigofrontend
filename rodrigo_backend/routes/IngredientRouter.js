@@ -4,6 +4,7 @@ const router = express.Router();
 const HttpError = require("../HttpError");
 
 const ingredientQueries = require("../queries/IngredientQueries");
+const recetteQueries = require("../queries/RecetteQueries");
 
 router.get('/:id', (req, res, next) => {
     const recetteId = req.params.id;

@@ -38,19 +38,19 @@ router.get('/:id', (req, res, next) => {
 router.get('/:id/:user',
     passport.authenticate('basic', { session: false }),
     (req, res, next) => {
-        const id = req.params.id;
+        const recetteId = req.params.id;
         const user = req.params.user;
 
-        if (id == null || id === "") {
-            return next(new HttpError(400, `Le parametre Id est requis`));
+        if (recetteId == null || recetteId === "") {
+            return next(new HttpError(400, `Le parametre recetteId est requis`));
         }
         if (user == null || user === "") {
             return next(new HttpError(400, `Le parametre user est requis`));
         }
 
-        recetteQueries.getRecetteById(id).then(recette => {
+        recetteQueries.getRecetteById(recetteId).then(recette => {
             if (!recette) {
-                return next(new HttpError(404, `La recette ${id} est inexistante ou introuvable`));
+                return next(new HttpError(404, `La recette ${recetteId} est inexistante ou introuvable`));
             }
         }).catch(err => {
             return next(err);
@@ -86,20 +86,26 @@ router.get('/:id/:user',
 router.post('/',
     passport.authenticate('basic', { session: false }),
     (req, res, next) => {
-
+        
         const recetteId = req.body.recetteId;
+
         if (!recetteId || recetteId === "") {
             return next(new HttpError(400, 'Le champ recetteId est requis'));
         }
 
-        const user = req.user;
-        if (!user) {
-            return next(new HttpError(403, "Vous devez avoir un compte utilisateur pour ajouter une appreciation"));
-        }
+        recetteQueries.getRecetteById(recetteId).then(recette => {
+            if (!recette) {
+                return next(new HttpError(404, `La recette ${recetteId} est inexistante ou introuvable`));
+            }
+        }).catch(err => {
+            return next(err);
+        });
 
+        const user = req.user;
+        
         appreciationQueries.getUserAppreciationByRecetteId(recetteId, user.courrielUtilisateur).then(result => {
             if (result.note > 0) {
-                return next(new HttpError(400, `${user.courrielUtilisateur} a deja donne une appreciation sur la recette ${recetteId}`));
+                return next(new HttpError(400, `${user.courrielUtilisateur} a déjà donné une note d'appréciation de ${result.note} sur la recette ${recetteId}`));
             }
 
             const nouvAppreciation = {

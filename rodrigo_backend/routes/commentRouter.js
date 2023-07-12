@@ -75,15 +75,21 @@ router.get('/:id/:user', (req, res, next) => {
 router.post('/',
     passport.authenticate('basic', { session: false }),
     (req, res, next) => {
+
         const recetteId = req.body.recetteId;
-        if (recetteId == "") {
+        if (!recetteId ||recetteId == "") {
             return next(new HttpError(400, 'Le champ recetteId est requis'));
         }
+        
+        recetteQueries.getRecetteById(recetteId).then(recette => {
+            if (!recette) {
+                return next(new HttpError(404, `La recette ${recetteId} est inexistante ou introuvable`));
+            }
+        }).catch(err => {
+            return next(err);
+        });
 
         const user = req.user;
-        if (!user) {
-            return next(new HttpError(403, "Vous devez avoir un compte utilisateur pour publier un commentaire"));
-        }
 
         commentQueries.getUserCommentByRecetteId(user.courrielUtilisateur, recetteId).then(result => {
 

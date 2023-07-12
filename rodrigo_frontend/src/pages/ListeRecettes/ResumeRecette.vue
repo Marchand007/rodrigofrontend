@@ -58,7 +58,7 @@
                                 <v-btn color="green-darken-1" variant="text" @click="dialog = false">
                                     Annuler
                                 </v-btn>
-                                <v-btn color="green-darken-1" variant="text" @click="deleteRecette()">
+                                <v-btn color="green-darken-1" variant="text" @click="deleteRecette">
                                     Confirmer
                                 </v-btn>
                             </v-card-actions>

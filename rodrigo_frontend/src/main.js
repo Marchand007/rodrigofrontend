@@ -56,12 +56,15 @@ app.use(vuetify);
 
 app.mount("#app");
 
-//Question pour le prof
 
-// update liste de recette apres la suppresion
+//mettre le dialog aussi suppresion dans page edition
 
-//on a juste recette service.. on serait tu mieux de toute splitter ?
+//changer Mais c'est quoi du Lasagnes à la bolognaise ??
 
-//mettre indication sur page detail que elle est supprimer
+//regler afficahge ingredients dans info recette
 
-//ne pas accepter appreciation / commentaire / etape / ingredient SI elle est desactiver
+
+
+//regex pour creation de compte
+
+//remettre le laod appreciation

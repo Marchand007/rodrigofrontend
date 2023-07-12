@@ -111,8 +111,28 @@
                     </v-form>
                 </v-sheet>
                 <v-btn class="w-25 mx-5" type="submit" size="large">Mettre la recette à jour</v-btn>
-                <v-btn class="w-25 mx-5" @click="deleteRecette()" size="large">Supprimer le
-                    recette</v-btn>
+                <v-dialog v-model="dialog" persistent width="auto">
+                <template v-slot:activator="{ props }">
+                    <v-btn v-if="session.user && session.user.isAdmin" class="ma-4" v-bind="props" size="large">Supprimer la recette</v-btn>
+                </template>
+                <v-card>
+                    <v-card-title class="text-h5">
+                        Supprimer {{ recette.nom }}
+                    </v-card-title>
+                    <v-card-text>Voulez-vous vraiment supprimer la recette {{ recette.nom }}</v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
+                            Annuler
+                        </v-btn>
+                        <v-btn color="blue-darken-1" variant="text" @click="deleteRecette()">
+                            Confirmer
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+                <!-- <v-btn class="w-25 mx-5" @click="deleteRecette()" size="large">Supprimer le
+                    recette</v-btn>-->
             </v-form>
         </v-sheet>
         <v-sheet v-else class="ma-2">Vous n'avez pas les permissions pour voir cette page</v-sheet>
@@ -147,7 +167,8 @@ export default {
             nouvQuantiteIngredient: "",
             nouvMesureIngredient: "",
             nouvNomIngredient: "",
-            nouvNomEtape: ""
+            nouvNomEtape: "",
+            dialog: false,
         };
     },
     methods: {
@@ -192,6 +213,7 @@ export default {
         },
         deleteRecette()
         {
+            this.dialog = true;
             deleteRecetteById(this.id).then(result =>
             {
                 this.$router.push('/');

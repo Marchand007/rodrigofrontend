@@ -32,7 +32,6 @@
                 <v-img :src="imageSrc" width="600px" /> 
             </v-sheet>
             <v-sheet>
-                <v-card-title>Mais c'est quoi du {{ recette.nom }} ??</v-card-title>
                 <v-card-text>
                     <div class="text-body-1 pre-wrap">{{ recette.descLong }}</div>
                 </v-card-text>
@@ -111,6 +110,7 @@ export default {
             });
         },
         deleteRecette() {
+            this.dialog = true;
             deleteRecetteById(this.id).then(result => {
                 this.$router.push('/');
             })

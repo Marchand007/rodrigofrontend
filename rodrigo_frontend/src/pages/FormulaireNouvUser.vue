@@ -4,7 +4,7 @@
             <v-sheet class="ma-2" max-width="40rem">
                 <v-form @submit.prevent="createUserAccount" validate-on="submit lazy" ref="newUserForm">
                     <v-text-field v-model="userAccountEmail" label="Adresse courriel"
-                        :rules="[rules.required, rules.validEmail, rules.userAccountIdUnique]" density="compact">
+                        :rules="[rules.required, rules.validEmail, rules.userAccountEmailUnique]" density="compact">
                     </v-text-field>
 
                     <v-text-field v-model="userFullName" label="Nom complet" 

@@ -218,7 +218,15 @@ export async function fetchAppreciationByRecetteId(recetteId)
 export async function fetchAppreciationForUserByRecetteId(recetteId)
 {
     const user = session.user_email;
-    const response = await fetch(`/api/appreciation/${recetteId}/${user}`);
+    const response = await fetch(`/api/appreciation/${recetteId}/${user}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            ...session.getAuthHeaders()
+        }
+    }
+    
+    );
 
     if (response.ok) {
         return await response.json();

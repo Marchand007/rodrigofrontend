@@ -8,10 +8,8 @@
 </template>
 
 <script>
-import { computed } from 'vue';
 
 import EnteteNavigation from './components/EnteteNaviguation.vue';
-
 
 export default {
     components: {

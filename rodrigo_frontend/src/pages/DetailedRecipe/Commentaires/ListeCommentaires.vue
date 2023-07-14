@@ -1,9 +1,7 @@
 <template>
-        <CommentaireRecette v-for="(commentaire, i) in this.commentaires" :key="i" :commentaire="commentaire">
-        </CommentaireRecette>
+    <CommentaireRecette v-for="(commentaire, i) in this.commentaires" :key="i" :commentaire="commentaire">
+    </CommentaireRecette>
 </template>
-
-
 
 <script>
 import { fetchCommentairesByRecetteId } from '../../../RecetteService';
@@ -38,7 +36,7 @@ export default {
     },
     watch: {
         refreshCounter() {
-            this.chargerCommentaires(); 
+            this.chargerCommentaires();
         }
     }
 }

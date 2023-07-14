@@ -1,10 +1,4 @@
 <template>
-    <!-- <v-card class="mx-2 pa-2" elevation="5" border>
-        <v-img class="ma-4" :src="imageSrc" height="5rem" />
-        <router-link :to="recetteDetailUrl">{{ nom }}</router-link>
-        <v-card-text class="pa-0 pb-2 px-2">{{ descCourt }}</v-card-text>
-    </v-card> -->
-
     <v-card class="ma-4" width="340">
 
         <v-img class="ma-4" :src="imageSrc" height="200px" />
@@ -13,26 +7,17 @@
             <router-link :to="recetteDetailUrl">{{ nom }}</router-link>
         </v-card-title>
 
-        <!-- 
-        <v-card-subtitle>
-           
-        </v-card-subtitle>
-    -->
-
         <v-card-actions>
             <v-btn color="blue-lighten-2" variant="text">
                 Voir Plus
             </v-btn>
-
             <v-spacer></v-spacer>
-
             <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="this.show = !this.show"></v-btn>
         </v-card-actions>
 
         <v-expand-transition>
             <div v-show="show">
                 <v-divider></v-divider>
-
                 <v-card-text>
                     {{ descCourt }}
                 </v-card-text>
@@ -85,8 +70,7 @@ export default {
         descCourt: String,
         image: String,
     },
-    data: function ()
-    {
+    data: function () {
         return {
             session: session,
             dialog: false,
@@ -96,37 +80,29 @@ export default {
         };
     },
     methods: {
-        goToUpdatePage()
-        {
+        goToUpdatePage() {
             this.$router.push("/admin/update-recipe/" + this.id);
         },
-        deleteRecette()
-        {
+        deleteRecette() {
             this.dialog = false
-            deleteRecetteById(this.id).then(result =>
-            {
+            deleteRecetteById(this.id).then(result => {
                 this.loadRecettes();
             })
         },
-        chargerAppreciations()
-        {
-            fetchAppreciationByRecetteId(this.id).then(appreciation =>
-            {
+        chargerAppreciations() {
+            fetchAppreciationByRecetteId(this.id).then(appreciation => {
                 this.nombreAppreciation = appreciation.nombreAppreciation;
                 this.moyenneAppreciation = appreciation.moyenneAppreciation;
-            }).catch(err =>
-            {
+            }).catch(err => {
                 console.error(err);
             });
         }
     },
     computed: {
-        recetteDetailUrl()
-        {
+        recetteDetailUrl() {
             return "/recettes/" + this.id;
         },
-        imageSrc()
-        {
+        imageSrc() {
             return addApiPrefixToPath(this.image);
         }
     },

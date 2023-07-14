@@ -11,7 +11,8 @@
 
             <v-card class="ma-2" v-if="session.user">
                 <v-card-actions>
-                    <v-btn :icon="showAjout ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="this.showAjout = !this.showAjout"></v-btn>
+                    <v-btn :icon="showAjout ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                        @click="this.showAjout = !this.showAjout"></v-btn>
                     <v-card-title>
                         Ajouter un commentaire / appréciation
                     </v-card-title>
@@ -33,14 +34,15 @@
 
             <v-card class="ma-2">
                 <v-card-actions>
-                    <v-btn :icon="showListeCommentaire ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="this.showListeCommentaire = !this.showListeCommentaire"></v-btn>
+                    <v-btn :icon="showListeCommentaire ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                        @click="this.showListeCommentaire = !this.showListeCommentaire"></v-btn>
                     <v-card-title>
-                       Liste des commentaires
+                        Liste des commentaires
                     </v-card-title>
                 </v-card-actions>
                 <v-expand-transition>
                     <div v-show="showListeCommentaire">
-                            <ListeCommentaires :id="id" :refreshCounter="refreshCounter"></ListeCommentaires>
+                        <ListeCommentaires :id="id" :refreshCounter="refreshCounter"></ListeCommentaires>
                     </div>
                 </v-expand-transition>
             </v-card>
@@ -48,7 +50,6 @@
     </div>
 </template>
 <script>
-
 
 import session from '../../session';
 
@@ -58,8 +59,6 @@ import ListeEtapesRecette from './ListeEtapes/ListeEtapesRecette.vue';
 import ListeCommentaires from './Commentaires/ListeCommentaires.vue';
 import AjoutCommentaire from './AjoutCommentaire.vue';
 import AjoutAppreciation from './AjoutAppreciation.vue';
-
-import { fetchRecette } from '../../RecetteService';
 
 
 export default {
@@ -74,8 +73,7 @@ export default {
         AjoutCommentaire,
         AjoutAppreciation
     },
-    data()
-    {
+    data() {
         return {
             loading: true,
             loadError: false,
@@ -85,15 +83,13 @@ export default {
             showListeCommentaire: false,
         };
     },
-    provide()
-    {
+    provide() {
         return {
             refresh: this.refreshPageDetaillee
         };
     },
     methods: {
-        refreshPageDetaillee()
-        {
+        refreshPageDetaillee() {
             this.refreshCounter++;
         }
     }

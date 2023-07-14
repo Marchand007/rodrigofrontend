@@ -3,7 +3,8 @@
         <div class="text-center">
             <v-rating @click="enableBtn" :readonly="disabledAppr" v-model="rating" hover></v-rating>
             <pre>{{ rating }}</pre>
-            <v-btn v-if="!disabledAppr" :disabled="disabledBtn" v-on:click="this.addAppreciation()">Envoyer Appréciation</v-btn>
+            <v-btn v-if="!disabledAppr" :disabled="disabledBtn" v-on:click="this.addAppreciation()">Envoyer
+                Appréciation</v-btn>
             <v-btn v-if="disabledAppr" :disabled="disabledBtn">Appréciation déjà envoyé</v-btn>
         </div>
     </v-col>
@@ -61,7 +62,6 @@ export default {
     },
     mounted() {
         this.loadAppreciation();
-
     }
 }
 

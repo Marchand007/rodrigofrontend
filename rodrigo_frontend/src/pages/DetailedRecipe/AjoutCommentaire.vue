@@ -11,24 +11,20 @@ import session from '../../session';
 import { addCommentaireToRecipeId } from '../.././RecetteService';
 
 export default {
-    inject :['refresh'],
+    inject: ['refresh'],
     props: {
         id: String,
         refreshCounter: Number
     },
-    data()
-    {
+    data() {
         return {
             session: session,
             texteCommentaire: "",
         }
     },
-
     methods: {
-        addCommentaire()
-        {
-            if (!session.user)
-            {
+        addCommentaire() {
+            if (!session.user) {
                 alert("Impossible de soumettre le commentaire sans connexion");
             }
 
@@ -38,8 +34,7 @@ export default {
                 texte: this.texteCommentaire
             };
 
-            addCommentaireToRecipeId(commentaire).then((response) =>
-            {
+            addCommentaireToRecipeId(commentaire).then((response) => {
                 alert(response.message);
                 this.texteCommentaire = "";
                 this.refresh();
@@ -47,7 +42,5 @@ export default {
         }
     }
 }
-
-
 
 </script>

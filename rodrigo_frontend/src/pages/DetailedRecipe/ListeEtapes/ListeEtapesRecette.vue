@@ -6,9 +6,7 @@
             </v-list-subheader>
             <EtapeRecette v-for="(etape, i) in this.etapes" :key="i" :etape="etape">
             </EtapeRecette>
-
         </v-list>
-
     </v-col>
 </template>
 
@@ -17,7 +15,6 @@
 import { fetchEtapesByRecetteId } from '../../../RecetteService';
 import EtapeRecette from './EtapeRecette.vue';
 
-
 export default {
     props: {
         id: String,
@@ -25,23 +22,19 @@ export default {
     components: {
         EtapeRecette
     },
-    data()
-    {
+    data() {
         return {
             etapes: [],
             loading: true,
             loadError: false
         };
     },
-    mounted()
-    {
-        fetchEtapesByRecetteId(this.id).then(etapes =>
-        {
+    mounted() {
+        fetchEtapesByRecetteId(this.id).then(etapes => {
             this.etapes = etapes;
             this.loading = false;
             this.loadError = false;
-        }).catch(err =>
-        {
+        }).catch(err => {
             console.error(err);
             this.loading = false;
             this.loadError = true;

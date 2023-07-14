@@ -2,25 +2,26 @@
     <v-btn @click="goToUpdatePage()" size="x-small" v-if="session.user && session.user.isAdmin">Modifier la recette</v-btn>
 
     <v-dialog v-model="dialog" persistent width="auto">
-                <template v-slot:activator="{ props }">
-                    <v-btn v-if="session.user && session.user.isAdmin" class="ma-4" v-bind="props" size="x-small">Supprimer la recette</v-btn>
-                </template>
-                <v-card>
-                    <v-card-title class="text-h5">
-                        Supprimer {{ recette.nom }}
-                    </v-card-title>
-                    <v-card-text>Voulez-vous vraiment supprimer la recette {{ recette.nom }}</v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
-                            Annuler
-                        </v-btn>
-                        <v-btn color="blue-darken-1" variant="text" @click="deleteRecette()">
-                            Confirmer
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
+        <template v-slot:activator="{ props }">
+            <v-btn v-if="session.user && session.user.isAdmin" class="ma-4" v-bind="props" size="x-small">Supprimer la
+                recette</v-btn>
+        </template>
+        <v-card>
+            <v-card-title class="text-h5">
+                Supprimer {{ recette.nom }}
+            </v-card-title>
+            <v-card-text>Voulez-vous vraiment supprimer la recette {{ recette.nom }}</v-card-text>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
+                    Annuler
+                </v-btn>
+                <v-btn color="blue-darken-1" variant="text" @click="deleteRecette()">
+                    Confirmer
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 
     <h2 class="text-h4">{{ recette.nom }}</h2>
     <v-rating v-model="moyenneAppreciation" density="compact" hover half-increments readonly>
@@ -29,7 +30,7 @@
     <v-card class="ma-2">
         <v-sheet class="d-flex">
             <v-sheet class="ma-4">
-                <v-img :src="imageSrc" height="400px" width="600px" /> 
+                <v-img :src="imageSrc" height="400px" width="600px" />
             </v-sheet>
             <v-sheet>
                 <v-card-text>
@@ -37,7 +38,6 @@
                 </v-card-text>
             </v-sheet>
         </v-sheet>
-
 
         <v-container>
             <v-card class="ma-2">
@@ -72,9 +72,7 @@
             </v-card>
         </v-container>
     </v-card>
-
 </template>
-
 
 <script>
 import { addApiPrefixToPath } from '../../../src/api_utils.js';
@@ -94,7 +92,7 @@ export default {
             nombreAppreciation: 0,
             loading: true,
             loadError: false,
-            dialog : false
+            dialog: false
         };
     },
     methods: {
@@ -132,7 +130,6 @@ export default {
             this.loading = false;
             this.loadError = true;
         })
-        
     },
     watch: {
         refreshCounter() {

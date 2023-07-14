@@ -12,4 +12,5 @@ export default {
         etape: Object,
     }
 }
+
 </script>

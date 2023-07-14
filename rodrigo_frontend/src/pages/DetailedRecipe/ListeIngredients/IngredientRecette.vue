@@ -15,4 +15,5 @@ export default {
         ingredient: Object,
     }
 }
+
 </script>

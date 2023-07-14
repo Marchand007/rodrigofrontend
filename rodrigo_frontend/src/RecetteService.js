@@ -33,20 +33,7 @@ const convertToRecette = jsonRecette => {
     };
 };
 
-const convertToCommentaire = jsonCommentaire => {
-    return {
-        courrielUtilisateur: jsonCommentaire.courrielUtilisateur,
-        recetteId: jsonCommentaire.recetteId,
-        texte: jsonCommentaire.texte,
-        datePublication: jsonCommentaire.datePublication
-    };
-};
 
-/**
- * Récupère depuis l'API back-end la liste de tous les produits du catalogue
- * 
- * @returns Promesse permettant d'obtenir la liste des produits
- */
 export async function fetchRecettes() {
     const response = await fetch('/api/recettes');
 
@@ -58,12 +45,6 @@ export async function fetchRecettes() {
     }
 }
 
-/**
- * Récupère depuis l'API back-end un produit individuel du catalogue
- * 
- * @param {String} recetteId L'identifiant du produit à récupérer
- * @returns Promesse permettant d'obtenir le produit demandé
- */
 export async function fetchRecette(recetteId) {
     const response = await fetch(`/api/recettes/${recetteId}`);
 
@@ -83,15 +64,14 @@ export async function updateRecette(recette) {
         },
         body: JSON.stringify(recette)
     });
-    if (response.ok)
-    {
+    if (response.ok) {
         return response.json();
-    } else
-    {
+    } else {
 
         throw await createServiceError(response);
     }
 }
+
 export async function deleteRecetteById(recetteId) {
     const response = await fetch(`/api/recettes/${recetteId}`, {
         method: "DELETE",
@@ -100,11 +80,9 @@ export async function deleteRecetteById(recetteId) {
             ...session.getAuthHeaders()
         }
     });
-    if (response.ok)
-    {
+    if (response.ok) {
         return response.json();
-    } else
-    {
+    } else {
 
         throw await createServiceError(response);
     }
@@ -126,7 +104,6 @@ export async function createRecette(recette) {
         throw await createServiceError(response);
     }
 }
-
 
 export async function updateRecetteImage(recetteId, formData) {
     const response = await fetch(`/api/recettes/${recetteId}/image`, {
@@ -156,7 +133,6 @@ export async function fetchEtapesByRecetteId(recetteId) {
     }
 }
 
-
 export async function addEtape(etape) {
     const response = await fetch(`/api/etapes`, {
         method: "POST",
@@ -185,7 +161,6 @@ export async function fetchIngredientsByRecetteId(recetteId) {
     }
 }
 
-
 export async function addIngredient(ingredient) {
     const response = await fetch(`/api/ingredients`, {
         method: "POST",
@@ -204,8 +179,7 @@ export async function addIngredient(ingredient) {
 }
 
 //APPRECIATION//
-export async function fetchAppreciationByRecetteId(recetteId)
-{
+export async function fetchAppreciationByRecetteId(recetteId) {
     const response = await fetch(`/api/appreciation/${recetteId}`);
 
     if (response.ok) {
@@ -215,8 +189,7 @@ export async function fetchAppreciationByRecetteId(recetteId)
     }
 }
 
-export async function fetchAppreciationForUserByRecetteId(recetteId)
-{
+export async function fetchAppreciationForUserByRecetteId(recetteId) {
     const user = session.user_email;
     const response = await fetch(`/api/appreciation/${recetteId}/${user}`, {
         method: "GET",
@@ -234,7 +207,7 @@ export async function fetchAppreciationForUserByRecetteId(recetteId)
     }
 }
 
-export async function addAppreciationToRecipeId(appreciation){
+export async function addAppreciationToRecipeId(appreciation) {
     const response = await fetch(`/api/appreciation`, {
         method: "POST",
         headers: {
@@ -263,7 +236,7 @@ export async function fetchCommentairesByRecetteId(recetteId) {
     }
 }
 
-export async function addCommentaireToRecipeId(commentaire){
+export async function addCommentaireToRecipeId(commentaire) {
     const response = await fetch(`/api/comments`, {
         method: "POST",
         headers: {

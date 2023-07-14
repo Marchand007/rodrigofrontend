@@ -4,7 +4,7 @@
             <v-sheet class="ma-2" max-width="40rem">
                 <v-form @submit.prevent="createUserAccount" validate-on="submit lazy" ref="newUserForm">
                     <v-text-field v-model="userAccountEmail" label="Adresse courriel"
-                        :rules="[rules.required, rules.validEmail, rules.userAccountIdUnique]" density="compact">
+                        :rules="[rules.required, rules.validEmail, rules.userAccountEmailUnique]" density="compact">
                     </v-text-field>
 
                     <v-text-field v-model="userFullName" label="Nom complet" 
@@ -45,14 +45,14 @@ export default {
                 },
                 validFullName: value => {
                     const validFullName = /(^[A-Z][a-z]+)(-){0,1}([ ]{0,1})([A-Z][a-z]+)?([ ]{1})?([A-Z][a-z]+)(-{0,1})([ ]{0,1})([A-Z][a-z]+)?$/;
-                    return validFullName.test(value) || "Veuillez entrer un nom complet valide"
+                    return validFullName.test(value) || "Veuillez entrer un nom complet valide, (première lettre par mot doit être une majuscule)"
                 },
                 validPassword: value => {
                     const validPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-                    return validPasswordRegex.test(value) || "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule et 1 caractère spécial"
+                    return validPasswordRegex.test(value) || "Le mot de passe doit contenir au moins 8 caractères, 1 majuscule, 1 chiffre et 1 caractère spécial"
                 },
                 passwordsMatch: () => this.password === this.passwordConf || "Les mots de passe ne correspondent pas",
-                userAccountEmailUnique: () => this.userAccountEmail || "Cette adressse courriel est déjà utilisée, veuillez en entrer une autre"
+                userAccountEmailUnique: () => this.userAccountUnique || "Cette adressse courriel est déjà utilisée, veuillez en entrer une autre"
             },
             userAccountUnique: true
         };

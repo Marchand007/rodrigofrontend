@@ -10,10 +10,8 @@
             </p>
         </v-toolbar-title>
         <router-link class="routerlink" to="/"><v-tab>Les recettes</v-tab></router-link>
-        <router-link class="routerlink" to="/admin/new-recipe"><v-tab v-if="session.user && session.user.isAdmin">Ajouter
-                une
-                recette</v-tab></router-link>
-
+        <router-link class="routerlink" to="/admin/new-recipe"><v-tab v-if="session.user && session.user.isAdmin">
+            Ajouter une recette</v-tab></router-link>
         <div v-if="session.user">
             <v-tab>
                 Bienvenue, {{ session.user.nomComplet }}
@@ -22,7 +20,6 @@
                 DÉCONNEXION
             </v-tab>
         </div>
-
         <div v-else>
             <router-link class="routerlink" to="/login">
                 <v-tab>
@@ -41,7 +38,6 @@
 
 <script>
 import session from '../session';
-
 
 export default {
     data: function () {
@@ -78,14 +74,6 @@ export default {
     padding: 0.3rem;
 }
 
-
-/* .nav {
-    text-align: center;
-align-content: space-between;
-    flex-basis: 60%;
-    padding: 0.3rem;
-
-} */
 .nav span {
     justify-self: left;
     background-color: red;

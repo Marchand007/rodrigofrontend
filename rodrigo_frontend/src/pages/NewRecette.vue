@@ -36,8 +36,8 @@
                             </v-col>
                         </v-row>
                     </v-container>
-                    <v-text-field v-model="recette.descCourt" label="Description Courte" density="compact"
-                        :rules="[rules.required]"></v-text-field>
+                    <v-text-field maxlength="170" v-model="recette.descCourt" label="Description Courte" density="compact"
+                        :rules="[rules.required, rules.max170char]" clearable></v-text-field>
                     <v-textarea id="description" v-model="recette.descLong" label="Description longue"
                         :rules="[rules.required]" auto-grow></v-textarea>
                 </v-sheet>
@@ -153,7 +153,8 @@ export default {
                     console.log("validation required :", value);
                     return !!value || "Le champ est requis";
                 },
-                recetteIdUnique: () => this.recetteIdUnique || "Cet identifiant est déjà utilisé, veuillez en enter un autre"
+                recetteIdUnique: () => this.recetteIdUnique || "Cet identifiant est déjà utilisé, veuillez en enter un autre",
+                max170char: () => this.recette.descCourt.length <= 170 || "Le description courte est trop longue (maximum 170 caractères)"
             },
             recetteIdUnique: true,
             nouvQuantiteIngredient: "",

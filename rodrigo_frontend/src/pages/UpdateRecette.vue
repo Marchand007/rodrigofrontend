@@ -125,14 +125,12 @@
                         <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
                             Annuler
                         </v-btn>
-                        <v-btn color="blue-darken-1" variant="text" @click="deleteRecette()">
+                        <v-btn color="blue-darken-1" variant="text" @click="deleteRecette">
                             Confirmer
                         </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-                <!-- <v-btn class="w-25 mx-5" @click="deleteRecette()" size="large">Supprimer le
-                    recette</v-btn>-->
             </v-form>
         </v-sheet>
         <v-sheet v-else class="ma-2">Vous n'avez pas les permissions pour voir cette page</v-sheet>
@@ -174,7 +172,6 @@ export default {
     methods: {
         refreshRecette(id)
         {
-            this.recette = null;
 
             fetchRecette(this.id).then(recette =>
             {
@@ -216,6 +213,7 @@ export default {
             this.dialog = true;
             deleteRecetteById(this.id).then(result =>
             {
+                console.log("result : ", result);
                 this.$router.push('/');
             })
         },

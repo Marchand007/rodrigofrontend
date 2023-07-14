@@ -4,19 +4,19 @@
             <v-sheet class="ma-2" max-width="40rem">
                 <v-form @submit.prevent="createUserAccount" validate-on="submit lazy" ref="newUserForm">
                     <v-text-field v-model="userAccountEmail" label="Adresse courriel"
-                        :rules="[rules.required, rules.validEmail, rules.userAccountEmailUnique]" density="compact">
+                        :rules="[rules.required, rules.validEmail, rules.userAccountEmailUnique]" density="compact" clearable>
                     </v-text-field>
 
                     <v-text-field v-model="userFullName" label="Nom complet" 
-                        :rules="[rules.required, rules.validFullName]">
+                        :rules="[rules.required, rules.validFullName]" clearable>
                     </v-text-field>
 
                     <v-text-field v-model="password" label="Mot de passe" type="password"
-                        :rules="[rules.required, rules.validPassword]" density="compact">
+                        :rules="[rules.required, rules.validPassword]" density="compact" clearable>
                     </v-text-field>
 
                     <v-text-field v-model="passwordConf" label="Confirmer le mot de passe"
-                        :rules="[rules.required, rules.passwordsMatch]" type="password" density="compact">
+                        :rules="[rules.required, rules.passwordsMatch]" type="password" density="compact" clearable>
                     </v-text-field>
 
                     <v-btn type="submit" :disabled="!userAccountEmail || !userFullName || !password || !passwordConf">

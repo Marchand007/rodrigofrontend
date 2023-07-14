@@ -5,10 +5,7 @@
                 <h2><u>Ingrédients</u></h2>
             </v-list-subheader>
             <v-sheet class="ma-2">
-                
-                            <IngredientRecette v-for="(ingredient, i) in this.ingredients" :key="i" :ingredient="ingredient">
-            </IngredientRecette>
-    
+                <IngredientRecette v-for="(ingredient, i) in this.ingredients" :key="i" :ingredient="ingredient"> </IngredientRecette>
             </v-sheet>
         </v-list>
     </v-col>
@@ -27,8 +24,7 @@ export default {
     components: {
         IngredientRecette
     },
-    data()
-    {
+    data() {
         return {
             ingredients: [],
             loading: true,
@@ -36,23 +32,19 @@ export default {
             show: false
         };
     },
-    mounted()
-    {
-        fetchIngredientsByRecetteId(this.id).then(ingredients =>
-        {
+    mounted() {
+        fetchIngredientsByRecetteId(this.id).then(ingredients => {
             this.ingredients = ingredients;
             this.loading = false;
             this.loadError = false;
-        }).catch(err =>
-        {
+        }).catch(err => {
             console.error(err);
             this.loading = false;
             this.loadError = true;
         });
     },
     computed: {
-        recetteDetailUrl()
-        {
+        recetteDetailUrl() {
             return "/recettes/" + this.id;
         },
     }

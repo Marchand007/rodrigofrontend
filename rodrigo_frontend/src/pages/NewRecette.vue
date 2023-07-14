@@ -37,7 +37,7 @@
                             </v-col>
                         </v-row>
                     </v-container>
-                    <v-text-field maxlength="170" v-model="recette.descCourt" label="Description Courte" density="compact"
+                    <v-text-field maxlength="170" v-model="recette.descCourt" label="Description courte" density="compact"
                         :rules="[rules.required, rules.max170char]" clearable></v-text-field>
                     <v-textarea id="description" v-model="recette.descLong" label="Description longue"
                         :rules="[rules.required]" auto-grow></v-textarea>
@@ -131,8 +131,7 @@ import session from '../session';
 import { createRecette, updateRecetteImage } from '../RecetteService';
 
 export default {
-    data()
-    {
+    data() {
         return {
             session: session,
             recette: {
@@ -149,8 +148,7 @@ export default {
             },
             fichierImage: null,
             rules: {
-                required: value =>
-                {
+                required: value => {
                     return !!value || "Le champ est requis";
                 },
                 recetteIdUnique: () => this.recetteIdUnique || "Cet identifiant est déjà utilisé, veuillez en enter un autre",
@@ -164,63 +162,50 @@ export default {
         };
     },
     methods: {
-        async addRecette()
-        {
+        async addRecette() {
             this.recetteIdUnique = true;
             const formValid = await this.$refs.recetteform.validate();
-            if (!formValid.valid)
-            {
+            if (!formValid.valid) {
                 return;
             }
 
             await createRecette(this.recette)
-                .then(async reponse =>
-                {
-                    if (this.fichierImage && this.fichierImage.length != 0)
-                    {
+                .then(async reponse => {
+                    if (this.fichierImage && this.fichierImage.length != 0) {
                         await this.submitImage();
                     }
-                    else
-                    {
+                    else {
                         this.$router.push('/recettes/' + this.recette.recetteId);
                         this.recetteIdUnique = true;
 
                     }
 
-                }).catch(err =>
-                {
+                }).catch(err => {
                     console.error(err);
                     alert(err.message);
-                    if (err.status === 409)
-                    {
+                    if (err.status === 409) {
                         this.recetteIdUnique = false;
                     }
                     this.$refs.recetteform.validate();
                 })
         },
-        async submitImage()
-        {
-            if (this.fichierImage)
-            {
+        async submitImage() {
+            if (this.fichierImage) {
                 const formData = new FormData();
                 formData.append('recette-image', this.fichierImage[0]);
 
-                try
-                {
+                try {
                     await updateRecetteImage(this.recette.recetteId, formData);
                     this.$router.push('/recettes/' + this.recette.recetteId);
 
-                } catch (err)
-                {
+                } catch (err) {
                     console.error(err);
                     alert(err.message);
                 }
             }
         },
-        addIngredient()
-        {
-            if (this.nouvNomIngredient == "")
-            {
+        addIngredient() {
+            if (this.nouvNomIngredient == "") {
                 alert("champs requis");
                 return;
             }
@@ -235,29 +220,22 @@ export default {
             this.nouvQuantiteIngredient = "";
             this.nouvMesureIngredient = "";
         },
-        deleteIngredient(index)
-        {
+        deleteIngredient(index) {
             this.recette.ingredients.splice(index, 1);
 
         },
-        upIngredient(index)
-        {
-            if (index > 0)
-            {
+        upIngredient(index) {
+            if (index > 0) {
                 this.recette.ingredients[index - 1] = this.recette.ingredients.splice(index, 1, this.recette.ingredients[index - 1])[0];
             }
         },
-        downIngredient(index)
-        {
-            if (index < this.recette.ingredients.length - 1)
-            {
+        downIngredient(index) {
+            if (index < this.recette.ingredients.length - 1) {
                 this.recette.ingredients[index + 1] = this.recette.ingredients.splice(index, 1, this.recette.ingredients[index + 1])[0];
             }
         },
-        addEtape()
-        {
-            if (this.nouvNomEtape == "")
-            {
+        addEtape() {
+            if (this.nouvNomEtape == "") {
                 alert("champs requis");
                 return;
             }
@@ -268,21 +246,16 @@ export default {
             this.recette.etapes.push(nouvEtape);
             this.nouvNomEtape = "";
         },
-        deleteEtape(index)
-        {
+        deleteEtape(index) {
             this.recette.etapes.splice(index, 1);
         },
-        upEtape(index)
-        {
-            if (index > 0)
-            {
+        upEtape(index) {
+            if (index > 0) {
                 this.recette.etapes[index - 1] = this.recette.etapes.splice(index, 1, this.recette.etapes[index - 1])[0];
             }
         },
-        downEtape(index)
-        {
-            if (index < this.recette.etapes.length - 1)
-            {
+        downEtape(index) {
+            if (index < this.recette.etapes.length - 1) {
                 this.recette.etapes[index + 1] = this.recette.etapes.splice(index, 1, this.recette.etapes[index + 1])[0];
             }
         },

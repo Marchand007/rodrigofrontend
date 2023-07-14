@@ -24,7 +24,7 @@
                         <v-row>
                             <v-col cols="1" sm="4">
                                 <v-text-field class="mr-2" v-model="recette.tempsPrepMin"
-                                    label="Temps de preparation (minutes)" density="compact" type="number" min="0" step="1"
+                                    label="Temps de préparation (minutes)" density="compact" type="number" min="0" step="1"
                                     :rules="[]"></v-text-field>
                             </v-col>
                             <v-col cols="1" sm="4">
@@ -37,33 +37,31 @@
                             </v-col>
                         </v-row>
                     </v-container>
-                    <v-text-field v-model="recette.descCourt" label="Description Courte" density="compact"
+                    <v-text-field v-model="recette.descCourt" label="Description courte" density="compact"
                         :rules="[rules.required]"></v-text-field>
                     <v-textarea id="description" v-model="recette.descLong" label="Description longue"
                         :rules="[rules.required]" auto-grow></v-textarea>
                 </v-sheet>
                 <v-sheet class="boxed-center">
-                    <h3>Liste des ingredients</h3>
+                    <h3>Liste des ingrédients</h3>
                     <v-form @submit.prevent="addIngredient" validate-on="submit" ref="ingredientAddForm">
 
                         <v-container v-for="(ingredient, i) in recette.ingredients">
                             <v-row>
-
                                 <span> {{ i + 1 }}</span>
                                 <v-text-field class="ml-2" v-model="recette.ingredients[i].quantite" density="compact">
                                 </v-text-field>
+
                                 <v-text-field class="ml-2" v-model="recette.ingredients[i].uniteMesure" density="compact">
                                 </v-text-field>
                                 <v-text-field class="ml-2" v-model="recette.ingredients[i].nom" density="compact"
                                     :rules="[rules.required]">
                                 </v-text-field>
-
                                 <v-btn class="ml-5" @click="deleteIngredient(i)" size="small">Supprimer l'ingrédient</v-btn>
                                 <v-btn class="ml-5" @click="upIngredient(i)" size="small" :disabled="i <= 0">Monter
                                     l'ingrédient</v-btn>
                                 <v-btn class="ml-5" @click="downIngredient(i)" size="small"
                                     :disabled="i >= recette.ingredients.length - 1">Descendre l'ingrédient</v-btn>
-
                             </v-row>
                         </v-container>
                         <v-container>
@@ -90,8 +88,8 @@
                         <v-container v-for="(etape, i) in recette.etapes">
                             <v-row>
                                 <span> {{ i + 1 }}</span>
-                                <v-text-field class="ml-2" v-model="recette.etapes[i].description" density="compact">
-
+                                <v-text-field class="ml-2" v-model="recette.etapes[i].description"
+                                    density="compact">
                                 </v-text-field>
                                 <v-btn class="ml-5" @click="deleteEtape(i)" size="small">Supprimer l'étape</v-btn>
                                 <v-btn class="ml-5" @click="upEtape(i)" size="small" :disabled="i <= 0">Monter
@@ -138,20 +136,16 @@
     </div>
 </template>
 
-
 <script>
 
 import session from '../session';
 import { updateRecette, fetchRecette, fetchEtapesByRecetteId, fetchIngredientsByRecetteId, deleteRecetteById, updateRecetteImage } from '../RecetteService';
-import { ref } from 'vue';
-
 
 export default {
     props: {
         id: String,
     },
-    data()
-    {
+    data() {
         return {
             session: session,
             recette: {
@@ -171,75 +165,59 @@ export default {
         };
     },
     methods: {
-        refreshRecette(id)
-        {
+        refreshRecette(id) {
 
-            fetchRecette(this.id).then(recette =>
-            {
+            fetchRecette(this.id).then(recette => {
                 this.recette = recette;
                 this.loading = false;
                 this.loadError = false;
-            }).catch(err =>
-            {
+            }).catch(err => {
                 console.error(err);
                 this.loading = false;
                 this.loadError = true;
             });
         },
-        async updateRecette()
-        {
+        async updateRecette() {
             const formValid = await this.$refs.recetteform.validate();
-            if (!formValid.valid)
-            {
+            if (!formValid.valid) {
                 return;
             }
             updateRecette(this.recette)
-                .then(async reponse =>
-                {
-                    if (this.fichierImage && this.fichierImage.length != 0)
-                    {
+                .then(async reponse => {
+                    if (this.fichierImage && this.fichierImage.length != 0) {
                         await this.submitImage();
                     }
-                    
+
                     this.$router.push('/recettes/' + this.id);
-                }).catch(err =>
-                {
+                }).catch(err => {
                     console.error(err);
                     alert(err.message);
 
                     this.$refs.recetteform.validate();
                 })
         },
-        deleteRecette()
-        {
+        deleteRecette() {
             this.dialog = true;
-            deleteRecetteById(this.id).then(result =>
-            {
+            deleteRecetteById(this.id).then(result => {
                 this.$router.push('/');
             })
         },
-        async submitImage()
-        {
-            if (this.fichierImage)
-            {
+        async submitImage() {
+            if (this.fichierImage) {
                 const formData = new FormData();
                 formData.append('recette-image', this.fichierImage[0]);
 
-                try
-                {
+                try {
                     await updateRecetteImage(this.id, formData);
                     this.refreshRecette(this.id);
-                } catch (err)
-                {
+                } catch (err) {
                     console.error(err);
                     alert(err.message);
                 }
             }
         },
-        addIngredient()
-        {
-            if (this.nouvNomIngredient == "")
-            {
+        addIngredient() {
+            if (this.nouvNomIngredient == "") {
                 alert("champs requis");
                 return;
             }
@@ -254,29 +232,22 @@ export default {
             this.nouvQuantiteIngredient = "";
             this.nouvMesureIngredient = "";
         },
-        deleteIngredient(index)
-        {
+        deleteIngredient(index) {
             this.recette.ingredients.splice(index, 1);
 
         },
-        upIngredient(index)
-        {
-            if (index > 0)
-            {
+        upIngredient(index) {
+            if (index > 0) {
                 this.recette.ingredients[index - 1] = this.recette.ingredients.splice(index, 1, this.recette.ingredients[index - 1])[0];
             }
         },
-        downIngredient(index)
-        {
-            if (index < this.recette.ingredients.length - 1)
-            {
+        downIngredient(index) {
+            if (index < this.recette.ingredients.length - 1) {
                 this.recette.ingredients[index + 1] = this.recette.ingredients.splice(index, 1, this.recette.ingredients[index + 1])[0];
             }
         },
-        addEtape()
-        {
-            if (this.nouvNomEtape == "")
-            {
+        addEtape() {
+            if (this.nouvNomEtape == "") {
                 alert("champs requis");
                 return;
             }
@@ -287,47 +258,37 @@ export default {
             this.recette.etapes.push(nouvEtape);
             this.nouvNomEtape = "";
         },
-        deleteEtape(index)
-        {
+        deleteEtape(index) {
             this.recette.etapes.splice(index, 1);
         },
-        upEtape(index)
-        {
-            if (index > 0)
-            {
+        upEtape(index) {
+            if (index > 0) {
                 this.recette.etapes[index - 1] = this.recette.etapes.splice(index, 1, this.recette.etapes[index - 1])[0];
             }
         },
-        downEtape(index)
-        {
-            if (index < this.recette.etapes.length - 1)
-            {
+        downEtape(index) {
+            if (index < this.recette.etapes.length - 1) {
                 this.recette.etapes[index + 1] = this.recette.etapes.splice(index, 1, this.recette.etapes[index + 1])[0];
             }
         },
     },
-    mounted()
-    {
+    mounted() {
         this.refreshRecette(this.id);
 
-        fetchIngredientsByRecetteId(this.id).then(ingredients =>
-        {
+        fetchIngredientsByRecetteId(this.id).then(ingredients => {
             this.recette.ingredients = ingredients;
             this.loading = false;
             this.loadError = false;
-        }).catch(err =>
-        {
+        }).catch(err => {
             console.error(err);
             this.loading = false;
             this.loadError = true;
         });
-        fetchEtapesByRecetteId(this.id).then(etapes =>
-        {
+        fetchEtapesByRecetteId(this.id).then(etapes => {
             this.recette.etapes = etapes;
             this.loading = false;
             this.loadError = false;
-        }).catch(err =>
-        {
+        }).catch(err => {
             console.error(err);
             this.loading = false;
             this.loadError = true;

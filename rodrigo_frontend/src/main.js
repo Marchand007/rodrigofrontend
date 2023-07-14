@@ -25,14 +25,13 @@ const router = createRouter({
     scrollBehavior(to, from, savedPosition) {
         // always scroll to top
         return { top: 0 }
-      },
+    },
     history: createWebHistory(),
     routes: [
         { path: '/', component: ListeRecettes },
         { path: '/recettes/:id', component: PageDetailRecette, props: true },
         { path: '/admin/new-recipe', component: NewRecette },
         { path: '/admin/update-recipe/:id', component: UpdateRecette, props: true },
-
         { path: '/login', component: FormulaireLogin },
         { path: '/login/new', component: FormulaireNouvUser }
     ]
@@ -55,16 +54,3 @@ const vuetify = createVuetify({
 app.use(vuetify);
 
 app.mount("#app");
-
-
-//mettre le dialog aussi suppresion dans page edition
-
-//changer Mais c'est quoi du Lasagnes à la bolognaise ??
-
-//regler afficahge ingredients dans info recette
-
-
-
-//regex pour creation de compte
-
-//remettre le laod appreciation

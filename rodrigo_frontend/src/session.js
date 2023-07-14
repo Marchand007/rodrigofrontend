@@ -105,8 +105,6 @@ const session = reactive({
             })
         });
 
-        console.log("RESULT: ", response);
-
         if(response.ok){
             const user = await response.json();
             return user;

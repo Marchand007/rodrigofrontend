@@ -23,8 +23,6 @@ router.get('/:id', (req, res, next) => {
 
     commentQueries.getCommentByRecetteId(recetteId).then(comment => {
         if (comment) {
-            console.log("commentRouter commentaire value : ", comment);
-           
             res.json(comment);
         }
 

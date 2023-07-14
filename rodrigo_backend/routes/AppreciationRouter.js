@@ -56,7 +56,6 @@ router.get('/:id/:user',
         });
 
         userAccountQueries.getLoginByUserAccountEmail(user).then(userEmail => {
-            console.log("USEREMAIL :", userEmail);
             if (userEmail) {
                 if (userEmail.courrielUtilisateur != req.user.courrielUtilisateur) {
                     return next(new HttpError(403, `Vous devez être le même utilisateur pour voir l'appréciation`));

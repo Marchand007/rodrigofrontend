@@ -4,9 +4,9 @@
         <v-sheet v-if="session.user && session.user.isAdmin">
             <v-file-input accept="image/*" label="Nouvelle image" prepend-icon="mdi-camera" id="recette-image"
                 ref="recetteImage" v-model="fichierImage"></v-file-input>
-            <v-form @submit.prevent="updateRecette" validate-on="submit lazy" ref="recetteform">
+            <v-form @submit.prevent="this.updateRecette" validate-on="submit lazy" ref="recetteform">
                 <v-sheet class="boxed-center">
-                    <v-sheet-title>Informations de la recette</v-sheet-title>
+                    <h3>Informations de la recette</h3>
                     <v-container>
                         <v-row>
                             <v-col cols="1" sm="6">
@@ -21,7 +21,7 @@
                         </v-row>
                     </v-container>
                     <v-container>
-                        <v-row >
+                        <v-row>
                             <v-col cols="1" sm="4">
                                 <v-text-field class="mr-2" v-model="recette.tempsPrepMin"
                                     label="Temps de preparation (minutes)" density="compact" type="number" min="0" step="1"
@@ -43,7 +43,7 @@
                         :rules="[rules.required]" auto-grow></v-textarea>
                 </v-sheet>
                 <v-sheet class="boxed-center">
-                    <v-sheet-title>Liste des ingredients</v-sheet-title>
+                    <h3>Liste des ingredients</h3>
                     <v-form @submit.prevent="addIngredient" validate-on="submit" ref="ingredientAddForm">
 
                         <v-container v-for="(ingredient, i) in recette.ingredients">
@@ -84,7 +84,7 @@
 
                 </v-sheet>
                 <v-sheet class="boxed-center">
-                    <v-sheet-title class="ma-5">Liste des etapes</v-sheet-title>
+                    <h3 class="ma-5">Liste des étapes</h3>
                     <v-form @submit.prevent="addEtape" validate-on="submit" ref="etapeAddForm">
 
                         <v-container v-for="(etape, i) in recette.etapes">
@@ -112,25 +112,26 @@
                 </v-sheet>
                 <v-btn class="w-25 mx-5" type="submit" size="large">Mettre la recette à jour</v-btn>
                 <v-dialog v-model="dialog" persistent width="auto">
-                <template v-slot:activator="{ props }">
-                    <v-btn v-if="session.user && session.user.isAdmin" class="ma-4" v-bind="props" size="large">Supprimer la recette</v-btn>
-                </template>
-                <v-card>
-                    <v-card-title class="text-h5">
-                        Supprimer {{ recette.nom }}
-                    </v-card-title>
-                    <v-card-text>Voulez-vous vraiment supprimer la recette {{ recette.nom }}</v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
-                            Annuler
-                        </v-btn>
-                        <v-btn color="blue-darken-1" variant="text" @click="deleteRecette">
-                            Confirmer
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
+                    <template v-slot:activator="{ props }">
+                        <v-btn v-if="session.user && session.user.isAdmin" class="ma-4" v-bind="props"
+                            size="large">Supprimer la recette</v-btn>
+                    </template>
+                    <v-card>
+                        <v-card-title class="text-h5">
+                            Supprimer {{ recette.nom }}
+                        </v-card-title>
+                        <v-card-text>Voulez-vous vraiment supprimer la recette {{ recette.nom }}</v-card-text>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
+                                Annuler
+                            </v-btn>
+                            <v-btn color="blue-darken-1" variant="text" @click="deleteRecette">
+                                Confirmer
+                            </v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
             </v-form>
         </v-sheet>
         <v-sheet v-else class="ma-2">Vous n'avez pas les permissions pour voir cette page</v-sheet>
@@ -193,12 +194,13 @@ export default {
                 return;
             }
             updateRecette(this.recette)
-                .then((reponse) =>
+                .then(async reponse =>
                 {
-                    if (this.fichierImage)
+                    if (this.fichierImage && this.fichierImage.length != 0)
                     {
-                        this.submitImage();
+                        await this.submitImage();
                     }
+                    
                     this.$router.push('/recettes/' + this.id);
                 }).catch(err =>
                 {
@@ -213,7 +215,6 @@ export default {
             this.dialog = true;
             deleteRecetteById(this.id).then(result =>
             {
-                console.log("result : ", result);
                 this.$router.push('/');
             })
         },
@@ -227,7 +228,6 @@ export default {
                 try
                 {
                     await updateRecetteImage(this.id, formData);
-                    //this.edition = false;
                     this.refreshRecette(this.id);
                 } catch (err)
                 {

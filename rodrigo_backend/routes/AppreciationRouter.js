@@ -104,6 +104,10 @@ router.post('/',
                 return next(new HttpError(400, `${user.courrielUtilisateur} a déjà donné une note d'appréciation de ${result.note} sur la recette ${recetteId}`));
             }
 
+            if(req.body.note < 1 || req.body.note > 5){
+                return next(new HttpError(400,`Impossible de donner une note d'appréciation de ${req.body.note} : elle doit être en 1 et 5`));
+            }
+
             const nouvAppreciation = {
                 courrielUtilisateur: "" + user.courrielUtilisateur,
                 recetteId: "" + recetteId,

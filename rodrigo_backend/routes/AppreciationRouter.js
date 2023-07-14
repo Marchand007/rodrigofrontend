@@ -69,7 +69,7 @@ router.get('/:id/:user',
 
         appreciationQueries.getUserAppreciationByRecetteId(recetteId, user).then(appreciation => {
             if (appreciation) {
-               
+
                 res.json(appreciation);
             } else {
                 return next(new HttpError(404, `Appreciation de ${user} pour la recette ${recetteId} introuvable`));
@@ -84,6 +84,7 @@ router.post('/',
     (req, res, next) => {
 
         const recetteId = req.body.recetteId;
+        const valueApprecation = req.body.note;
 
         if (!recetteId || recetteId === "") {
             return next(new HttpError(400, 'Le champ recetteId est requis'));
@@ -97,21 +98,22 @@ router.post('/',
             return next(err);
         });
 
+        if (valueApprecation < 1 || valueApprecation > 5) {
+            return next(new HttpError(400, `Impossible de donner une note d'appréciation de ${valueApprecation} : elle doit être en 1 et 5`));
+        }
+
         const user = req.user;
 
         appreciationQueries.getUserAppreciationByRecetteId(recetteId, user.courrielUtilisateur).then(result => {
+
             if (result.note > 0) {
                 return next(new HttpError(400, `${user.courrielUtilisateur} a déjà donné une note d'appréciation de ${result.note} sur la recette ${recetteId}`));
-            }
-
-            if(req.body.note < 1 || req.body.note > 5){
-                return next(new HttpError(400,`Impossible de donner une note d'appréciation de ${req.body.note} : elle doit être en 1 et 5`));
             }
 
             const nouvAppreciation = {
                 courrielUtilisateur: "" + user.courrielUtilisateur,
                 recetteId: "" + recetteId,
-                note: "" + req.body.note
+                note: "" + valueApprecation
             };
 
             return appreciationQueries.insertAppreciationToRecipe(nouvAppreciation);

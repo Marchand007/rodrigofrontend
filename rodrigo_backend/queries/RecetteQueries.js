@@ -99,11 +99,9 @@ const insertRecette = async (recette, clientParam) => {
         VALUES ($1, $2, $3, $4, $5, $6, $7)`,
             [recette.recetteId, recette.nom, recette.descCourt, recette.descLong, recette.tempsPrepMin, recette.tempsCuissonMin, recette.nbPortions]
         );
-      
-        if (recette.ingredients)
-        {
-            for (let i = 0; i < recette.ingredients.length; i++)
-            {
+
+        if (recette.ingredients) {
+            for (let i = 0; i < recette.ingredients.length; i++) {
                 client.query(
                     `INSERT INTO Ingredient (recette_id, ordre, quantite, unite_mesure, nom) 
             VALUES ($1, $2, $3, $4, $5)`,
@@ -111,10 +109,8 @@ const insertRecette = async (recette, clientParam) => {
                 )
             };
         }
-        if (recette.etapes)
-        {
-            for (let i = 0; i < recette.etapes.length; i++)
-            {
+        if (recette.etapes) {
+            for (let i = 0; i < recette.etapes.length; i++) {
                 client.query(
                     `INSERT INTO Etape (recette_id, ordre, description)
         VALUES ($1, $2, $3)`,
@@ -138,10 +134,8 @@ exports.insertRecette = insertRecette;
 const updateRecette = async (recette, clientParam) => {
     const client = clientParam || await pool.connect();
 
-    try
-    {
-        if (!clientParam)
-        {
+    try {
+        if (!clientParam) {
             await client.query('BEGIN');
         }
 

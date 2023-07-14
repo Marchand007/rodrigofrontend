@@ -2,7 +2,7 @@
     <div class="boxed-center">
         <v-sheet class="ma-2" max-width="40rem">
             <v-sheet class="ma-2" max-width="40rem">
-                <v-form @submit.prevent="createUserAccount" validate-on="submit lazy" ref="newUserForm">
+                <v-form @submit.prevent="createUserAccount" validate-on="blur" ref="newUserForm">
                     <v-text-field v-model="userAccountEmail" label="Adresse courriel"
                         :rules="[rules.required, rules.validEmail, rules.userAccountEmailUnique]" density="compact" clearable>
                     </v-text-field>
@@ -45,7 +45,7 @@ export default {
                 },
                 validFullName: value => {
                     const validFullName = /(^[A-Z][a-z]+)(-){0,1}([ ]{0,1})([A-Z][a-z]+)?([ ]{1})?([A-Z][a-z]+)(-{0,1})([ ]{0,1})([A-Z][a-z]+)?$/;
-                    return validFullName.test(value) || "Veuillez entrer un nom complet valide, (première lettre par mot doit être une majuscule)"
+                    return validFullName.test(value) || "Veuillez entrer un nom complet (prénom et nom) valide, (première lettre par mot doit être une majuscule)"
                 },
                 validPassword: value => {
                     const validPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;

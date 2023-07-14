@@ -8,7 +8,6 @@ const loadImages = async () => {
     recetteResult.rows.forEach(async row => {
         const recetteId = row.recette_id;
         const imageName = row.recette_id + '.jpg';
-        console.log(`recetteId: ${recetteId}, imageName: ${imageName}`);
         const imageData = fs.readFileSync('./images/recettes/' + imageName);
 
         await pool.query(

@@ -137,7 +137,6 @@ exports.insertRecette = insertRecette;
 
 const updateRecette = async (recette, clientParam) => {
     const client = clientParam || await pool.connect();
-    console.log("recette recu :", recette);
 
     try
     {
@@ -186,7 +185,6 @@ const updateRecette = async (recette, clientParam) => {
         }
         await client.query("COMMIT");
 
-        console.log("recetteId : ", recette.recetteId)
         return getRecetteById(recette.recetteId);
     } catch (error) {
 
@@ -224,7 +222,7 @@ const updateRecetteImage = async (recetteId, imageBuffer, imageContentType) => {
     );
 
     if (result.rowCount === 0) {
-        throw new Error("Erreur lors de la mi   se-à-jour de l'image");
+        throw new Error("Erreur lors de la mise-à-jour de l'image");
     }
 
     return getRecetteImageContent(recetteId);

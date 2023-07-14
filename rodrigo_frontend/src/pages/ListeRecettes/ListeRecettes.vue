@@ -7,10 +7,10 @@
 
     <v-container>
         <v-row class="justify-space-evenly">
-            <v-flex v-for="recette in recettes" xs2>
+            <v-sheet class="d-flex" v-for="recette in recettes" xs2>
                 <ResumeRecette :key="recette.id" :id="recette.id" :nom="recette.nom"
                     :descCourt="recette.descCourt" :image="recette.image" />
-            </v-flex>
+            </v-sheet>
         </v-row>
     </v-container>
 </template>

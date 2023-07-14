@@ -24,12 +24,8 @@ exports.getAppreciationByRecetteId = getAppreciationByRecetteId;
 const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, clientParam) => {
     const client = clientParam || await pool.connect();
 
-
-
-    try
-    {
-        if (!clientParam)
-        {
+    try {
+        if (!clientParam) {
             await client.query('BEGIN');
         }
 
@@ -55,7 +51,6 @@ const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, c
         await client.query("COMMIT");
 
         return row;
-
     }
     catch (error) {
         await client.query("ROLLBACK");

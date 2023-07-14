@@ -19,6 +19,7 @@
                     <v-text-field @input="validatePasswordMatch" v-model="passwordConf" label="Confirmer le mot de passe"
                         :rules="[rules.required, rules.passwordsMatch]" type="password" density="compact"
                         ref="passwordConfirmInput" clearable>
+
                     </v-text-field>
 
                     <v-btn type="submit" :disabled="!userAccountEmail || !userFullName || !password || !passwordConf">
@@ -50,7 +51,7 @@ export default {
                 validFullName: value =>
                 {
                     const validFullName = /(^[A-Z][a-z]+)(-){0,1}([ ]{0,1})([A-Z][a-z]+)?([ ]{1})?([A-Z][a-z]+)(-{0,1})([ ]{0,1})([A-Z][a-z]+)?$/;
-                    return validFullName.test(value) || "Veuillez entrer un nom complet valide, (première lettre par mot doit être une majuscule)"
+                    return validFullName.test(value) || "Veuillez entrer un nom complet (prénom et nom) valide, (première lettre par mot doit être une majuscule)"
                 },
                 validPassword: value =>
                 {

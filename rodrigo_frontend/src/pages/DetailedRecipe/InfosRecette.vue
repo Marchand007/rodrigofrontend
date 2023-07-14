@@ -7,9 +7,9 @@
                 </template>
                 <v-card>
                     <v-card-title class="text-h5">
-                        Supprimer {{ nom }}
+                        Supprimer {{ recette.nom }}
                     </v-card-title>
-                    <v-card-text>Voulez-vous vraiment supprimer la recette {{ nom }}</v-card-text>
+                    <v-card-text>Voulez-vous vraiment supprimer la recette {{ recette.nom }}</v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
@@ -29,7 +29,7 @@
     <v-card class="ma-2">
         <v-sheet class="d-flex">
             <v-sheet class="ma-4">
-                <v-img :src="imageSrc" width="600px" /> 
+                <v-img :src="imageSrc" height="400px" width="600px" /> 
             </v-sheet>
             <v-sheet>
                 <v-card-text>
@@ -136,7 +136,6 @@ export default {
     },
     watch: {
         refreshCounter() {
-            console.log("VALUE :", this.refreshCounter);
             this.chargerAppreciations();
         }
     }

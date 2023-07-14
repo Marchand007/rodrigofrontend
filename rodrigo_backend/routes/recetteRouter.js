@@ -100,6 +100,14 @@ router.post('/',
             {
                 throw new HttpError(409, `Une recette avec le id ${recetteId} existe déjà`);
             }
+            let tempsPrepMin = "" + req.body.tempsPrepMin;
+            if (tempsPrepMin == "" || tempsPrepMin == 'null') { tempsPrepMin = null };
+
+            let tempsCuissonMin = "" + req.body.tempsCuissonMin;
+            if (tempsCuissonMin == "" || tempsCuissonMin == 'null') { tempsCuissonMin = null };
+
+            let nbPortions = "" + req.body.nbPortions;
+            if (nbPortions == "" || nbPortions == 'null') { nbPortions = null };
 
             const nouvRecette = {
                 recetteId: "" + req.body.recetteId,
@@ -107,9 +115,9 @@ router.post('/',
                 image: "" + req.body.image,
                 descCourt: "" + req.body.descCourt,
                 descLong: "" + req.body.descLong,
-                tempsPrepMin: "" + req.body.tempsPrepMin,
-                tempsCuissonMin: "" + req.body.tempsCuissonMin,
-                nbPortions: "" + req.body.nbPortions,
+                tempsPrepMin: tempsPrepMin,
+                tempsCuissonMin: tempsCuissonMin,
+                nbPortions: nbPortions,
                 ingredients: req.body.ingredients,
                 etapes: req.body.etapes
             };
@@ -161,6 +169,14 @@ router.put('/:id',
         {
             return next(err);
         });
+        let tempsPrepMin = "" + req.body.tempsPrepMin;
+        if (tempsPrepMin == "" || tempsPrepMin == 'null') { tempsPrepMin = null };
+
+        let tempsCuissonMin = "" + req.body.tempsCuissonMin;
+        if (tempsCuissonMin == "" || tempsCuissonMin == 'null') { tempsCuissonMin = null };
+
+        let nbPortions = "" + req.body.nbPortions;
+        if (nbPortions == "" || nbPortions == 'null') { nbPortions = null };
 
         const nouvRecette = {
             recetteId: "" + recetteId,
@@ -168,9 +184,9 @@ router.put('/:id',
             image: "" + req.body.image,
             descCourt: "" + req.body.descCourt,
             descLong: "" + req.body.descLong,
-            tempsPrepMin: "" + req.body.tempsPrepMin,
-            tempsCuissonMin: "" + req.body.tempsCuissonMin,
-            nbPortions: "" + req.body.nbPortions,
+            tempsPrepMin: tempsPrepMin,
+            tempsCuissonMin: tempsCuissonMin,
+            nbPortions: nbPortions,
             ingredients: req.body.ingredients,
             etapes: req.body.etapes
         };

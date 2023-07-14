@@ -38,7 +38,6 @@ export default {
     },
     watch: {
         refreshCounter() {
-            console.log("VALUE :", this.refreshCounter);
             this.chargerCommentaires(); 
         }
     }

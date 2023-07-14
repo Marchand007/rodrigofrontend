@@ -1,12 +1,12 @@
 <template>
     <div class="boxed-center">
-        <h2>Creation d'une nouvelle recette</h2>
+        <h2>Création d'une nouvelle recette</h2>
         <v-sheet v-if="session.user && session.user.isAdmin">
             <v-form @submit.prevent="addRecette" validate-on="submit lazy" ref="recetteform">
                 <v-file-input accept="image/*" label="Nouvelle image" prepend-icon="mdi-camera" id="recette-image"
                     ref="recetteImage" v-model="fichierImage"></v-file-input>
                 <v-sheet class="boxed-center">
-                    <v-sheet-title>Informations de la recette</v-sheet-title>
+                    <h3>Informations de la recette</h3>
                     <v-container>
                         <v-row>
                             <v-col cols="1" sm="6">
@@ -23,16 +23,17 @@
                     <v-container>
                         <v-row>
                             <v-col cols="1" sm="4">
-                                <v-text-field class="mr-2" v-model="recette.tempsPrepMin" label="Temps de preparation"
-                                    density="compact" type="number" min="0" step="1" :rules="[]"></v-text-field>
+                                <v-text-field class="mr-2" v-model="recette.tempsPrepMin"
+                                    label="Temps de préparation (minutes)" density="compact" type="number" min="0" step="1"
+                                    :rules="[]"></v-text-field>
                             </v-col>
                             <v-col cols="1" sm="4">
                                 <v-text-field v-model="recette.tempsCuissonMin" label="Temps de cuisson (minutes)"
                                     density="compact" type="number" step="1" min="0" :rules="[]"></v-text-field>
                             </v-col>
                             <v-col cols="1" sm="4">
-                                <v-text-field v-model="recette.nbPortions" label="Nombre de portions (minutes)"
-                                    density="compact" type="number" step="1" min="0" :rules="[]"></v-text-field>
+                                <v-text-field v-model="recette.nbPortions" label="Nombre de portions" density="compact"
+                                    type="number" step="1" min="0" :rules="[]"></v-text-field>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -42,7 +43,7 @@
                         :rules="[rules.required]" auto-grow></v-textarea>
                 </v-sheet>
                 <v-sheet class="boxed-center">
-                    <v-sheet-title>Liste des ingredients</v-sheet-title>
+                    <h3>Liste des ingrédients</h3>
 
 
                     <v-container v-for="(ingredient, i) in recette.ingredients">
@@ -70,13 +71,13 @@
                         <v-form @submit.prevent="addIngredient" validate-on="submit lazy" ref="ingredientAddForm">
                             <v-row>
 
-                                <v-text-field class="ml-2" label="Quantite" v-model="nouvQuantiteIngredient"
+                                <v-text-field class="ml-2" label="Quantité" v-model="nouvQuantiteIngredient"
                                     density="compact">
                                 </v-text-field>
-                                <v-text-field class="ml-2" label="Unite de mesure" v-model="nouvMesureIngredient"
+                                <v-text-field class="ml-2" label="Unité de mesure" v-model="nouvMesureIngredient"
                                     density="compact">
                                 </v-text-field>
-                                <v-text-field class="ml-2" label="Nom du nouvel ingredient" v-model="nouvNomIngredient"
+                                <v-text-field class="ml-2" label="Nom du nouvel ingrédient" v-model="nouvNomIngredient"
                                     density="compact" :rules="[rules.required]">
                                 </v-text-field>
                                 <v-btn class="w-25 ml-5" type="submit">Ajouter l'ingrédient</v-btn>
@@ -88,7 +89,7 @@
 
                 </v-sheet>
                 <v-sheet class="boxed-center">
-                    <v-sheet-title class="ma-5">Liste des etapes</v-sheet-title>
+                    <h3 class="ma-5">Liste des étapes</h3>
 
 
                     <v-container v-for="(etape, i) in recette.etapes">
@@ -150,7 +151,6 @@ export default {
             rules: {
                 required: value =>
                 {
-                    console.log("validation required :", value);
                     return !!value || "Le champ est requis";
                 },
                 recetteIdUnique: () => this.recetteIdUnique || "Cet identifiant est déjà utilisé, veuillez en enter un autre",
@@ -174,11 +174,11 @@ export default {
             }
 
             await createRecette(this.recette)
-                .then(reponse =>
+                .then(async reponse =>
                 {
                     if (this.fichierImage && this.fichierImage.length != 0)
                     {
-                        this.submitImage();
+                        await this.submitImage();
                     }
                     else
                     {
@@ -207,10 +207,8 @@ export default {
 
                 try
                 {
-                    await updateRecetteImage(this.recette.recetteId, formData).then(result =>
-                    {
-                        this.$router.push('/recettes/' + this.recette.recetteId);
-                    });
+                    await updateRecetteImage(this.recette.recetteId, formData);
+                    this.$router.push('/recettes/' + this.recette.recetteId);
 
                 } catch (err)
                 {
@@ -221,7 +219,6 @@ export default {
         },
         addIngredient()
         {
-            console.log("addIngredient");
             if (this.nouvNomIngredient == "")
             {
                 alert("champs requis");

@@ -33,15 +33,6 @@ const convertToRecette = jsonRecette => {
     };
 };
 
-const convertToCommentaire = jsonCommentaire => {
-    return {
-        courrielUtilisateur: jsonCommentaire.courrielUtilisateur,
-        recetteId: jsonCommentaire.recetteId,
-        texte: jsonCommentaire.texte,
-        datePublication: jsonCommentaire.datePublication
-    };
-};
-
 export async function fetchRecettes() {
     const response = await fetch('/api/recettes');
 

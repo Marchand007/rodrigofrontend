@@ -12,7 +12,7 @@
                             <v-col cols="1" sm="6">
                                 <v-text-field class="w-100 justify-center" v-model="recette.id"
                                     label="Identifiant unique de la recette (exemple : poulet_curry)" density="compact"
-                                    :rules="[rules.required, rules.recetteIdUnique]" disabled></v-text-field>
+                                    :rules="[rules.required]" disabled></v-text-field>
                             </v-col>
                             <v-col cols="1" sm="6">
                                 <v-text-field v-model="recette.nom" label="Nom de la recette" density="compact"
@@ -150,8 +150,7 @@ export default {
             },
             fichierImage: null,
             rules: {
-                required: value => !!value || "Le champ est requis",
-                recetteIdUnique: () => this.id || "Cet identifiant est déjà utilisé, veuillez en enter un autre"
+                required: value => !!value || "Le champ est requis"
             },
             nouvQuantiteIngredient: "",
             nouvMesureIngredient: "",

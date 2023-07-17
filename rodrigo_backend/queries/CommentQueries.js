@@ -30,7 +30,7 @@ const insertCommentToRecipe = async (comment) => {
 
         const result = await pool.query(
             `INSERT INTO commentaire (courriel_utilisateur, recette_id, texte, date_publication)
-        VALUES ($1, $2, $3, $4)`,
+            VALUES ($1, $2, $3, $4)`,
             [comment.courrielUtilisateur, comment.recetteId, comment.texte, commentDateTime]
         );
 

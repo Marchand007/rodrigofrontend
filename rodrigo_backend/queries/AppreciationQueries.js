@@ -15,7 +15,6 @@ const getAppreciationByRecetteId = async (recetteId) => {
             nombreAppreciation: row.count
         };
         return appreciation;
-
     };
 };
 
@@ -35,6 +34,7 @@ const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, c
         WHERE courriel_utilisateur = $1 AND recette_id = $2`,
             [courriel_utilisateur, recetteId]
         );
+
         const row = result.rows[0];
 
         if (row.note > 0) {
@@ -58,7 +58,6 @@ const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, c
     }
     finally {
         client.release();
-
     }
 }
 exports.getUserAppreciationByRecetteId = getUserAppreciationByRecetteId;
@@ -79,5 +78,4 @@ const insertAppreciationToRecipe = async (appreciation) => {
         throw error;
     }
 };
-
 exports.insertAppreciationToRecipe = insertAppreciationToRecipe;

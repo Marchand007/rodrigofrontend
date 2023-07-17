@@ -16,7 +16,6 @@ const addImagePathToRecette = recette => {
     };
 };
 
-
 const getAllRecettes = async () => {
     const result = await pool.query(
         `SELECT recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions
@@ -39,7 +38,6 @@ const getAllRecettes = async () => {
     });
 };
 exports.getAllRecettes = getAllRecettes;
-
 
 const getRecetteById = async (recetteId) => {
     const result = await pool.query(
@@ -86,7 +84,6 @@ const getRecetteImageContent = async (recetteId) => {
 };
 exports.getRecetteImageContent = getRecetteImageContent;
 
-
 const insertRecette = async (recette, clientParam) => {
     const client = clientParam || await pool.connect();
 
@@ -130,7 +127,6 @@ const insertRecette = async (recette, clientParam) => {
 };
 exports.insertRecette = insertRecette;
 
-
 const updateRecette = async (recette, clientParam) => {
     const client = clientParam || await pool.connect();
 
@@ -163,11 +159,13 @@ const updateRecette = async (recette, clientParam) => {
                 )
             };
         }
+
         await client.query(
             `DELETE FROM Etape
         WHERE recette_id = $1`,
             [recette.recetteId]
         );
+
         if (recette.etapes) {
             for (let i = 0; i < recette.etapes.length; i++) {
                 client.query(
@@ -177,11 +175,11 @@ const updateRecette = async (recette, clientParam) => {
                 )
             };
         }
+
         await client.query("COMMIT");
 
         return getRecetteById(recette.recetteId);
     } catch (error) {
-
         await client.query("ROLLBACK");
         throw error;
     } finally {
@@ -189,7 +187,6 @@ const updateRecette = async (recette, clientParam) => {
     }
 };
 exports.updateRecette = updateRecette;
-
 
 const deleteRecette = async (recetteId) => {
     const result = await pool.query(
@@ -206,7 +203,6 @@ const deleteRecette = async (recetteId) => {
     };
 };
 exports.deleteRecette = deleteRecette;
-
 
 const updateRecetteImage = async (recetteId, imageBuffer, imageContentType) => {
     const result = await pool.query(

@@ -14,6 +14,7 @@ router.get('/:id', (req, res, next) => {
     if (id == null || id === "") {
         return next(new HttpError(400, `Le parametre Id est requis`));
     }
+
     recetteQueries.getRecetteById(id).then(recette => {
         if (!recette) {
             return next(new HttpError(404, `La recette ${id} est inexistante ou introuvable`));
@@ -32,7 +33,6 @@ router.get('/:id', (req, res, next) => {
         return next(err);
     });
 });
-
 
 router.get('/:id/:user',
     passport.authenticate('basic', { session: false }),
@@ -105,7 +105,6 @@ router.post('/',
         const user = req.user;
 
         appreciationQueries.getUserAppreciationByRecetteId(recetteId, user.courrielUtilisateur).then(result => {
-
             if (result.note > 0) {
                 return next(new HttpError(400, `${user.courrielUtilisateur} a déjà donné une note d'appréciation de ${result.note} sur la recette ${recetteId}`));
             }
@@ -123,6 +122,5 @@ router.post('/',
             next(err);
         });
     });
-
 
 module.exports = router;

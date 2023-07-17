@@ -10,6 +10,7 @@ const getCommentByRecetteId = async (recetteId) => {
         ORDER BY date_publication ASC`,
         [recetteId]
     );
+
     return result.rows.map(row => {
         const commentaire = {
             nomUtilisateur: row.nom_complet,
@@ -20,7 +21,6 @@ const getCommentByRecetteId = async (recetteId) => {
         return commentaire;
     });
 };
-
 exports.getCommentByRecetteId = getCommentByRecetteId;
 
 const insertCommentToRecipe = async (comment) => {
@@ -40,7 +40,5 @@ const insertCommentToRecipe = async (comment) => {
     } catch (error) {
         throw error;
     }
-
 };
-
 exports.insertCommentToRecipe = insertCommentToRecipe;

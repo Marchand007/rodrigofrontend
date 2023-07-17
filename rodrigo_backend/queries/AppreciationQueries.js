@@ -30,8 +30,8 @@ const getUserAppreciationByRecetteId = async (recetteId, courriel_utilisateur, c
 
         const result = await client.query(
             `SELECT COUNT(courriel_utilisateur) as note
-        FROM Appreciation
-        WHERE courriel_utilisateur = $1 AND recette_id = $2`,
+            FROM Appreciation
+            WHERE courriel_utilisateur = $1 AND recette_id = $2`,
             [courriel_utilisateur, recetteId]
         );
 

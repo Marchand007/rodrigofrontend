@@ -93,7 +93,7 @@ const insertRecette = async (recette, clientParam) => {
     try {
         await client.query(
             `INSERT INTO Recette (recette_id, nom, desc_court, desc_long, temps_prep_min, temps_cuisson_min, nb_portions) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            VALUES ($1, $2, $3, $4, $5, $6, $7)`,
             [recette.recetteId, recette.nom, recette.descCourt, recette.descLong, recette.tempsPrepMin, recette.tempsCuissonMin, recette.nbPortions]
         );
 
@@ -101,7 +101,7 @@ const insertRecette = async (recette, clientParam) => {
             for (let i = 0; i < recette.ingredients.length; i++) {
                 client.query(
                     `INSERT INTO Ingredient (recette_id, ordre, quantite, unite_mesure, nom) 
-            VALUES ($1, $2, $3, $4, $5)`,
+                    VALUES ($1, $2, $3, $4, $5)`,
                     [recette.recetteId, i + 1, recette.ingredients[i].quantite, recette.ingredients[i].uniteMesure, recette.ingredients[i].nom]
                 )
             };
@@ -110,7 +110,7 @@ const insertRecette = async (recette, clientParam) => {
             for (let i = 0; i < recette.etapes.length; i++) {
                 client.query(
                     `INSERT INTO Etape (recette_id, ordre, description)
-        VALUES ($1, $2, $3)`,
+                    VALUES ($1, $2, $3)`,
                     [recette.recetteId, i + 1, recette.etapes[i].description]
                 )
             };
@@ -137,7 +137,7 @@ const updateRecette = async (recette, clientParam) => {
 
         const result = await client.query(
             `UPDATE Recette SET nom = $2, desc_court = $3, desc_long = $4, temps_prep_min = $5, temps_cuisson_min = $6, nb_portions = $7
-        WHERE recette_id = $1`,
+            WHERE recette_id = $1`,
             [recette.recetteId, recette.nom, recette.descCourt, recette.descLong, recette.tempsPrepMin, recette.tempsCuissonMin, recette.nbPortions]
         );
 
@@ -147,7 +147,7 @@ const updateRecette = async (recette, clientParam) => {
 
         await client.query(
             `DELETE FROM Ingredient
-        WHERE recette_id = $1`,
+            WHERE recette_id = $1`,
             [recette.recetteId]
         );
 
@@ -155,7 +155,7 @@ const updateRecette = async (recette, clientParam) => {
             for (let i = 0; i < recette.ingredients.length; i++) {
                 client.query(
                     `INSERT INTO Ingredient (recette_id, ordre, quantite, unite_mesure, nom) 
-        VALUES ($1, $2, $3, $4, $5)`,
+                    VALUES ($1, $2, $3, $4, $5)`,
                     [recette.recetteId, i + 1, recette.ingredients[i].quantite, recette.ingredients[i].uniteMesure, recette.ingredients[i].nom]
                 )
             };
@@ -163,7 +163,7 @@ const updateRecette = async (recette, clientParam) => {
 
         await client.query(
             `DELETE FROM Etape
-        WHERE recette_id = $1`,
+            WHERE recette_id = $1`,
             [recette.recetteId]
         );
 
@@ -171,7 +171,7 @@ const updateRecette = async (recette, clientParam) => {
             for (let i = 0; i < recette.etapes.length; i++) {
                 client.query(
                     `INSERT INTO Etape (recette_id, ordre, description)
-    VALUES ($1, $2, $3)`,
+                    VALUES ($1, $2, $3)`,
                     [recette.recetteId, i + 1, recette.etapes[i].description]
                 )
             };

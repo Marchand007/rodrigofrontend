@@ -19,7 +19,7 @@
 import session from '../session';
 
 export default {
-    data: function () {
+    data() {
         return {
             userAccountEmail: '',
             password: '',

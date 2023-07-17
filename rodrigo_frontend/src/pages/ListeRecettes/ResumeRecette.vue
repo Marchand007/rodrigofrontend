@@ -69,7 +69,7 @@ export default {
         descCourt: String,
         image: String,
     },
-    data: function () {
+    data() {
         return {
             session: session,
             dialog: false,
@@ -83,10 +83,10 @@ export default {
             this.$router.push("/admin/update-recipe/" + this.id);
         },
         deleteRecette() {
-            this.dialog = false
+            this.dialog = false;
             deleteRecetteById(this.id).then(result => {
                 this.loadRecettes();
-            })
+            });
         },
         chargerAppreciations() {
             fetchAppreciationByRecetteId(this.id).then(appreciation => {

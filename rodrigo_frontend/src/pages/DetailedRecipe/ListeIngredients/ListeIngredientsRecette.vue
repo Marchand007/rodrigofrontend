@@ -11,15 +11,13 @@
     </v-col>
 </template>
 
-
 <script>
 import { fetchIngredientsByRecetteId } from '../../../RecetteService';
 import IngredientRecette from './IngredientRecette.vue';
 
-
 export default {
     props: {
-        id: String,
+        id: String
     },
     components: {
         IngredientRecette
@@ -27,20 +25,14 @@ export default {
     data() {
         return {
             ingredients: [],
-            loading: true,
-            loadError: false,
             show: false
         };
     },
     mounted() {
         fetchIngredientsByRecetteId(this.id).then(ingredients => {
             this.ingredients = ingredients;
-            this.loading = false;
-            this.loadError = false;
         }).catch(err => {
             console.error(err);
-            this.loading = false;
-            this.loadError = true;
         });
     },
     computed: {

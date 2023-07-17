@@ -1,6 +1,5 @@
 <template>
     <v-btn @click="goToUpdatePage()" size="x-small" v-if="session.user && session.user.isAdmin">Modifier la recette</v-btn>
-
     <v-dialog v-model="dialog" persistent width="auto">
         <template v-slot:activator="{ props }">
             <v-btn v-if="session.user && session.user.isAdmin" class="ma-4" v-bind="props" size="x-small">Supprimer la
@@ -22,7 +21,6 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-
     <h2 class="text-h4">{{ recette.nom }}</h2>
     <v-rating v-model="moyenneAppreciation" density="compact" hover half-increments readonly>
     </v-rating>
@@ -38,7 +36,6 @@
                 </v-card-text>
             </v-sheet>
         </v-sheet>
-
         <v-container>
             <v-card class="ma-2">
                 <v-row no-gutters>
@@ -50,7 +47,6 @@
                             <span v-else>N/A </span>
                         </v-sheet>
                     </v-col>
-
                     <v-col>
                         <v-sheet class="pa-2 ma-2">
                             <span>Temps de cuisson : </span>
@@ -89,8 +85,6 @@ export default {
             recette: {},
             moyenneAppreciation: 0,
             nombreAppreciation: 0,
-            loading: true,
-            loadError: false,
             dialog: false
         };
     },
@@ -110,7 +104,7 @@ export default {
             this.dialog = true;
             deleteRecetteById(this.id).then(result => {
                 this.$router.push('/');
-            })
+            });
         }
     },
     computed: {
@@ -121,15 +115,10 @@ export default {
     mounted() {
         fetchRecette(this.id).then(recette => {
             this.recette = recette;
-            this.loading = false;
-            this.loadError = false;
             this.chargerAppreciations();
         }).catch(err => {
             console.error(err);
-            this.loading = false;
-            this.loadError = true;
-        })
-
+        });
     },
     watch: {
         refreshCounter() {

@@ -40,7 +40,7 @@
 import session from '../session';
 
 export default {
-    data: function () {
+    data(){
         return {
             session: session
         };

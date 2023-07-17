@@ -44,11 +44,8 @@
                 </v-sheet>
                 <v-sheet class="boxed-center">
                     <h3>Liste des ingrédients</h3>
-
-
                     <v-container v-for="(ingredient, i) in recette.ingredients">
                         <v-row>
-
                             <span> {{ i + 1 }}</span>
                             <v-text-field class="ml-2" v-model="recette.ingredients[i].quantite" density="compact">
                             </v-text-field>
@@ -57,20 +54,16 @@
                             <v-text-field class="ml-2" v-model="recette.ingredients[i].nom" density="compact"
                                 :rules="[rules.required]">
                             </v-text-field>
-
                             <v-btn class="ml-5" @click="deleteIngredient(i)" size="small">Supprimer l'ingrédient</v-btn>
                             <v-btn class="ml-5" @click="upIngredient(i)" size="small" :disabled="i <= 0">Monter
                                 l'ingrédient</v-btn>
                             <v-btn class="ml-5" @click="downIngredient(i)" size="small"
                                 :disabled="i >= recette.ingredients.length - 1">Descendre l'ingrédient</v-btn>
-
                         </v-row>
                     </v-container>
-
                     <v-container>
                         <v-form @submit.prevent="addIngredient" validate-on="submit lazy" ref="ingredientAddForm">
                             <v-row>
-
                                 <v-text-field class="ml-2" label="Quantité" v-model="nouvQuantiteIngredient"
                                     density="compact">
                                 </v-text-field>
@@ -81,22 +74,16 @@
                                     density="compact" :rules="[rules.required]">
                                 </v-text-field>
                                 <v-btn class="w-25 ml-5" type="submit">Ajouter l'ingrédient</v-btn>
-
                             </v-row>
                         </v-form>
                     </v-container>
-
-
                 </v-sheet>
                 <v-sheet class="boxed-center">
                     <h3 class="ma-5">Liste des étapes</h3>
-
-
                     <v-container v-for="(etape, i) in recette.etapes">
                         <v-row>
                             <span> {{ i + 1 }}</span>
                             <v-text-field class="ml-2" v-model="recette.etapes[i].description" density="compact">
-
                             </v-text-field>
                             <v-btn class="ml-5" @click="deleteEtape(i)" size="small">Supprimer l'étape</v-btn>
                             <v-btn class="ml-5" @click="upEtape(i)" size="small" :disabled="i <= 0">Monter
@@ -105,7 +92,6 @@
                                 :disabled="i >= recette.etapes.length - 1">Descendre l'étape</v-btn>
                         </v-row>
                     </v-container>
-
                     <v-form @submit.prevent="addEtape" validate-on="submit" ref="etapeAddForm">
                         <v-container>
                             <v-row>
@@ -170,16 +156,14 @@ export default {
             }
 
             await createRecette(this.recette)
-                .then(async reponse => {
+                .then(async response => {
                     if (this.fichierImage && this.fichierImage.length != 0) {
                         await this.submitImage();
                     }
                     else {
                         this.$router.push('/recettes/' + this.recette.recetteId);
                         this.recetteIdUnique = true;
-
                     }
-
                 }).catch(err => {
                     console.error(err);
                     alert(err.message);
@@ -187,7 +171,7 @@ export default {
                         this.recetteIdUnique = false;
                     }
                     this.$refs.recetteform.validate();
-                })
+                });
         },
         async submitImage() {
             if (this.fichierImage) {
@@ -206,7 +190,7 @@ export default {
         },
         addIngredient() {
             if (this.nouvNomIngredient == "") {
-                alert("champs requis");
+                alert("Champs requis");
                 return;
             }
 
@@ -214,7 +198,8 @@ export default {
                 nom: this.nouvNomIngredient,
                 quantite: this.nouvQuantiteIngredient,
                 uniteMesure: this.nouvMesureIngredient,
-            }
+            };
+
             this.recette.ingredients.push(nouvIngredient);
             this.nouvNomIngredient = "";
             this.nouvQuantiteIngredient = "";
@@ -222,7 +207,6 @@ export default {
         },
         deleteIngredient(index) {
             this.recette.ingredients.splice(index, 1);
-
         },
         upIngredient(index) {
             if (index > 0) {
@@ -242,7 +226,8 @@ export default {
 
             const nouvEtape = {
                 description: this.nouvNomEtape,
-            }
+            };
+
             this.recette.etapes.push(nouvEtape);
             this.nouvNomEtape = "";
         },
@@ -260,8 +245,6 @@ export default {
             }
         },
     }
-
-
 }
 </script>
 

@@ -45,13 +45,11 @@
                 <v-sheet class="boxed-center">
                     <h3>Liste des ingrédients</h3>
                     <v-form @submit.prevent="addIngredient" validate-on="submit" ref="ingredientAddForm">
-
                         <v-container v-for="(ingredient, i) in recette.ingredients">
                             <v-row>
                                 <span> {{ i + 1 }}</span>
                                 <v-text-field class="ml-2" v-model="recette.ingredients[i].quantite" density="compact">
                                 </v-text-field>
-
                                 <v-text-field class="ml-2" v-model="recette.ingredients[i].uniteMesure" density="compact">
                                 </v-text-field>
                                 <v-text-field class="ml-2" v-model="recette.ingredients[i].nom" density="compact"
@@ -79,12 +77,10 @@
                             </v-row>
                         </v-container>
                     </v-form>
-
                 </v-sheet>
                 <v-sheet class="boxed-center">
                     <h3 class="ma-5">Liste des étapes</h3>
                     <v-form @submit.prevent="addEtape" validate-on="submit" ref="etapeAddForm">
-
                         <v-container v-for="(etape, i) in recette.etapes">
                             <v-row>
                                 <span> {{ i + 1 }}</span>
@@ -155,7 +151,7 @@ export default {
             fichierImage: null,
             rules: {
                 required: value => !!value || "Le champ est requis",
-                productIdUnique: () => this.productIdUnique || "Cet identifiant est déjà utilisé, veuillez en enter un autre"
+                recetteIdUnique: () => this.id || "Cet identifiant est déjà utilisé, veuillez en enter un autre"
             },
             nouvQuantiteIngredient: "",
             nouvMesureIngredient: "",
@@ -169,12 +165,8 @@ export default {
 
             fetchRecette(this.id).then(recette => {
                 this.recette = recette;
-                this.loading = false;
-                this.loadError = false;
             }).catch(err => {
                 console.error(err);
-                this.loading = false;
-                this.loadError = true;
             });
         },
         async updateRecette() {
@@ -187,20 +179,18 @@ export default {
                     if (this.fichierImage && this.fichierImage.length != 0) {
                         await this.submitImage();
                     }
-
                     this.$router.push('/recettes/' + this.id);
                 }).catch(err => {
                     console.error(err);
                     alert(err.message);
-
                     this.$refs.recetteform.validate();
-                })
+                });
         },
         deleteRecette() {
             this.dialog = true;
             deleteRecetteById(this.id).then(result => {
                 this.$router.push('/');
-            })
+            });
         },
         async submitImage() {
             if (this.fichierImage) {
@@ -226,7 +216,8 @@ export default {
                 nom: this.nouvNomIngredient,
                 quantite: this.nouvQuantiteIngredient,
                 uniteMesure: this.nouvMesureIngredient,
-            }
+            };
+
             this.recette.ingredients.push(nouvIngredient);
             this.nouvNomIngredient = "";
             this.nouvQuantiteIngredient = "";
@@ -234,7 +225,6 @@ export default {
         },
         deleteIngredient(index) {
             this.recette.ingredients.splice(index, 1);
-
         },
         upIngredient(index) {
             if (index > 0) {
@@ -254,7 +244,8 @@ export default {
 
             const nouvEtape = {
                 description: this.nouvNomEtape,
-            }
+            };
+
             this.recette.etapes.push(nouvEtape);
             this.nouvNomEtape = "";
         },
@@ -277,25 +268,16 @@ export default {
 
         fetchIngredientsByRecetteId(this.id).then(ingredients => {
             this.recette.ingredients = ingredients;
-            this.loading = false;
-            this.loadError = false;
         }).catch(err => {
             console.error(err);
-            this.loading = false;
-            this.loadError = true;
         });
+
         fetchEtapesByRecetteId(this.id).then(etapes => {
             this.recette.etapes = etapes;
-            this.loading = false;
-            this.loadError = false;
         }).catch(err => {
             console.error(err);
-            this.loading = false;
-            this.loadError = true;
         });
     }
-
-
 }
 </script>
 

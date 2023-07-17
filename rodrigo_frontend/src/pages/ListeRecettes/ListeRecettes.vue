@@ -25,8 +25,6 @@ export default {
     data() {
         return {
             recettes: [],
-            loading: true,
-            loadError: false
         };
     },
     provide() {
@@ -38,12 +36,8 @@ export default {
         loadRecettes() {
             fetchRecettes().then(recettes => {
                 this.recettes = recettes;
-                this.loading = true;
-                this.loadError = false;
             }).catch(err => {
                 console.error(err);
-                this.loading = false;
-                this.loadError = true;
             });
         }
     },

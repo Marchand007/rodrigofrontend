@@ -150,6 +150,7 @@ const updateRecette = async (recette, clientParam) => {
         WHERE recette_id = $1`,
             [recette.recetteId]
         );
+
         if (recette.ingredients) {
             for (let i = 0; i < recette.ingredients.length; i++) {
                 client.query(

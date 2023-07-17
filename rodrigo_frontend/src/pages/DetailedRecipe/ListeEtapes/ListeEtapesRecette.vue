@@ -10,34 +10,27 @@
     </v-col>
 </template>
 
-
 <script>
 import { fetchEtapesByRecetteId } from '../../../RecetteService';
 import EtapeRecette from './EtapeRecette.vue';
 
 export default {
     props: {
-        id: String,
+        id: String
     },
     components: {
         EtapeRecette
     },
     data() {
         return {
-            etapes: [],
-            loading: true,
-            loadError: false
+            etapes: []
         };
     },
     mounted() {
         fetchEtapesByRecetteId(this.id).then(etapes => {
             this.etapes = etapes;
-            this.loading = false;
-            this.loadError = false;
         }).catch(err => {
             console.error(err);
-            this.loading = false;
-            this.loadError = true;
         });
     }
 }

@@ -20,6 +20,9 @@ async function createServiceError(response) {
     return new ServiceError(response.status, await getResponseMessage(response));
 }
 
+
+///***RECETTES***///
+
 const convertToRecette = jsonRecette => {
     return {
         id: jsonRecette.id,
@@ -66,7 +69,6 @@ export async function updateRecette(recette) {
     if (response.ok) {
         return response.json();
     } else {
-
         throw await createServiceError(response);
     }
 }
@@ -82,7 +84,6 @@ export async function deleteRecetteById(recetteId) {
     if (response.ok) {
         return response.json();
     } else {
-
         throw await createServiceError(response);
     }
 }
@@ -120,7 +121,7 @@ export async function updateRecetteImage(recetteId, formData) {
     }
 }
 
-//ETAPES//
+///***ETAPES***///
 
 export async function fetchEtapesByRecetteId(recetteId) {
     const response = await fetch(`/api/etapes/${recetteId}`);
@@ -149,7 +150,8 @@ export async function addEtape(etape) {
     }
 }
 
-//INGREDIENTS//
+///***INGREDIENTS***///
+
 export async function fetchIngredientsByRecetteId(recetteId) {
     const response = await fetch(`/api/ingredients/${recetteId}`);
 
@@ -177,7 +179,8 @@ export async function addIngredient(ingredient) {
     }
 }
 
-//APPRECIATION//
+///***APPRECIATION***///
+
 export async function fetchAppreciationByRecetteId(recetteId) {
     const response = await fetch(`/api/appreciation/${recetteId}`);
 
@@ -196,8 +199,7 @@ export async function fetchAppreciationForUserByRecetteId(recetteId) {
             "Content-Type": "application/json",
             ...session.getAuthHeaders()
         }
-    }
-    );
+    });
 
     if (response.ok) {
         return await response.json();
@@ -223,7 +225,7 @@ export async function addAppreciationToRecipeId(appreciation) {
     }
 }
 
-//COMMENTAIRES//
+///***COMMENTAIRES***///
 
 export async function fetchCommentairesByRecetteId(recetteId) {
     const response = await fetch(`/api/comments/${recetteId}`);

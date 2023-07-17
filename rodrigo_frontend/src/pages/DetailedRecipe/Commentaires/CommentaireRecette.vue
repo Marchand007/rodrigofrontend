@@ -9,7 +9,7 @@
 import { DateTime } from 'luxon';
 export default {
     props: {
-        commentaire: Object,
+        commentaire: Object
     },
     computed: {
         formattedDateTime() {

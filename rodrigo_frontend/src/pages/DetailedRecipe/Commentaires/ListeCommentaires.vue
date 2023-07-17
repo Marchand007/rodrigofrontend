@@ -16,9 +16,7 @@ export default {
     },
     data() {
         return {
-            commentaires: [],
-            loading: true,
-            loadError: false
+            commentaires: []
         };
     },
     methods: {
@@ -27,7 +25,7 @@ export default {
                 this.commentaires = commentaires;
             }).catch(err => {
                 console.error(err);
-            })
+            });
         }
     },
     mounted() {

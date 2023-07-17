@@ -40,6 +40,7 @@ export default {
                 recetteId: this.id,
                 note: this.rating
             };
+            
             addAppreciationToRecipeId(appreciation).then(response => {
                 alert(response.message);
                 this.rating = response.note;
@@ -62,8 +63,6 @@ export default {
     },
     mounted() {
         this.loadAppreciation();
-
     }
 }
-
 </script>

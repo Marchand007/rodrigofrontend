@@ -8,7 +8,6 @@
                     <ListeEtapesRecette :id="id"></ListeEtapesRecette>
                 </v-row>
             </v-container>
-
             <v-card class="ma-2" v-if="session.user">
                 <v-card-actions>
                     <v-btn :icon="showAjout ? 'mdi-chevron-up' : 'mdi-chevron-down'"
@@ -26,12 +25,10 @@
                     </div>
                 </v-expand-transition>
             </v-card>
-
             <v-card v-else align="center">
                 <v-card-text>Vous devez avoir un compte utilisateur pour ajouter un commentaire et/ou une appréciation
                 </v-card-text>
             </v-card>
-
             <v-card class="ma-2">
                 <v-card-actions>
                     <v-btn :icon="showListeCommentaire ? 'mdi-chevron-up' : 'mdi-chevron-down'"
@@ -75,8 +72,6 @@ export default {
     },
     data() {
         return {
-            loading: true,
-            loadError: false,
             session: session,
             refreshCounter: 0,
             showAjout: false,
